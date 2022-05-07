@@ -11,6 +11,7 @@
     "php": "^8.0.2",
     "3x1io/filament-user": "^1.1",
     "bezhansalleh/filament-shield": "1.*",
+    "doctrine/dbal": "^3.3",
     "filament/filament": "^2.11",
     "filament/spatie-laravel-media-library-plugin": "^2.11",
     "guzzlehttp/guzzle": "^7.2",
@@ -18,6 +19,8 @@
     "laravel/framework": "^9.2",
     "laravel/sanctum": "^2.14.1",
     "laravel/tinker": "^2.7",
+    "nnjeim/world": "^1.1",
+    "orangehill/iseed": "^3.0",
     "ralphjsmit/laravel-filament-seo": "^1.0",
     "stechstudio/filament-impersonate": "^2.4"
   },
