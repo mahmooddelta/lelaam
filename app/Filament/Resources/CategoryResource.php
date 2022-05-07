@@ -19,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use RalphJSmit\Filament\SEO\SEO;
 
@@ -150,7 +151,7 @@ class CategoryResource extends Resource {
 			          ])
 			->bulkActions([
 				              Tables\Actions\BulkAction::make('delete')
-					              ->action(fn (Category $records) => $records->each(fn (Category $record) => $record->delete()))
+					              ->action(fn (Collection $records) => $records->each(fn (Category $record) => $record->delete()))
 					              ->icon('heroicon-o-trash')
 					              ->requiresConfirmation()
 					              ->color('danger'),

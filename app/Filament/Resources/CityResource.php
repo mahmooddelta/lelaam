@@ -12,6 +12,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Collection;
 
 class CityResource extends Resource {
 	
@@ -65,7 +66,7 @@ class CityResource extends Resource {
 			          ])
 			->bulkActions([
 				              Tables\Actions\BulkAction::make('delete')
-					              ->action(fn (City $records) => $records->each(fn (City $record) => $record->delete()))
+					              ->action(fn (Collection $records) => $records->each(fn (City $record) => $record->delete()))
 					              ->icon('heroicon-o-trash')
 					              ->requiresConfirmation()
 					              ->color('danger'),
