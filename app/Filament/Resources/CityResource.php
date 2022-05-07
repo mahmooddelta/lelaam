@@ -25,21 +25,41 @@ class CityResource extends Resource {
 	public static function form (Form $form): Form {
 		return $form
 			->schema([
-				         Forms\Components\Select::make('country_id')
+				         Forms\Components\BelongsToSelect::make('country_id')
+					         ->relationship('country', 'name')
 					         ->label('Country')
 					         ->options(Country::select('id', 'name')
 						                   ->pluck('name', 'id')
 						                   ->toArray())
-					         ->required(),
-				         Forms\Components\Select::make('state_id')
+					         ->reactive()
+					         ->afterStateHydrated(fn (callable $set) => $set('state_id', null))
+					         ->required()
+					         ->exists('countries', 'id'),
+				
+				         Forms\Components\BelongsToSelect::make('state_id')
+					         ->relationship('state', 'name')
 					         ->label('State')
-					         ->options(State::select('id', 'name')
-						                   ->pluck('name', 'id')
-						                   ->toArray())
-					         ->required(),
+					         ->options(function (callable $get) {
+						         $country = $get('country_id');
+						         if ( !$country ) {
+							         State::select(['name', 'id', 'country_id'])
+								         ->pluck('name', 'id', 'country_id')
+								         ->toArray();
+						         }
+						
+						         return State::select(['id', 'name'])
+							         ->whereCountryId($country)
+							         ->get()
+							         ->pluck('name', 'id')
+							         ->toArray();
+					         })
+					         ->required()
+					         ->exists('states', 'id'),
+				
 				         Forms\Components\TextInput::make('name')
 					         ->required()
-					         ->maxLength(255),
+					         ->maxLength(255)
+					         ->columnSpan(2),
 			         ]);
 	}
 	
