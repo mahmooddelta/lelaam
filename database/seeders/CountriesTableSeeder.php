@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use function now;
 
 class CountriesTableSeeder extends Seeder {
 	
@@ -23,12 +22,22 @@ class CountriesTableSeeder extends Seeder {
 				         0 =>
 					         [
 						         'id' => 1,
-						         'name' => 'Afghanistan',
-						         'status' => 1,
-						         'phone_code' => '93',
 						         'iso3' => 'AFG',
-						         'created_at' => now()->toDateTimeString(),
-						         'updated_at' => now()->toDateTimeString(),
+						         'name' => 'افغانستان',
+						         'phone_code' => '93',
+						         'status' => 1,
+						         'created_at' => '2022-05-07 07:01:00',
+						         'updated_at' => '2022-05-07 10:18:39',
+					         ],
+				         1 =>
+					         [
+						         'id' => 2,
+						         'iso3' => 'IR',
+						         'name' => 'ایران',
+						         'phone_code' => '98',
+						         'status' => 1,
+						         'created_at' => '2022-05-07 07:02:02',
+						         'updated_at' => '2022-05-07 10:18:56',
 					         ],
 			         ]);
 		
