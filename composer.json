@@ -19,7 +19,6 @@
     "laravel/framework": "^9.2",
     "laravel/sanctum": "^2.14.1",
     "laravel/tinker": "^2.7",
-    "nnjeim/world": "^1.1",
     "orangehill/iseed": "^3.0",
     "ralphjsmit/laravel-filament-seo": "^1.0",
     "stechstudio/filament-impersonate": "^2.4"
