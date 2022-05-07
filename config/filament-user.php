@@ -1,5 +1,5 @@
 <?php
 
 return [
-	"group" => "User and Roles",
+    "group" => "Users and Roles"
 ];

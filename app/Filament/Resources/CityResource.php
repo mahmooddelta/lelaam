@@ -20,7 +20,7 @@ class CityResource extends Resource {
 	
 	protected static ?string $navigationIcon  = 'heroicon-o-location-marker';
 	protected static ?string $navigationGroup = 'Location';
-	protected static ?int    $navigationSort  = 7;
+	protected static ?int    $navigationSort  = 13;
 	
 	public static function form (Form $form): Form {
 		return $form
