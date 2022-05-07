@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use RalphJSmit\Filament\SEO\SEO;
+use function __;
 
 class CategoryResource extends Resource {
 	
@@ -55,24 +56,30 @@ class CategoryResource extends Resource {
 							                  Grid::make()
 								                  ->schema([
 									                           TextInput::make('name')
+										                           ->label(__('general.categories.fields.name'))
 										                           ->required()
 										                           ->reactive()
 										                           ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+									
 									                           TextInput::make('slug')
+										                           ->label(__('general.categories.fields.slug'))
 										                           ->disabled()
 										                           ->required()
 										                           ->unique(Category::class, 'slug', fn ($record) => $record),
 								                           ]),
+							
 							                  BelongsToSelect::make('parent_id')
-								                  ->label('Parent')
+								                  ->label(__('general.categories.fields.parent_id'))
 								                  ->relationship('parent', 'name', fn (Builder $query) => $query->where('parent_id', null))
 								                  ->searchable()
 								                  ->placeholder('Select parent category'),
+							
 							                  Toggle::make('is_visible')
-								                  ->label('Visible to customers.')
+								                  ->label(__('general.categories.fields.is_visible'))
 								                  ->default(true),
+							
 							                  MarkdownEditor::make('description')
-								                  ->label('Description')
+								                  ->label(__('general.categories.fields.description'))
 								                  ->columnSpan(2),
 						                  ])
 						         ->columns([
@@ -87,16 +94,17 @@ class CategoryResource extends Resource {
 					         $layout::make()
 						         ->schema([
 							                  Placeholder::make('created_at')
-								                  ->label('Created at')
+								                  ->label(__('general.created_at'))
 								                  ->content(fn (?Category $record): string => $record ? $record->created_at->diffForHumans() : '-'),
 							                  Placeholder::make('updated_at')
-								                  ->label('Last modified at')
+								                  ->label(__('general.updated_at'))
 								                  ->content(fn (?Category $record): string => $record ? $record->updated_at->diffForHumans() : '-'),
 						                  ])
 						         ->columns(1),
 					         $layout::make()
 						         ->schema([
-							                  Placeholder::make("Search Engine Optimization"),
+							                  Placeholder::make("Search Engine Optimization")
+								                  ->label(__('general.SEO.title')),
 							                  SEO::make(),
 						                  ])
 						         ->columns(1),
@@ -111,46 +119,59 @@ class CategoryResource extends Resource {
 			->with('children');
 	}
 	
+	public static function getLabel (): string {
+		return __('general.categories.title');
+	}
+	
+	public static function getPluralLabel (): string {
+		return __('general.categories.title_plural');
+	}
+	
+	protected static function getNavigationGroup (): ?string {
+		return __('nav.leelam');
+	}
+	
 	public static function table (Table $table): Table {
 		return $table
 			->columns([
 				          Tables\Columns\TextColumn::make('name')
-					          ->label('Name')
+					          ->label(__('general.categories.fields.name'))
 					          ->searchable()
 					          ->sortable()
 					          ->toggleable(),
 				          Tables\Columns\TextColumn::make('parent.name')
-					          ->label('Parent')
+					          ->label(__('general.categories.fields.parent_id'))
 					          ->searchable()
 					          ->sortable()
-					          ->default('No Parent')
+					          ->default(__('general.categories.placeholders.no_parent'))
 					          ->toggleable(),
 				          Tables\Columns\TextColumn::make('children.count')
 					          ->counts('children')
-					          ->label('Children')
+					          ->label(__('general.categories.placeholders.num_children'))
 					          ->sortable()
 					          ->default(0)
 					          ->toggleable(),
 				          Tables\Columns\BooleanColumn::make('is_visible')
-					          ->label('Visibility')
+					          ->label(__('general.categories.fields.is_visible'))
 					          ->sortable()
 					          ->toggleable(),
 				          Tables\Columns\TextColumn::make('updated_at')
-					          ->label('Updated Date')
+					          ->label(__('general.updated_at'))
 					          ->date()
 					          ->sortable()
 					          ->toggleable(),
 			          ])
 			->filters([
 				          Tables\Filters\Filter::make('is_visible')
-					          ->label('Visible')
+					          ->label(__('general.categories.filters.visible'))
 					          ->query(fn (Builder $query): Builder => $query->whereIsVisible(true)),
 				          Tables\Filters\Filter::make('is_not_visible')
-					          ->label('Not Visible')
+					          ->label(__('general.categories.filters.not_visible'))
 					          ->query(fn (Builder $query): Builder => $query->whereIsVisible(false)),
 			          ])
 			->bulkActions([
 				              Tables\Actions\BulkAction::make('delete')
+					              ->label(__('general.delete_bulk'))
 					              ->action(fn (Collection $records) => $records->each(fn (Category $record) => $record->delete()))
 					              ->icon('heroicon-o-trash')
 					              ->requiresConfirmation()

@@ -176,7 +176,7 @@ class RoleResource extends Resource {
 	}
 	
 	protected static function getNavigationGroup (): ?string {
-		return 'Users and Roles';
+		return __('nav.users_roles');
 	}
 	
 	protected static function getNavigationLabel (): string {
