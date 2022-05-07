@@ -17,6 +17,8 @@ return new class extends Migration {
 				->fulltext()
 				->index();
 			
+			$table->string('phone_code', 5);
+			
 			$table->boolean('status')
 				->default(true);
 			
