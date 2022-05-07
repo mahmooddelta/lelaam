@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f3eccd8db999477bdf3d52bfa9eb6315",
+    "content-hash": "eb81e55d4b1695c5a06288d1b1b7f2b1",
     "packages": [
         {
             "name": "3x1io/filament-user",
@@ -189,16 +189,16 @@
         },
         {
             "name": "bezhansalleh/filament-shield",
-            "version": "v1.1.8",
+            "version": "v1.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bezhanSalleh/filament-shield.git",
-                "reference": "e3f36e1e99da7633ff2e446afe7b1f6d63a250c0"
+                "reference": "fcf4beace1921dcb40f95112f67959449d232d69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bezhanSalleh/filament-shield/zipball/e3f36e1e99da7633ff2e446afe7b1f6d63a250c0",
-                "reference": "e3f36e1e99da7633ff2e446afe7b1f6d63a250c0",
+                "url": "https://api.github.com/repos/bezhanSalleh/filament-shield/zipball/fcf4beace1921dcb40f95112f67959449d232d69",
+                "reference": "fcf4beace1921dcb40f95112f67959449d232d69",
                 "shasum": ""
             },
             "require": {
@@ -256,7 +256,7 @@
             ],
             "support": {
                 "issues": "https://github.com/bezhanSalleh/filament-shield/issues",
-                "source": "https://github.com/bezhanSalleh/filament-shield/tree/v1.1.8"
+                "source": "https://github.com/bezhanSalleh/filament-shield/tree/v1.1.11"
             },
             "funding": [
                 {
@@ -264,7 +264,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-02-28T23:36:37+00:00"
+            "time": "2022-03-24T03:08:50+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
