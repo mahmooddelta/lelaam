@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class CityPolicy
+class DistrictPolicy
 {
     use HandlesAuthorization;
 
@@ -17,7 +17,7 @@ class CityPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view_any_city');
+        return $user->can('view_any_district');
     }
 
     /**
@@ -28,7 +28,7 @@ class CityPolicy
      */
     public function view(User $user)
     {
-        return $user->can('view_city');
+        return $user->can('view_district');
     }
 
     /**
@@ -39,7 +39,7 @@ class CityPolicy
      */
     public function create(User $user)
     {
-        return $user->can('create_city');
+        return $user->can('create_district');
     }
 
     /**
@@ -50,7 +50,7 @@ class CityPolicy
      */
     public function update(User $user)
     {
-        return $user->can('update_city');
+        return $user->can('update_district');
     }
 
     /**
@@ -61,7 +61,7 @@ class CityPolicy
      */
     public function delete(User $user)
     {
-        return $user->can('delete_city');
+        return $user->can('delete_district');
     }
 
     /**
@@ -72,7 +72,7 @@ class CityPolicy
      */
     public function deleteAny(User $user)
     {
-        return $user->can('delete_any_city');
+        return $user->can('delete_any_district');
     }
 
 }
