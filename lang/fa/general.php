@@ -76,4 +76,15 @@ return [
 		'placeholders' => [
 		],
 	],
+	'currencies' => [
+		'title' => 'واحد پولی',
+		'title_plural' => 'واحد های پولی',
+		'fields' => [
+			'name' => 'نام',
+			'symbol' => 'سمبول',
+			'is_active' => 'فعال',
+		],
+		'placeholders' => [
+		],
+	],
 ];
