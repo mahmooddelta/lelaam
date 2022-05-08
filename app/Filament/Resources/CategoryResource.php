@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CategoryResource\Pages\CreateCategory;
 use App\Filament\Resources\CategoryResource\Pages\EditCategory;
 use App\Filament\Resources\CategoryResource\Pages\ListCategories;
+use App\Filament\Resources\CategoryResource\RelationManagers\AttributesRelationManager;
 use App\Models\Category;
 use Filament\Forms\Components\BelongsToSelect;
 use Filament\Forms\Components\Card;
@@ -31,8 +32,6 @@ class CategoryResource extends Resource {
 	protected static ?string $slug = 'categories';
 	
 	protected static ?string $recordTitleAttribute = 'name';
-	
-	protected static ?string $navigationGroup = 'Lelaam';
 	
 	protected static ?string $navigationIcon = 'heroicon-o-tag';
 	
@@ -180,7 +179,9 @@ class CategoryResource extends Resource {
 	}
 	
 	public static function getRelations (): array {
-		return [];
+		return [
+			AttributesRelationManager::class,
+		];
 	}
 	
 	public static function getPages (): array {
