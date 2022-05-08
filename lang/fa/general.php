@@ -5,6 +5,7 @@ return [
 	'updated_at' => 'تاریخ ویرایش',
 	'delete' => 'حذف',
 	'delete_bulk' => 'حذف انتخاب شده',
+	'status_helper' => 'در سایت نمایش داده شود یا نه؟',
 	'SEO' => [
 		'title' => 'سئو',
 		'fields' => [
@@ -85,6 +86,52 @@ return [
 			'is_active' => 'فعال',
 		],
 		'placeholders' => [
+		],
+	],
+	'posts' => [
+		'title' => 'اعلان',
+		'title_plural' => 'اعلانات',
+		'fields' => [
+			'category_id' => 'دسته بندی',
+			'title' => 'عنوان',
+			'price' => 'قیمت',
+			'currency_id' => 'واحد پولی',
+			'phone_number' => 'شماره تماس',
+			'desc' => 'توضیحات',
+			'address' => 'آدرس',
+			'district_id' => 'ناحیه',
+			'is_published' => 'تایید/نشر شده',
+			'media' => 'انتخاب تصاویر',
+		],
+		'placeholders' => [
+			'category' => 'انتخاب دسته بندی',
+			'address_section' => 'آدرس  و ناحیه',
+			'photo_section' => 'تصاویر',
+			'attribute_values_section' => 'مقدار ویژگی ها'
+		],
+	],
+	'attributes' => [
+		'title' => 'ویژگی',
+		'title_plural' => 'ویژگی ها',
+		'fields' => [
+			'name' => 'نام',
+			'front_end_type' => 'نوع فیلد',
+			'is_active' => 'فعال',
+		],
+		'placeholders' => [],
+	],
+	'attribute_values' => [
+		'title' => 'مقدار ویژگی',
+		'title_plural' => 'مقادیر ویژگی',
+		'fields' => [
+			'name' => 'نام',
+			'attribute_id' => 'ویژگی',
+			'is_active' => 'فعال',
+		],
+		'placeholders' => [],
+		'filters' => [
+			'visible' => 'فعال',
+			'not_visible' => 'غیر فعال',
 		],
 	],
 ];
