@@ -18,10 +18,6 @@ class AttributeValue extends Model {
 		return $this->belongsTo(Attribute::class);
 	}
 	
-	public function products (): BelongsToMany {
-		return $this->belongsToMany(Product::class, 'product_attribute_values', 'attribute_value_id', 'product_id');
-	}
-	
 	public function scopeIsActive ($query) {
 		return $query->whereIsActive(true);
 	}

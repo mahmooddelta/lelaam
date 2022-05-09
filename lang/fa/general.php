@@ -107,7 +107,7 @@ return [
 			'category' => 'انتخاب دسته بندی',
 			'address_section' => 'آدرس  و ناحیه',
 			'photo_section' => 'تصاویر',
-			'attribute_values_section' => 'مقدار ویژگی ها'
+			'attribute_values_section' => 'مقدار ویژگی ها',
 		],
 	],
 	'attributes' => [
@@ -132,6 +132,10 @@ return [
 		'filters' => [
 			'visible' => 'فعال',
 			'not_visible' => 'غیر فعال',
+		],
+		'relations' => [
+			'attribute' => 'ویژگی',
+			'value' => 'قیمت',
 		],
 	],
 ];
