@@ -105,26 +105,30 @@ class PostResource extends Resource {
 												                           Category::with('attributes')
 													                           ->find($get('category_id'))->attributes->map(function (Attribute $attribute) use (&$inputs) {
 														                           if ( $attribute->frontend_type === 'text' ) {
-															                           $inputs[] = TextInput::make('attributes_' . $attribute->name)
-																                           ->name('attributes_' . $attribute->name)
+															                           $inputs[] = TextInput::make('attributes.' . $attribute->id)
 																                           ->label($attribute->name)
 																                           ->required();
 														                           } elseif ( $attribute->frontend_type === 'number' ) {
-															                           $inputs[] = TextInput::make('attributes_' . $attribute->name)
+															                           $inputs[] = TextInput::make('attributes.' . $attribute->name)
+																                           ->label($attribute->name)
 																                           ->numeric()
 																                           ->required();
 														                           } elseif ( $attribute->frontend_type === 'checkbox' ) {
-															                           $inputs[] = Checkbox::make('attributes_' . $attribute->name)
+															                           $inputs[] = Checkbox::make('attributes.' . $attribute->name)
+																                           ->label($attribute->name)
 																                           ->inline()
 																                           ->required();
 														                           } elseif ( $attribute->frontend_type === 'radio' ) {
-															                           $inputs[] = Radio::make('attributes_' . $attribute->name)
+															                           $inputs[] = Radio::make('attributes.' . $attribute->name)
+																                           ->label($attribute->name)
 																                           ->options($attribute->values)
 																                           ->required();
 														                           } elseif ( $attribute->frontend_type === 'color' ) {
-															                           $inputs[] = ColorPicker::make('attributes_' . $attribute->name);
+															                           $inputs[] = ColorPicker::make('attributes.' . $attribute->name)
+																                           ->label($attribute->name)
+																                           ->required();
 														                           } elseif ( $attribute->frontend_type === 'select' ) {
-															                           $inputs [] = Select::make('values_' . $attribute->name)
+															                           $inputs [] = Select::make('values.' . $attribute->name)
 																                           ->options($attribute->values()
 																	                                     ->pluck('name', 'id', 'attribute_id')
 																	                                     ->toArray() ?? [])

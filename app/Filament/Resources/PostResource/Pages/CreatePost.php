@@ -5,36 +5,37 @@ namespace App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource;
 use App\Models\Attribute;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Support\Str;
-use function collect;
-use function strlen;
-use function substr;
+use Illuminate\Support\Arr;
+use function is_null;
 
 class CreatePost extends CreateRecord {
 	
 	protected static string $resource = PostResource::class;
 	
 	protected function afterCreate (): void {
-		collect($this->data)
-			->each(function ($value, $key) use (&$attribute_values, &$attributes) {
-				if ( Str::startsWith($key, 'values_') ) {
-					$attribute_values[] = [
-						'attribute_id' => Attribute::whereName(substr($key, strlen("values_")))
-							->first()
-							->value('id'),
-						'attribute_value_id' => $value,
-					];
-				} elseif ( Str::startsWith($key, 'attributes_') ) {
-					$attributes[Attribute::whereName(substr($key, strlen("attributes_")))
+		if ( Arr::has($this->data, 'values') && !is_null(Arr::get($this->data, 'values')) ) {
+			$values = [];
+			foreach ( Arr::get($this->data, 'values') as $key => $value ) {
+				$values[] = [
+					'attribute_id' => Attribute::whereName($key)
 						->first()
-						->value('id')] = $value;
-				}
-			});
-		if ( isset($attribute_values) ) {
+						->value('id'),
+					'attribute_value_id' => $value,
+				];
+			}
 			$this->record->values()
-				->sync($attribute_values);
+				->sync($values);
 		}
-		if ( isset($attributes) ) {
+		if ( Arr::has($this->data, 'attributes') && !is_null(Arr::get($this->data, 'attributes')) ) {
+			$attributes = [];
+			foreach ( Arr::get($this->data, 'attributes') as $key => $attribute ) {
+				$attributes[] = [
+					'attribute_id' => Attribute::find($key)
+						?->first()
+						?->value('id'),
+					'value' => $attribute,
+				];
+			}
 			$this->record->attributes()
 				->sync($attributes);
 		}

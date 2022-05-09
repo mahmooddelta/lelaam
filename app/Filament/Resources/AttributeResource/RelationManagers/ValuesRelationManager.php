@@ -36,13 +36,15 @@ class ValuesRelationManager extends HasManyRelationManager {
 	public static function table (Table $table): Table {
 		return $table
 			->columns([
+				          TextColumn::make('attribute.name')
+					          ->label(__('general.attribute_values.fields.attribute_id'))
+					          ->searchable(),
+						  
 				          TextColumn::make('name')
 					          ->label(__('general.attribute_values.fields.name'))
 					          ->searchable()
 					          ->sortable(),
-				          TextColumn::make('attribute.name')
-					          ->label(__('general.attribute_values.fields.attribute_id'))
-					          ->searchable(),
+						  
 				          BooleanColumn::make('is_active')
 					          ->label(__('general.attribute_values.fields.is_active'))
 					          ->sortable(),

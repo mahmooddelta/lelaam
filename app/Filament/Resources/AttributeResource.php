@@ -49,8 +49,19 @@ class AttributeResource extends Resource {
 	public static function table (Table $table): Table {
 		return $table
 			->columns([
-				          Tables\Columns\TextColumn::make('name'),
-				          Tables\Columns\BooleanColumn::make('is_active'),
+				          Tables\Columns\TextColumn::make('name')
+					          ->label(__('general.attributes.fields.name'))
+					          ->searchable()
+					          ->sortable(),
+				
+				          Tables\Columns\BadgeColumn::make('frontend_type')
+					          ->label(__('general.attributes.fields.front_end_type'))
+					          ->enum(Attribute::FRONT_END_TYPES),
+				
+				          Tables\Columns\BooleanColumn::make('is_active')
+					          ->label(__('general.attributes.fields.is_active'))
+					          ->searchable()
+					          ->sortable(),
 			          ])
 			->filters([
 				          //

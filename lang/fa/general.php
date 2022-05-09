@@ -124,7 +124,7 @@ return [
 		'title' => 'مقدار ویژگی',
 		'title_plural' => 'مقادیر ویژگی',
 		'fields' => [
-			'name' => 'نام',
+			'name' => 'قیمت',
 			'attribute_id' => 'ویژگی',
 			'is_active' => 'فعال',
 		],
