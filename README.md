@@ -1,5 +1,5 @@
-# HSO
-HSO project for freelancer
+# Lelaam.af
+
 ## Installation
 
 1. Install dependencies
