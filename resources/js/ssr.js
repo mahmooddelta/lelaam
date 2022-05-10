@@ -1,6 +1,6 @@
-import { createSSRApp, h } from 'vue';
-import { renderToString } from '@vue/server-renderer';
-import { createInertiaApp } from '@inertiajs/inertia-vue3';
+import {createSSRApp, h} from 'vue';
+import {renderToString} from '@vue/server-renderer';
+import {createInertiaApp, Head, Link} from '@inertiajs/inertia-vue3';
 import createServer from '@inertiajs/server';
 import route from 'ziggy';
 
@@ -12,9 +12,11 @@ createServer((page) =>
         render: renderToString,
         title: (title) => `${title} - ${appName}`,
         resolve: (name) => require(`./Pages/${name}.vue`),
-        setup({ app, props, plugin }) {
-            return createSSRApp({ render: () => h(app, props) })
+        setup({app, props, plugin}) {
+            return createSSRApp({render: () => h(app, props)})
                 .use(plugin)
+                .component('Head', Head)
+                .component('Link', Link)
                 .mixin({
                     methods: {
                         route: (name, params, absolute) => {
