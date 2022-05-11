@@ -32,6 +32,10 @@ return [
 			'visible' => 'فعال',
 			'not_visible' => 'غیر فعال',
 		],
+		'relations' => [
+			'children' => 'زیردسته ها',
+			'child' => 'زیردسته',
+		],
 	],
 	'countries' => [
 		'title' => 'کشور',

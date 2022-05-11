@@ -6,6 +6,7 @@ use App\Filament\Resources\CategoryResource\Pages\CreateCategory;
 use App\Filament\Resources\CategoryResource\Pages\EditCategory;
 use App\Filament\Resources\CategoryResource\Pages\ListCategories;
 use App\Filament\Resources\CategoryResource\RelationManagers\AttributesRelationManager;
+use App\Filament\Resources\CategoryResource\RelationManagers\ChildrenRelationManager;
 use App\Models\Category;
 use Filament\Forms\Components\BelongsToSelect;
 use Filament\Forms\Components\Card;
@@ -22,6 +23,7 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
+use Livewire\Component;
 use RalphJSmit\Filament\SEO\SEO;
 use function __;
 
@@ -99,6 +101,7 @@ class CategoryResource extends Resource {
 								                  ->label(__('general.updated_at'))
 								                  ->content(fn (?Category $record): string => $record ? $record->updated_at->diffForHumans() : '-'),
 						                  ])
+						         ->visible(fn (Component $livewire): bool => !$livewire instanceof ChildrenRelationManager)
 						         ->columns(1),
 					         $layout::make()
 						         ->schema([
@@ -144,12 +147,12 @@ class CategoryResource extends Resource {
 					          ->sortable()
 					          ->default(__('general.categories.placeholders.no_parent'))
 					          ->toggleable(),
-				          Tables\Columns\TextColumn::make('children.count')
+				          Tables\Columns\TextColumn::make('children_count')
 					          ->counts('children')
 					          ->label(__('general.categories.placeholders.num_children'))
 					          ->sortable()
-					          ->default(0)
-					          ->toggleable(),
+					          ->toggleable()
+					          ->visible(fn (Component $livewire): bool => !$livewire instanceof ChildrenRelationManager),
 				          Tables\Columns\BooleanColumn::make('is_visible')
 					          ->label(__('general.categories.fields.is_visible'))
 					          ->sortable()
@@ -158,6 +161,7 @@ class CategoryResource extends Resource {
 					          ->label(__('general.updated_at'))
 					          ->date()
 					          ->sortable()
+					          ->formatStateUsing(fn (?Category $record): ?string => $record?->updated_at->diffForHumans())
 					          ->toggleable(),
 			          ])
 			->filters([
@@ -180,6 +184,7 @@ class CategoryResource extends Resource {
 	
 	public static function getRelations (): array {
 		return [
+			ChildrenRelationManager::class,
 			AttributesRelationManager::class,
 		];
 	}
