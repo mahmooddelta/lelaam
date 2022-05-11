@@ -23,6 +23,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use RalphJSmit\Filament\SEO\SEO;
 use function __;
@@ -56,12 +57,14 @@ class PostResource extends Resource {
 									                           Forms\Components\TextInput::make('title')
 										                           ->label(__('general.posts.fields.title'))
 										                           ->required()
-										                           ->maxLength(255),
-									                           Forms\Components\TextInput::make('phone_number')
-										                           ->tel()
+										                           ->reactive()
+										                           ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::persian_slug($state))),
+									                           TextInput::make('slug')
+										                           ->label(__('general.categories.fields.slug'))
+										                           ->disabled()
 										                           ->required()
-										                           ->label(__('general.posts.fields.phone_number'))
-										                           ->maxLength(255),
+										                           ->unique(Post::class, 'slug', fn ($record) => $record),
+									
 									                           Forms\Components\MarkdownEditor::make('desc')
 										                           ->toolbarButtons([
 											                                            'blockquote',
@@ -109,22 +112,22 @@ class PostResource extends Resource {
 																                           ->label($attribute->name)
 																                           ->required();
 														                           } elseif ( $attribute->frontend_type === 'number' ) {
-															                           $inputs[] = TextInput::make('attributes.' . $attribute->name)
+															                           $inputs[] = TextInput::make('attributes.' . $attribute->id)
 																                           ->label($attribute->name)
 																                           ->numeric()
 																                           ->required();
 														                           } elseif ( $attribute->frontend_type === 'checkbox' ) {
-															                           $inputs[] = Checkbox::make('attributes.' . $attribute->name)
+															                           $inputs[] = Checkbox::make('attributes.' . $attribute->id)
 																                           ->label($attribute->name)
 																                           ->inline()
 																                           ->required();
 														                           } elseif ( $attribute->frontend_type === 'radio' ) {
-															                           $inputs[] = Radio::make('attributes.' . $attribute->name)
+															                           $inputs[] = Radio::make('attributes.' . $attribute->id)
 																                           ->label($attribute->name)
 																                           ->options($attribute->values)
 																                           ->required();
 														                           } elseif ( $attribute->frontend_type === 'color' ) {
-															                           $inputs[] = ColorPicker::make('attributes.' . $attribute->name)
+															                           $inputs[] = ColorPicker::make('attributes.' . $attribute->id)
 																                           ->label($attribute->name)
 																                           ->required();
 														                           } elseif ( $attribute->frontend_type === 'select' ) {
@@ -201,7 +204,10 @@ class PostResource extends Resource {
 								                  ->relationship('currency', 'name')
 								                  ->exists('currencies', 'id')
 								                  ->required(),
-							
+							                  Forms\Components\TextInput::make('phone_number')
+								                  ->tel()
+								                  ->required()
+								                  ->label(__('general.posts.fields.phone_number')),
 							                  Toggle::make('is_published')
 								                  ->label(__('general.posts.fields.is_published'))
 								                  ->default(true),

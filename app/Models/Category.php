@@ -7,15 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Pishran\LaravelPersianSlug\HasPersianSlug;
 use RalphJSmit\Laravel\SEO\Support\HasSEO;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Sluggable\SlugOptions;
 
 class Category extends Model implements HasMedia {
 	
 	use HasFactory;
 	use InteractsWithMedia;
 	use HasSEO;
+	use HasPersianSlug;
 	
 	/**
 	 * @var array<int, string>
@@ -45,5 +48,11 @@ class Category extends Model implements HasMedia {
 	
 	public function attributes (): BelongsToMany {
 		return $this->belongsToMany(Attribute::class);
+	}
+	
+	public function getSlugOptions (): SlugOptions {
+		return SlugOptions::create()
+			->generateSlugsFrom('name')
+			->saveSlugsTo('slug');
 	}
 }

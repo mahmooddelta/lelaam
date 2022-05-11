@@ -60,7 +60,7 @@ class CategoryResource extends Resource {
 										                           ->label(__('general.categories.fields.name'))
 										                           ->required()
 										                           ->reactive()
-										                           ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+										                           ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::persian_slug($state))),
 									
 									                           TextInput::make('slug')
 										                           ->label(__('general.categories.fields.slug'))
@@ -71,7 +71,7 @@ class CategoryResource extends Resource {
 							
 							                  BelongsToSelect::make('parent_id')
 								                  ->label(__('general.categories.fields.parent_id'))
-								                  ->relationship('parent', 'name', fn (Builder $query) => $query->where('parent_id', null))
+								                  ->relationship('parent', 'name', fn (Builder $query) => $query->whereNull('parent_id'))
 								                  ->searchable()
 								                  ->placeholder('Select parent category'),
 							
@@ -117,7 +117,6 @@ class CategoryResource extends Resource {
 	
 	public static function getEloquentQuery (): Builder {
 		return Category::query()
-			->whereNull('parent_id')
 			->with('children');
 	}
 	
@@ -184,8 +183,8 @@ class CategoryResource extends Resource {
 	
 	public static function getRelations (): array {
 		return [
-			ChildrenRelationManager::class,
 			AttributesRelationManager::class,
+			ChildrenRelationManager::class,
 		];
 	}
 	
