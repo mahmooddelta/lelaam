@@ -4,35 +4,53 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use function now;
 
-class UsersTableSeeder extends Seeder {
-	
-	/**
-	 * Auto generated seed file
-	 *
-	 * @return void
-	 */
-	public function run () {
-		
-		
-		\DB::table('users')
-			->delete();
-		
-		\DB::table('users')
-			->insert([
-				         0 =>
-					         [
-						         'id' => 1,
-						         'name' => 'Ali',
-						         'email' => 'admin@leelam.af',
-						         'email_verified_at' => NULL,
-						         'password' => Hash::make('superDoper'),
-						         'remember_token' => NULL,
-						         'created_at' => '2022-05-07 07:01:13',
-						         'updated_at' => '2022-05-07 07:01:13',
-					         ],
-			         ]);
-		
-		
-	}
+class UsersTableSeeder extends Seeder
+{
+
+    /**
+     * Auto generated seed file
+     *
+     * @return void
+     */
+    public function run()
+    {
+        \DB::table('users')->delete();
+
+        \DB::table('users')->insert([
+                                        0 =>
+                                            [
+                                                'id' => 1,
+                                                'name' => 'Ali',
+                                                'email' => 'admin@leelam.af',
+                                                'email_verified_at' => now()->toDateTimeString(),
+                                                'password' => Hash::make('superDoper'),
+                                                'two_factor_secret' => null,
+                                                'two_factor_recovery_codes' => null,
+                                                'two_factor_confirmed_at' => null,
+                                                'remember_token' => null,
+                                                'current_team_id' => null,
+                                                'profile_photo_path' => null,
+                                                'created_at' => now()->toDateTimeString(),
+                                                'updated_at' => now()->toDateTimeString(),
+                                            ],
+                                        1 =>
+                                            [
+                                                'id' => 2,
+                                                'name' => 'Shaheen',
+                                                'email' => 'shaheen@leelam.af',
+                                                'email_verified_at' => now()->toDateTimeString(),
+                                                'password' => Hash::make('superDoper'),
+                                                'two_factor_secret' => null,
+                                                'two_factor_recovery_codes' => null,
+                                                'two_factor_confirmed_at' => null,
+                                                'remember_token' => null,
+                                                'current_team_id' => null,
+                                                'profile_photo_path' => null,
+                                                'created_at' => now()->toDateTimeString(),
+                                                'updated_at' => now()->toDateTimeString(),
+                                            ],
+                                    ]);
+    }
 }
