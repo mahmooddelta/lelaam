@@ -7,22 +7,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class AttributeValue extends Model {
-	
+
 	protected $fillable = [
 		'name',
 		'attribute_id',
 		'is_active',
 	];
-	
+
 	public function attribute (): BelongsTo {
 		return $this->belongsTo(Attribute::class);
 	}
-	
+
 	public function scopeIsActive ($query) {
 		return $query->whereIsActive(true);
 	}
-	
-	public function posts (): BelongsToMany {
-		return $this->belongsToMany(Post::class);
+
+	public function ads (): BelongsToMany {
+		return $this->belongsToMany(Ad::class);
 	}
 }

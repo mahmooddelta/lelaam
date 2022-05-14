@@ -31,12 +31,12 @@ Route::get('/', function () {
 })->name('home');
 Route::get('ads', function () {
     return Inertia::render('Ads', [
-        'ads' => \App\Models\Post::paginate(40),
+        //'ads' => \App\Models\Ad::paginate(40),
     ]);
 })->name('ads');
 Route::get('ads/{slug}', function () {
     return Inertia::render('Ads', [
-        'ads' => \App\Models\Post::paginate(40),
+        //'ads' => \App\Models\Post::paginate(40),
     ]);
 })->name('ads.show');
 Route::get('category', function () {
