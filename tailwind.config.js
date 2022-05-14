@@ -28,23 +28,25 @@ module.exports = {
     daisyui: {
         themes: [
             {
-
-                dracula: {
-                    ...require("daisyui/src/colors/themes")["[data-theme=dracula]"],
+                dark: {
+                    ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
                     primary: "#EE3E43",
                     secondary: "#F3F4F6",
                     accent: "#8b5cf6",
-                    info: "#3ABFF8",
+                    info: "#fecdd3",
                     success: "#22BE00",
                     warning: "#FBBD23",
                     error: "#F87272",
+                    neutral: "#414558",
+                    "base-100": "#282a36",
+                    "base-content": "#f8f8f2",
                 },
-                pastel: {
-                    ...require("daisyui/src/colors/themes")["[data-theme=pastel]"],
+                light: {
+                    ...require("daisyui/src/colors/themes")["[data-theme=autumn]"],
                     primary: "#EE3E43",
-                    secondary: "#F3F4F6",
+                    secondary: "#fecdd3",
                     accent: "#8b5cf6",
-                    info: "#3ABFF8",
+                    info: "#fda4af",
                     success: "#22BE00",
                     warning: "#FBBD23",
                     error: "#F87272",
