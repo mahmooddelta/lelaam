@@ -31,6 +31,8 @@ return [
 		'filters' => [
 			'visible' => 'فعال',
 			'not_visible' => 'غیر فعال',
+			'parent' => 'دسته بندی های اصلی',
+			'children' => 'زیردسته ها'
 		],
 		'relations' => [
 			'children' => 'زیردسته ها',
