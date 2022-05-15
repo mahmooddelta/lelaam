@@ -13,46 +13,56 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Sluggable\SlugOptions;
 
-class Category extends Model implements HasMedia {
-	
-	use HasFactory;
-	use InteractsWithMedia;
-	use HasSEO;
-	use HasPersianSlug;
-	
-	/**
-	 * @var array<int, string>
-	 */
-	protected $fillable = [
-		'name',
-		'slug',
-		'description',
-		'position',
-		'is_visible',
-	];
-	
-	/**
-	 * @var array<string, string>
-	 */
-	protected $casts = [
-		'is_visible' => 'boolean',
-	];
-	
-	public function children (): HasMany {
-		return $this->hasMany(__CLASS__, 'parent_id');
-	}
-	
-	public function parent (): BelongsTo {
-		return $this->belongsTo(__CLASS__, 'parent_id');
-	}
-	
-	public function attributes (): BelongsToMany {
-		return $this->belongsToMany(Attribute::class);
-	}
-	
-	public function getSlugOptions (): SlugOptions {
-		return SlugOptions::create()
-			->generateSlugsFrom('name')
-			->saveSlugsTo('slug');
-	}
+class Category extends Model implements HasMedia
+{
+
+    use HasFactory;
+    use InteractsWithMedia;
+    use HasSEO;
+    use HasPersianSlug;
+
+    /**
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'position',
+        'is_visible',
+    ];
+
+    /**
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_visible' => 'boolean',
+    ];
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(__CLASS__, 'parent_id');
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(__CLASS__, 'parent_id');
+    }
+
+    public function attributes(): BelongsToMany
+    {
+        return $this->belongsToMany(Attribute::class);
+    }
+
+    public function ads(): HasMany
+    {
+        return $this->hasMany(Ad::class);
+    }
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
+    }
 }
