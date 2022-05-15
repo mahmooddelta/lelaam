@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Resources\AdResource;
+use App\Models\Ad;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -20,6 +22,7 @@ Route::get('/', function () {
         'categories' => Category::query()->select(['id', 'name', 'slug'])
             ->whereHas('children')
             ->with(['children' => fn($query) => $query->select(['id', 'name', 'slug', 'parent_id'])])
+            ->withCount('ads')
             ->latest()
             ->get()
             ->map(function ($category) {
@@ -27,6 +30,11 @@ Route::get('/', function () {
 
                 return $category;
             }),
+        'ads' => AdResource::collection(Ad::query()->published()
+                                            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at'])
+                                            ->latest()
+                                            ->take(40)
+                                            ->get()),
     ]);
 })->name('home');
 Route::get('ads', function () {
