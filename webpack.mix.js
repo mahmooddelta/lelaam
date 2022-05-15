@@ -20,6 +20,13 @@ mix.js('resources/js/app.js', 'public/js')
     ])
     .alias({
         '@': 'resources/js',
+    })
+    .browserSync({
+        proxy: 'leelam.test',
+        https: {
+            key: "C:/laragon/etc/ssl/laragon.key",
+            cert: "C:/laragon/etc/ssl/laragon.crt"
+        }
     });
 
 if (mix.inProduction()) {

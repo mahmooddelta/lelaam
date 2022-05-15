@@ -15,4 +15,11 @@ mix.js('resources/js/ssr.js', 'public/js')
     .webpackConfig({
         target: 'node',
         externals: [webpackNodeExternals()],
+    })
+    .browserSync({
+        proxy: 'leelam.test',
+        https: {
+            key: "C:/laragon/etc/ssl/laragon.key",
+            cert: "C:/laragon/etc/ssl/laragon.crt"
+        }
     });
