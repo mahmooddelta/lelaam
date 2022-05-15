@@ -21,5 +21,6 @@ mix.js('resources/js/ssr.js', 'public/js')
         https: {
             key: "C:/laragon/etc/ssl/laragon.key",
             cert: "C:/laragon/etc/ssl/laragon.crt"
-        }
+        },
+        open: false,
     });

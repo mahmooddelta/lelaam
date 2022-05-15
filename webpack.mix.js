@@ -26,7 +26,8 @@ mix.js('resources/js/app.js', 'public/js')
         https: {
             key: "C:/laragon/etc/ssl/laragon.key",
             cert: "C:/laragon/etc/ssl/laragon.crt"
-        }
+        },
+        open: false,
     });
 
 if (mix.inProduction()) {
