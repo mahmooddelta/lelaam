@@ -8,6 +8,8 @@
 
 @import 'tippy.js/dist/tippy.css';
 @import 'tippy.js/themes/light.css';
+@import "vue-select/dist/vue-select.css";
+@import '../../public/custom/css/custom.css';
 
 @layer base {
     html {

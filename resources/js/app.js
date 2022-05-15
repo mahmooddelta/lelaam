@@ -1,3 +1,5 @@
+import VueSelect from "vue-select";
+
 require('./bootstrap');
 
 import {createApp, h} from 'vue';
@@ -19,6 +21,7 @@ createInertiaApp({
             .use(plugin)
             .component('Head', Head)
             .component('Link', Link)
+            .component('v-select', VueSelect)
             .mixin({methods: {route}})
             .mount(el);
     },
