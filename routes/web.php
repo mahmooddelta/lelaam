@@ -3,6 +3,8 @@
 use App\Http\Resources\AdResource;
 use App\Models\Ad;
 use App\Models\Category;
+use App\Models\District;
+use App\Models\State;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -39,7 +41,16 @@ Route::get('/', function () {
 })->name('home');
 Route::get('ads', function () {
     return Inertia::render('Ads', [
-        //'ads' => \App\Models\Ad::paginate(40),
+        'ads' => AdResource::collection(Ad::query()->published()
+                                            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at'])
+                                            ->latest()
+                                            ->take(40)
+                                            ->get()),
+        'categories' => Category::select(['name', 'slug'])->get(),
+        'states' => State::select(['id', 'name'])->get(),
+        'districts' => District::select(['id', 'name', 'state_id'])
+            ->when(request()->has('state'), fn($query) => $query->where('state_id', request('state')))
+            ->get(),
     ]);
 })->name('ads');
 Route::get('ads/{slug}', function () {
