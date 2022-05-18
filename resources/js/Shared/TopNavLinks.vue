@@ -9,7 +9,7 @@
                 <Link :href="route('ads')">آگهی ها</Link>
             </li>
             <li>
-                <Link :href="route('category')">دسته بندی ها</Link>
+                <Link :href="route('categories')">دسته بندی ها</Link>
             </li>
         </ul>
         <ul class="menu menu-horizontal">
