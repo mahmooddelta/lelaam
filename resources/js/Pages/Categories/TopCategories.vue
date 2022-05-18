@@ -23,7 +23,7 @@ defineProps({
                     </div>
                 </section>
                 <div class="card-actions justify-end">
-                    <Link :href="route('ads.show', category.slug)" class="btn btn-primary btn-sm">دیدن تمام آگهی ها</Link>
+                    <Link :href="route('ads', category.slug)" class="btn btn-primary btn-sm">دیدن تمام آگهی ها</Link>
                 </div>
             </div>
         </div>
