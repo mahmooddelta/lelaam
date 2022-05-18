@@ -68,12 +68,12 @@ class Ad extends Model implements HasMedia
 
     public function attributes(): BelongsToMany
     {
-        return $this->belongsToMany(Attribute::class);
+        return $this->belongsToMany(Attribute::class)->withPivot('value');
     }
 
     public function values(): BelongsToMany
     {
-        return $this->belongsToMany(AttributeValue::class);
+        return $this->belongsToMany(AttributeValue::class)->withPivot(['attribute_id']);
     }
 
     public function user(): BelongsTo
