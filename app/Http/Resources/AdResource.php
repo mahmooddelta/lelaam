@@ -29,13 +29,15 @@ class AdResource extends JsonResource
                 ?->getUrl('thumb') : secure_asset('images/No_image_preview.png'),
             'created_at' => $this->created_at->diffForHumans(),
 
-            'attributes' => $this->whenLoaded('attributes', fn() => $this->attributes),
-            'media' => $this->whenLoaded('media', fn() => $this->media),
-            'values' => $this->whenLoaded('values', fn() => $this->values),
+            'attributes' => $this->whenLoaded('attributes', fn() => AttributeResource::collection($this->attributes)),
+            'values' => $this->whenLoaded('values', fn() => AttributeValueResource::collection($this->values)),
+
+            'media' => $this->whenLoaded('media', fn() => MediaResource::collection($this->media)),
 
             'user' => $this->when('user', $this?->user?->name ?? 'مهمان'),
-            'category' => $this->when('category', $this?->category?->name ?? 'Category'),
+            'category' => $this->whenLoaded('category', $this->category),
             'district' => $this->when('district', $this?->district?->name ?? 'District'),
+            'state' => $this?->district?->state?->name ?? 'State',
         ];
     }
 }
