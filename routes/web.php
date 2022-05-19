@@ -19,33 +19,38 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Index', [
-        'categories' => Category::query()->select(['id', 'name', 'slug'])
-            ->whereHas('children')
-            ->with(['children' => fn($query) => $query->select(['id', 'name', 'slug', 'parent_id'])])
-            ->withCount('ads')
-            ->latest()
-            ->get()
-            ->map(function ($category) {
-                $category->setRelation('children', $category->children->take(5));
+Route::inertia('/', 'Index', [
+    'categories' => Category::query()->select(['id', 'name', 'slug'])
+        ->whereHas('children')
+        ->with(['children' => fn($query) => $query->select(['id', 'name', 'slug', 'parent_id'])])
+        ->withCount('ads')
+        ->latest()
+        ->get()
+        ->map(function ($category) {
+            $category->setRelation('children', $category->children->take(5));
 
-                return $category;
-            }),
-        'ads' => AdResource::collection(Ad::query()->published()
-                                            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at'])
-                                            ->latest()
-                                            ->take(40)
-                                            ->get()),
-    ]);
-})->name('home');
-Route::get('ads', function () {
+            return $category;
+        }),
+    'ads' => AdResource::collection(Ad::query()->published()
+                                        ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at'])
+                                        ->latest()
+                                        ->take(40)
+                                        ->get()),
+])->name('home');
+Route::get('ads/{category:slug?}', function (?Category $category) {
+    if ($category->exists) {
+        $ads = AdResource::collection($category->load('ads:title,slug,price,district_id,category_id,created_at')
+                                          ->ads);
+    } else {
+        $ads = AdResource::collection(Ad::query()->published()
+                                          ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at'])
+                                          ->latest()
+                                          ->take(40)
+                                          ->get());
+    }
+
     return Inertia::render('Ads', [
-        'ads' => AdResource::collection(Ad::query()->published()
-                                            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at'])
-                                            ->latest()
-                                            ->take(40)
-                                            ->get()),
+        'ads' => $ads,
         'categories' => Category::select(['name', 'slug'])->get(),
         'states' => State::select(['id', 'name'])->get(),
         'districts' => District::select(['id', 'name', 'state_id'])
@@ -53,16 +58,19 @@ Route::get('ads', function () {
             ->get(),
     ]);
 })->name('ads');
-Route::get('ads/{slug}', function () {
-    return Inertia::render('Ads', [
-        //'ads' => \App\Models\Post::paginate(40),
+Route::get('ad/{ad:slug}', function (Ad $ad) {
+    $ad->load(['category:name,slug,id', 'user', 'media', 'attributes', 'values.attribute']);
+
+    return Inertia::render('Ad', [
+        'ad' => new AdResource($ad),
     ]);
-})->name('ads.show');
-Route::get('category', function () {
-    return Inertia::render('Categories', [
-        'ads' => \App\Models\Category::paginate(16),
-    ]);
-})->name('category');
+})->name('ad.show');
+Route::inertia('categories', 'Categories', [
+    'categories' => Category::query()->select(['id', 'name', 'slug'])
+        ->withCount(['ads'])
+        ->get(),
+])->name('categories');
+
 Route::get('chat', function () {
     return Inertia::render('Chat', [
 
