@@ -15,13 +15,13 @@ class AdController extends Controller
     {
         if ($category->exists) {
             $ads = AdResource::collection($category->load(['ads:title,slug,price,district_id,category_id,created_at,is_published,id', 'ads.media'])
-                                              ->ads->where('is_published', true));
+                                              ->ads->where('is_published', true)->paginate(24));
         } else {
             $ads = AdResource::collection(Ad::query()->published()
                                               ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id'])
                                               ->latest()
                                               ->take(40)
-                                              ->get());
+                                              ->paginate(24));
         }
 
         return Inertia::render('Ads', [

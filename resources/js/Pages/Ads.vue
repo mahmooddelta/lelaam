@@ -1,7 +1,7 @@
 <script setup>
 
 import Filters from "../Shared/Filters";
-import LatestAds from "./Ad/LatestAds";
+import Ads from "../Shared/Ads";
 
 defineProps({
     categories: Object,
@@ -17,6 +17,6 @@ defineProps({
         <Filters :categories="categories" :states="states" :districts="districts"/>
     </section>
     <section class="w-full text-center my-4">
-        <LatestAds :ads="ads.data"/>
+        <Ads :ads="ads"/>
     </section>
 </template>
