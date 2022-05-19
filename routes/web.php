@@ -32,14 +32,15 @@ Route::inertia('/', 'Index', [
             return $category;
         }),
     'ads' => AdResource::collection(Ad::query()->published()
-                                        ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at'])
+                                        ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id'])
+                                        ->with('media')
                                         ->latest()
                                         ->take(40)
                                         ->get()),
 ])->name('home');
 Route::get('ads/{category:slug?}', function (?Category $category) {
     if ($category->exists) {
-        $ads = AdResource::collection($category->load('ads:title,slug,price,district_id,category_id,created_at')
+        $ads = AdResource::collection($category->load(['ads:title,slug,price,district_id,category_id,created_at', 'ads.media'])
                                           ->ads);
     } else {
         $ads = AdResource::collection(Ad::query()->published()
