@@ -105,4 +105,9 @@ class Ad extends Model implements HasMedia
     {
         return $this->whereIsPublished(true);
     }
+
+    public function scopeIsOwner(): Builder
+    {
+        return $this->whereUserId(auth()->id());
+    }
 }
