@@ -14,11 +14,11 @@ class AdController extends Controller
     public function index(?Category $category)
     {
         if ($category->exists) {
-            $ads = AdResource::collection($category->load(['ads:title,slug,price,district_id,category_id,created_at,is_published', 'ads.media'])
+            $ads = AdResource::collection($category->load(['ads:title,slug,price,district_id,category_id,created_at,is_published,id', 'ads.media'])
                                               ->ads->where('is_published', true));
         } else {
             $ads = AdResource::collection(Ad::query()->published()
-                                              ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at'])
+                                              ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id'])
                                               ->latest()
                                               ->take(40)
                                               ->get());

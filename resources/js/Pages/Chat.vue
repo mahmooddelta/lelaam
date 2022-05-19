@@ -3,5 +3,5 @@
 </script>
 
 <template>
-
+    <Head title="چت"/>
 </template>

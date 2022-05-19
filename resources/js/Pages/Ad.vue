@@ -5,6 +5,7 @@ defineProps({
 </script>
 
 <template>
+    <Head :title="ad.data.title"/>
     <div class="max-w-lg mx-auto overflow-hidden md:max-w-6xl p-6">
         <nav class="w-full flex-row" aria-label="Breadcrumb">
             <ol role="list" class="flex items-center space-x-4">

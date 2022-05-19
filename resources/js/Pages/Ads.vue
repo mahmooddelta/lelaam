@@ -12,6 +12,7 @@ defineProps({
 </script>
 
 <template>
+    <Head title="همه آگهی ها"/>
     <section class="w-full">
         <Filters :categories="categories" :states="states" :districts="districts"/>
     </section>
