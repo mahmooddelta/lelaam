@@ -11,22 +11,26 @@ use Filament\Forms;
 use Filament\Forms\Components\BelongsToSelect;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use RalphJSmit\Filament\SEO\SEO;
 use function __;
+use function count;
 use function is_null;
 
 class AdResource extends Resource
@@ -58,7 +62,7 @@ class AdResource extends Resource
                                  ->schema([
                                               Grid::make()
                                                   ->schema([
-                                                               Forms\Components\TextInput::make('title')
+                                                               TextInput::make('title')
                                                                    ->label(__('general.ads.fields.title'))
                                                                    ->required()
                                                                    ->reactive()
@@ -69,7 +73,7 @@ class AdResource extends Resource
                                                                    ->required()
                                                                    ->unique(Ad::class, 'slug', fn($record) => $record),
 
-                                                               Forms\Components\RichEditor::make('desc')
+                                                               RichEditor::make('desc')
                                                                    ->toolbarButtons([
                                                                                         'bold',
                                                                                         'bulletList',
@@ -82,7 +86,7 @@ class AdResource extends Resource
                                                                                         'undo',
                                                                                     ])
                                                                    ->label(__('general.ads.fields.desc'))
-                                                                   ->maxLength(2000)
+                                                                   ->required()
                                                                    ->columnSpan(2),
                                                            ]),
                                           ])
@@ -95,56 +99,29 @@ class AdResource extends Resource
                                                   ->schema([
                                                                BelongsToSelect::make('category_id')
                                                                    ->label(__('general.ads.fields.category_id'))
+                                                                   ->required()
                                                                    ->relationship('category', 'name')
+                                                                   ->exists('categories', 'id')
                                                                    ->columnSpan(2)
                                                                    ->searchable()
                                                                    ->preload()
                                                                    ->reactive(),
-                                                               Forms\Components\Section::make(__('general.ads.placeholders.attribute_values_section'))
+                                                               Section::make('attributes')
+                                                                   ->heading(__('general.ads.placeholders.attribute_values_section'))
                                                                    ->collapsible()
                                                                    ->columns(2)
                                                                    ->schema(function (callable $get): array {
-                                                                       $inputs = [];
                                                                        if (! is_null($get('category_id'))) {
-                                                                           Category::with('attributes')
-                                                                               ->find($get('category_id'))->attributes->map(function (Attribute $attribute) use (&$inputs) {
-                                                                                   if ($attribute->frontend_type === 'text') {
-                                                                                       $inputs[] = TextInput::make('attributes.'.$attribute->id)
-                                                                                           ->label($attribute->name)
-                                                                                           ->required();
-                                                                                   } elseif ($attribute->frontend_type === 'number') {
-                                                                                       $inputs[] = TextInput::make('attributes.'.$attribute->id)
-                                                                                           ->label($attribute->name)
-                                                                                           ->numeric()
-                                                                                           ->required();
-                                                                                   } elseif ($attribute->frontend_type === 'checkbox') {
-                                                                                       $inputs[] = Checkbox::make('attributes.'.$attribute->id)
-                                                                                           ->label($attribute->name)
-                                                                                           ->inline()
-                                                                                           ->required();
-                                                                                   } elseif ($attribute->frontend_type === 'radio') {
-                                                                                       $inputs[] = Radio::make('attributes.'.$attribute->id)
-                                                                                           ->label($attribute->name)
-                                                                                           ->options($attribute->values)
-                                                                                           ->required();
-                                                                                   } elseif ($attribute->frontend_type === 'color') {
-                                                                                       $inputs[] = ColorPicker::make('attributes.'.$attribute->id)
-                                                                                           ->label($attribute->name)
-                                                                                           ->required();
-                                                                                   } elseif ($attribute->frontend_type === 'select') {
-                                                                                       $inputs [] = Select::make('values.'.$attribute->id)
-                                                                                           ->options($attribute->values()
-                                                                                                         ->pluck('name', 'id', 'attribute_id')
-                                                                                                         ->toArray() ?? [])
-                                                                                           ->label($attribute->name)
-                                                                                           ->required();
-                                                                                   }
-                                                                               });
+                                                                           return static::generateInputs(Category::with('attributes')
+                                                                                                             ->find($get('category_id'))->attributes);
                                                                        }
 
-                                                                       return $inputs;
+                                                                       return [];
                                                                    })
-                                                                   ->visible(fn(callable $get, Component $livewire) => $livewire instanceof Pages\CreateAd && ! is_null($get('category_id'))),
+                                                                   ->visible(fn(callable $get, Component $livewire) => $livewire instanceof Pages\CreateAd
+                                                                       && ! is_null($get('category_id'))
+                                                                       && count(Category::with('attributes')
+                                                                                    ->find($get('category_id'))->attributes) > 0),
                                                            ]),
                                           ])
                                  ->columns(1),
@@ -152,7 +129,7 @@ class AdResource extends Resource
                                  ->schema([
                                               Grid::make()
                                                   ->schema([
-                                                               Forms\Components\TextInput::make('address')
+                                                               TextInput::make('address')
                                                                    ->label(__('general.ads.fields.address'))
                                                                    ->required()
                                                                    ->maxLength(255),
@@ -169,7 +146,7 @@ class AdResource extends Resource
                                  ->schema([
                                               Grid::make()
                                                   ->schema([
-                                                               Forms\Components\SpatieMediaLibraryFileUpload::make('media')
+                                                               SpatieMediaLibraryFileUpload::make('media')
                                                                    ->label(__('general.ads.fields.media'))
                                                                    ->collection('ads')
                                                                    ->enableReordering()
@@ -196,7 +173,7 @@ class AdResource extends Resource
                                  ->columns(1),
                              $layout::make()
                                  ->schema([
-                                              Forms\Components\TextInput::make('price')
+                                              TextInput::make('price')
                                                   ->label(__('general.ads.fields.price'))
                                                   ->numeric()
                                                   ->required(),
@@ -205,7 +182,7 @@ class AdResource extends Resource
                                                   ->relationship('currency', 'name')
                                                   ->exists('currencies', 'id')
                                                   ->required(),
-                                              Forms\Components\TextInput::make('phone_number')
+                                              TextInput::make('phone_number')
                                                   ->tel()
                                                   ->required()
                                                   ->label(__('general.ads.fields.phone_number')),
@@ -224,6 +201,37 @@ class AdResource extends Resource
                          ])
                 ->columnSpan(1),
         ];
+    }
+
+    private static function generateInputs(Collection $collection): array
+    {
+        return $collection->map(function (Attribute $attribute) use (&$inputs) {
+            $inputs [] = match ($attribute->frontend_type) {
+                'text' => TextInput::make('attributes.'.$attribute->id)
+                    ->label($attribute->name)
+                    ->required(),
+                'number' => TextInput::make('attributes.'.$attribute->id)
+                    ->label($attribute->name)
+                    ->numeric()
+                    ->required(),
+                'checkbox' => Checkbox::make('attributes.'.$attribute->id)
+                    ->label($attribute->name)
+                    ->inline()
+                    ->required(),
+                'radio' => Radio::make('attributes.'.$attribute->id)
+                    ->label($attribute->name)
+                    ->options($attribute->values)
+                    ->required(),
+                'select' => Select::make('values.'.$attribute->id)
+                    ->options($attribute->values()
+                                  ->pluck('name', 'id', 'attribute_id')
+                                  ->toArray() ?? [])
+                    ->label($attribute->name)
+                    ->required()
+            };
+
+            return $inputs;
+        })->flatten()->toArray();
     }
 
     public static function table(Table $table): Table
@@ -280,7 +288,8 @@ class AdResource extends Resource
                       ]);
     }
 
-    public static function getRelations(): array
+    public
+    static function getRelations(): array
     {
         return [
             RelationManagers\AttributesRelationManager::class,
@@ -288,22 +297,26 @@ class AdResource extends Resource
         ];
     }
 
-    public static function getLabel(): string
+    public
+    static function getLabel(): string
     {
         return __('general.ads.title');
     }
 
-    public static function getPluralLabel(): string
+    public
+    static function getPluralLabel(): string
     {
         return __('general.ads.title_plural');
     }
 
-    protected static function getNavigationGroup(): ?string
+    protected
+    static function getNavigationGroup(): ?string
     {
         return __('nav.leelam');
     }
 
-    public static function getPages(): array
+    public
+    static function getPages(): array
     {
         return [
             'index' => Pages\ListAds::route('/'),

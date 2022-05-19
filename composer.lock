@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "570a528c7750ca9a118a0f1940a4066b",
+    "content-hash": "601e2379ef29a52db44dbaf8c508ae3d",
     "packages": [
         {
             "name": "3x1io/filament-user",
@@ -1349,16 +1349,16 @@
         },
         {
             "name": "filament/filament",
-            "version": "v2.12.10",
+            "version": "v2.12.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-filament/admin.git",
-                "reference": "adaa3273e7b9cc1875788cc692d1f8ac46b492dd"
+                "reference": "43ec2f7e648ab7cca6d09f3dff5aed799d4ac7f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-filament/admin/zipball/adaa3273e7b9cc1875788cc692d1f8ac46b492dd",
-                "reference": "adaa3273e7b9cc1875788cc692d1f8ac46b492dd",
+                "url": "https://api.github.com/repos/laravel-filament/admin/zipball/43ec2f7e648ab7cca6d09f3dff5aed799d4ac7f1",
+                "reference": "43ec2f7e648ab7cca6d09f3dff5aed799d4ac7f1",
                 "shasum": ""
             },
             "require": {
@@ -1406,20 +1406,20 @@
                 "issues": "https://github.com/laravel-filament/filament/issues",
                 "source": "https://github.com/laravel-filament/filament"
             },
-            "time": "2022-05-15T21:32:36+00:00"
+            "time": "2022-05-12T05:37:39+00:00"
         },
         {
             "name": "filament/forms",
-            "version": "v2.12.10",
+            "version": "v2.12.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-filament/forms.git",
-                "reference": "480fe7fa1a89b0261224320054a9ed2f8e32fa51"
+                "reference": "a4f1cfd961d7c58f1f2c9d84976ac607d5b826b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-filament/forms/zipball/480fe7fa1a89b0261224320054a9ed2f8e32fa51",
-                "reference": "480fe7fa1a89b0261224320054a9ed2f8e32fa51",
+                "url": "https://api.github.com/repos/laravel-filament/forms/zipball/a4f1cfd961d7c58f1f2c9d84976ac607d5b826b2",
+                "reference": "a4f1cfd961d7c58f1f2c9d84976ac607d5b826b2",
                 "shasum": ""
             },
             "require": {
@@ -1463,7 +1463,7 @@
                 "issues": "https://github.com/laravel-filament/filament/issues",
                 "source": "https://github.com/laravel-filament/filament"
             },
-            "time": "2022-05-15T21:32:30+00:00"
+            "time": "2022-05-12T10:57:37+00:00"
         },
         {
             "name": "filament/spatie-laravel-media-library-plugin",
@@ -1504,16 +1504,16 @@
         },
         {
             "name": "filament/support",
-            "version": "v2.12.10",
+            "version": "v2.12.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-filament/support.git",
-                "reference": "6d3c61ee431e43b8cdf4438a874ec8e065d04bc1"
+                "reference": "afde23789bbe6c1791c1bce2aa394d6a9dbe4dd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-filament/support/zipball/6d3c61ee431e43b8cdf4438a874ec8e065d04bc1",
-                "reference": "6d3c61ee431e43b8cdf4438a874ec8e065d04bc1",
+                "url": "https://api.github.com/repos/laravel-filament/support/zipball/afde23789bbe6c1791c1bce2aa394d6a9dbe4dd0",
+                "reference": "afde23789bbe6c1791c1bce2aa394d6a9dbe4dd0",
                 "shasum": ""
             },
             "require": {
@@ -1549,20 +1549,20 @@
                 "issues": "https://github.com/laravel-filament/filament/issues",
                 "source": "https://github.com/laravel-filament/filament"
             },
-            "time": "2022-05-14T06:44:01+00:00"
+            "time": "2022-05-12T10:57:39+00:00"
         },
         {
             "name": "filament/tables",
-            "version": "v2.12.10",
+            "version": "v2.12.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-filament/tables.git",
-                "reference": "3f55721f71ecc494de18ceecff32bf084b456d4c"
+                "reference": "1165767023bc4114a1c8e5ae06eb14ba2fddb676"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-filament/tables/zipball/3f55721f71ecc494de18ceecff32bf084b456d4c",
-                "reference": "3f55721f71ecc494de18ceecff32bf084b456d4c",
+                "url": "https://api.github.com/repos/laravel-filament/tables/zipball/1165767023bc4114a1c8e5ae06eb14ba2fddb676",
+                "reference": "1165767023bc4114a1c8e5ae06eb14ba2fddb676",
                 "shasum": ""
             },
             "require": {
@@ -1603,7 +1603,7 @@
                 "issues": "https://github.com/laravel-filament/filament/issues",
                 "source": "https://github.com/laravel-filament/filament"
             },
-            "time": "2022-05-15T21:32:27+00:00"
+            "time": "2022-05-12T05:37:30+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -3516,29 +3516,31 @@
         },
         {
             "name": "maennchen/zipstream-php",
-            "version": "2.1.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maennchen/ZipStream-PHP.git",
-                "reference": "c4c5803cc1f93df3d2448478ef79394a5981cc58"
+                "reference": "211e9ba1530ea5260b45d90c9ea252f56ec52729"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/c4c5803cc1f93df3d2448478ef79394a5981cc58",
-                "reference": "c4c5803cc1f93df3d2448478ef79394a5981cc58",
+                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/211e9ba1530ea5260b45d90c9ea252f56ec52729",
+                "reference": "211e9ba1530ea5260b45d90c9ea252f56ec52729",
                 "shasum": ""
             },
             "require": {
                 "myclabs/php-enum": "^1.5",
-                "php": ">= 7.1",
+                "php": "^7.4 || ^8.0",
                 "psr/http-message": "^1.0",
                 "symfony/polyfill-mbstring": "^1.0"
             },
             "require-dev": {
                 "ext-zip": "*",
-                "guzzlehttp/guzzle": ">= 6.3",
+                "guzzlehttp/guzzle": "^6.5.3 || ^7.2.0",
                 "mikey179/vfsstream": "^1.6",
-                "phpunit/phpunit": ">= 7.5"
+                "php-coveralls/php-coveralls": "^2.4",
+                "phpunit/phpunit": "^8.5.8 || ^9.4.2",
+                "vimeo/psalm": "^4.1"
             },
             "type": "library",
             "autoload": {
@@ -3575,7 +3577,7 @@
             ],
             "support": {
                 "issues": "https://github.com/maennchen/ZipStream-PHP/issues",
-                "source": "https://github.com/maennchen/ZipStream-PHP/tree/master"
+                "source": "https://github.com/maennchen/ZipStream-PHP/tree/2.2.1"
             },
             "funding": [
                 {
@@ -3583,7 +3585,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2020-05-30T13:11:16+00:00"
+            "time": "2022-05-18T15:52:06+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -8578,16 +8580,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.14.5",
+            "version": "v1.14.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "1da083e30e6b0d646535c0afc2afeffdccb7181d"
+                "reference": "f00f3a8f83e71436d473cda7700ae7b4b68d26cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/1da083e30e6b0d646535c0afc2afeffdccb7181d",
-                "reference": "1da083e30e6b0d646535c0afc2afeffdccb7181d",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/f00f3a8f83e71436d473cda7700ae7b4b68d26cc",
+                "reference": "f00f3a8f83e71436d473cda7700ae7b4b68d26cc",
                 "shasum": ""
             },
             "require": {
@@ -8634,7 +8636,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2022-05-16T18:13:03+00:00"
+            "time": "2022-05-18T15:56:59+00:00"
         },
         {
             "name": "mockery/mockery",
