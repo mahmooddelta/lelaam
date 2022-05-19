@@ -34,11 +34,19 @@ class AdController extends Controller
         ]);
     }
 
-    public function show (Ad $ad) {
+    public function show(Ad $ad)
+    {
         $ad->load(['category:name,slug,id', 'user', 'media', 'attributes', 'values.attribute']);
 
         return Inertia::render('Ad', [
             'ad' => new AdResource($ad),
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('AdCreate', [
+
         ]);
     }
 }
