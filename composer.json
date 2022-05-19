@@ -25,6 +25,7 @@
     "orangehill/iseed": "^3.0",
     "pishran/laravel-persian-slug": "^2.2",
     "ralphjsmit/laravel-filament-seo": "^1.0",
+    "spatie/laravel-collection-macros": "^7.11",
     "spatie/laravel-sluggable": "^3.4",
     "stechstudio/filament-impersonate": "^2.4",
     "tightenco/ziggy": "^1.0"
