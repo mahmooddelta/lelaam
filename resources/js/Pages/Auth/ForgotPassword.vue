@@ -28,8 +28,8 @@ const submit = () => {
             <JetAuthenticationCardLogo />
         </template>
 
-        <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
+        <div class="mb-4 text-sm">
+            رمز عبور تان را فراموش کرده اید؟ مشکلی نیست. فقط ایمیل آدرس خود را وارد کنید تا ما لینک تنظیم دوباره رمز عبور را برای تان بفرسیتم
         </div>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -40,7 +40,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <JetLabel for="email" value="Email" />
+                <JetLabel for="email" value="ایمیل آدرس" />
                 <JetInput
                     id="email"
                     v-model="form.email"
@@ -53,7 +53,7 @@ const submit = () => {
 
             <div class="flex items-center justify-end mt-4">
                 <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
+                    لینک تنظیم دوباره رمز عبور را بفرست
                 </JetButton>
             </div>
         </form>

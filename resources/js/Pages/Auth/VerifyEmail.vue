@@ -26,27 +26,27 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
             <JetAuthenticationCardLogo />
         </template>
 
-        <div class="mb-4 text-sm text-gray-600">
-            Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.
+        <div class="mb-4 text-sm">
+            سپاس از ثبت نام شما در سیستم! قبل از ادامه دادن لطفاً ایمیل آدرس خویش را با کلیک کردن بر روی لینکی که برای شما ایمیل شده است، تایید کنید! اگر ایمیلی دریافت ننموده اید، میتوانید دوباره درخواست کنید.
         </div>
 
         <div v-if="verificationLinkSent" class="mb-4 font-medium text-sm text-green-600">
-            A new verification link has been sent to the email address you provided during registration.
+            یک لینک تایید حساب کاربری به ایمیلی که در حین ثبت نام وارد نموده اید، فرستاده شد.
         </div>
 
         <form @submit.prevent="submit">
             <div class="mt-4 flex items-center justify-between">
                 <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Resend Verification Email
+                    ارسال دوباره لینک فعال سازی حساب کاربری
                 </JetButton>
 
                 <Link
                     :href="route('logout')"
                     method="post"
                     as="button"
-                    class="underline text-sm text-gray-600 hover:text-gray-900"
+                    class="underline text-sm hover:text-primary-500"
                 >
-                    Log Out
+                    خارچ شدن از حساب کاربری
                 </Link>
             </div>
         </form>

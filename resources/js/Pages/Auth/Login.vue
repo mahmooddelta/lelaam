@@ -1,5 +1,5 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
+import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
 import JetButton from '@/Jetstream/Button.vue';
@@ -30,14 +30,14 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Log in" />
+    <Head title="Log in"/>
 
     <JetAuthenticationCard>
         <template #logo>
-            <JetAuthenticationCardLogo />
+            <JetAuthenticationCardLogo/>
         </template>
 
-        <JetValidationErrors class="mb-4" />
+        <JetValidationErrors class="mb-4"/>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
@@ -45,24 +45,24 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <JetLabel for="email" value="Email" />
+                <JetLabel for="email" value="ایمیل آدرس یا شماره تلفن" class="text-primary-500"/>
                 <JetInput
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-2 block w-full"
                     required
                     autofocus
                 />
             </div>
 
             <div class="mt-4">
-                <JetLabel for="password" value="Password" />
+                <JetLabel for="password" value="رمز عبور" class="text-primary-500"/>
                 <JetInput
                     id="password"
                     v-model="form.password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-2 block w-full"
                     required
                     autocomplete="current-password"
                 />
@@ -70,18 +70,18 @@ const submit = () => {
 
             <div class="block mt-4">
                 <label class="flex items-center">
-                    <JetCheckbox v-model:checked="form.remember" name="remember" />
-                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                    <JetCheckbox v-model:checked="form.remember" name="remember"/>
+                    <span class="ml-2 text-sm">مرا به خاطر بسپار</span>
                 </label>
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    Forgot your password?
+                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm hover:text-primary-500">
+                    رمز عبور تان را فراموش کرده اید؟
                 </Link>
 
                 <JetButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
+                    ورود به سیستم
                 </JetButton>
             </div>
         </form>

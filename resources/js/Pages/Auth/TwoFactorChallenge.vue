@@ -45,13 +45,13 @@ const submit = () => {
             <JetAuthenticationCardLogo />
         </template>
 
-        <div class="mb-4 text-sm text-gray-600">
+        <div class="mb-4 text-sm">
             <template v-if="! recovery">
-                Please confirm access to your account by entering the authentication code provided by your authenticator application.
+                لطفاً کلید دسترسی برنامه که توسط برنامه authenticator شما تولید شده، را وارد کنید.
             </template>
 
             <template v-else>
-                Please confirm access to your account by entering one of your emergency recovery codes.
+                لطفاً یکی از کد های بازیابی عاجل خود را برای تایید هویت تان وارد کنید.
             </template>
         </div>
 
@@ -59,7 +59,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div v-if="! recovery">
-                <JetLabel for="code" value="Code" />
+                <JetLabel for="code" value="کد" />
                 <JetInput
                     id="code"
                     ref="codeInput"
@@ -73,7 +73,7 @@ const submit = () => {
             </div>
 
             <div v-else>
-                <JetLabel for="recovery_code" value="Recovery Code" />
+                <JetLabel for="recovery_code" value="کد بازیابی" />
                 <JetInput
                     id="recovery_code"
                     ref="recoveryCodeInput"
@@ -85,18 +85,18 @@ const submit = () => {
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <button type="button" class="text-sm text-gray-600 hover:text-gray-900 underline cursor-pointer" @click.prevent="toggleRecovery">
+                <button type="button" class="text-sm hover:text-primary-500 underline cursor-pointer" @click.prevent="toggleRecovery">
                     <template v-if="! recovery">
-                        Use a recovery code
+                        استفاده از کد بازیابی
                     </template>
 
                     <template v-else>
-                        Use an authentication code
+                        استفاده از کد دسترسی
                     </template>
                 </button>
 
                 <JetButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
+                    ورود به سیستم
                 </JetButton>
             </div>
         </form>

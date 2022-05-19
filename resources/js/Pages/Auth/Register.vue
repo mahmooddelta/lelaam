@@ -11,6 +11,7 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 const form = useForm({
     name: '',
     email: '',
+    phone: '',
     password: '',
     password_confirmation: '',
     terms: false,
@@ -35,7 +36,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <JetLabel for="name" value="Name" />
+                <JetLabel for="name" value="اسم" />
                 <JetInput
                     id="name"
                     v-model="form.name"
@@ -48,7 +49,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <JetLabel for="email" value="Email" />
+                <JetLabel for="email" value="ایمیل آدرس" />
                 <JetInput
                     id="email"
                     v-model="form.email"
@@ -59,7 +60,18 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <JetLabel for="password" value="Password" />
+                <JetLabel for="phone" value="شماره تماس" />
+                <JetInput
+                    id="phone"
+                    v-model="form.phone"
+                    type="phone"
+                    class="mt-1 block w-full"
+                    required
+                />
+            </div>
+
+            <div class="mt-4">
+                <JetLabel for="password" value="رمز عبور" />
                 <JetInput
                     id="password"
                     v-model="form.password"
@@ -71,7 +83,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <JetLabel for="password_confirmation" value="Confirm Password" />
+                <JetLabel for="password_confirmation" value="تایید رمز عبور" />
                 <JetInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
@@ -95,12 +107,12 @@ const submit = () => {
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    Already registered?
+                <Link :href="route('login')" class="underline text-sm hover:text-primary-500">
+                    قبلاً ثبت نام کرده اید؟
                 </Link>
 
                 <JetButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
+                    ثبت نام
                 </JetButton>
             </div>
         </form>
