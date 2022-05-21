@@ -7,25 +7,22 @@ use App\Models\Ad;
 use App\Models\Category;
 use App\Models\District;
 use App\Models\State;
+use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
 
 class AdController extends Controller
 {
     public function index(?Category $category)
     {
-        if ($category->exists) {
-            $ads = AdResource::collection($category->load(['ads:title,slug,price,district_id,category_id,created_at,is_published,id', 'ads.media'])
-                                              ->ads->where('is_published', true)->paginate(24));
-        } else {
-            $ads = AdResource::collection(Ad::query()->published()
-                                              ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id'])
-                                              ->latest()
-                                              ->take(40)
-                                              ->paginate(24));
-        }
+        $ads = Ad::query()
+            ->published()
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id'])
+            ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
+            ->latest()
+            ->paginate(24);
 
         return Inertia::render('Ads', [
-            'ads' => $ads,
+            'ads' => AdResource::collection($ads),
             'categories' => Category::select(['name', 'slug'])->get(),
             'states' => State::select(['id', 'name'])->get(),
             'districts' => District::select(['id', 'name', 'state_id'])

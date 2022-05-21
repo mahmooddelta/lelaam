@@ -1,7 +1,8 @@
 <script setup>
 
 import Filters from "../Shared/Filters";
-import Ads from "../Shared/Ads";
+import Ad from "../Shared/Ad";
+import Pagination from "../Shared/Components/Pagination";
 
 defineProps({
     categories: Object,
@@ -17,6 +18,10 @@ defineProps({
         <Filters :categories="categories" :states="states" :districts="districts"/>
     </section>
     <section class="w-full text-center my-4">
-        <Ads :ads="ads"/>
+        <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-4 gap-4 px-4">
+            <Ad v-for="ad in ads.data" :key="ad.id" :ad="ad"/>
+        </section>
+        <div class="divider"></div>
+        <Pagination :links="ads.meta.links"/>
     </section>
 </template>
