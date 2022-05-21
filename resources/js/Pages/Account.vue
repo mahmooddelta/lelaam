@@ -4,16 +4,24 @@ import Container from "../Shared/Components/Container";
 import Collapse from "../Shared/Components/Collapse";
 import Ad from "../Shared/Ad"
 import {ref, watch} from "vue";
+import {Inertia} from "@inertiajs/inertia";
 
-defineProps({
+const props = defineProps({
     ads: Object,
     states: Object,
     bookmarked: Object,
     last_views: Object,
+    user: Object,
 })
-const selectedState = ref(localStorage.getItem('state') ?? null)
+const selectedState = ref(props.user.state_id ?? null);
 watch(selectedState, (value) => {
-    localStorage.setItem('state', value)
+    // localStorage.setItem('state', value)
+    // localStorage.getItem('state')
+    Inertia.visit(route('account.user.state.change', {state: value}, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+    }))
 })
 </script>
 

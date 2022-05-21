@@ -6,6 +6,7 @@ use App\Http\Resources\AdResource;
 use App\Http\Resources\BookmarkResource;
 use App\Models\Ad;
 use App\Models\State;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 use Maize\Markable\Models\Like;
@@ -24,6 +25,14 @@ class AccountController extends Controller
             'states' => State::select(['id', 'name'])->get(),
             'bookmarked' => BookmarkResource::collection(Bookmark::where('user_id', auth()->id())->get()),
             'last_views' => BookmarkResource::collection(Like::where('user_id', auth()->id())->get()),
+            'user' => auth()->user(),
         ]);
+    }
+
+    public function changeState(State $state): RedirectResponse
+    {
+        auth()->user()?->update(['state_id' => $state->id]);
+
+        return back()->with('flash', 'ولایت شما تغییر یافت.');
     }
 }

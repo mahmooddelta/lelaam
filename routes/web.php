@@ -28,5 +28,7 @@ Route::get('chat', [ChatController::class, 'index'])->name('chat');
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])
     ->group(function () {
         Route::get('account', [AccountController::class, 'index'])->name('account');
+        Route::get('account/user/state/{state}/change', [AccountController::class, 'changeState'])
+            ->name('account.user.state.change');
         Route::get('ad/{ad:slug}/bookmark', [AdController::class, 'bookmark'])->name('ad.bookmark');
     });

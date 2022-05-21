@@ -34,6 +34,9 @@ class User extends Authenticatable implements HasMedia, FilamentUser
         'name',
         'email',
         'password',
+        'state_id',
+        'phone',
+        'phone_verified_at',
     ];
 
     /**
