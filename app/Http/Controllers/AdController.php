@@ -51,6 +51,11 @@ class AdController extends Controller
     {
         $ad->load(['category:name,slug,id', 'user', 'media', 'attributes', 'values.attribute', 'bookmarkers']);
 
+        // Add the add to user's viewed ads
+        if (auth()->check()) {
+            Like::add($ad, auth()->user());
+        }
+
         return Inertia::render('Ad', [
             'ad' => new AdResource($ad),
             'is_bookmarked' => auth()->check() ? $ad->whereHasBookmark(auth()->user())->exists() : false,
