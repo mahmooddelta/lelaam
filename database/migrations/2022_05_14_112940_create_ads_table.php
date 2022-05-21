@@ -23,8 +23,8 @@ return new class extends Migration{
                 ->cascadeOnDelete();
 
             $table->string('title')
-                ->fulltext()
                 ->index();
+            $table->fullText('title');
 
             $table->string('slug')
                 ->unique();
@@ -49,6 +49,9 @@ return new class extends Migration{
                 ->index();
 
             $table->boolean('is_published')
+                ->default(false);
+
+            $table->boolean('is_chat_enabled')
                 ->default(false);
 
             $table->timestamps();

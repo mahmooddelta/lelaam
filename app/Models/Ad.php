@@ -36,6 +36,7 @@ class Ad extends Model implements HasMedia
         'address',
         'district_id',
         'is_published',
+        'is_chat_enabled',
     ];
 
     protected static function boot()
@@ -109,5 +110,10 @@ class Ad extends Model implements HasMedia
     public function scopeIsOwner(): Builder
     {
         return $this->whereUserId(auth()->id());
+    }
+
+    public function scopeIsChatEnabled(): Builder
+    {
+        return $this->whereIsChatEnabled(true);
     }
 }
