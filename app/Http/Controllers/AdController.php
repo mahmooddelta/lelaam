@@ -20,12 +20,7 @@ class AdController extends Controller
             ->published()
             ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id'])
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
-            ->when(request()->has('search') && request('search') !== '', fn(Builder $query) => $query->where('title', 'LIKE', "%".request('search')."%"))
-            ->when(request()->has('category') && request('category') !== '', fn(Builder $query) => $query->where('category_id', Category::whereSlug(request('category'))
-                ->value('id')))
-            ->when(request()->has('district') && request('district') !== '', fn(Builder $query) => $query->where('district_id', request('district')))
-            ->when(request()->has('state') && request('state') !== '', fn(Builder $query) => $query->whereIn('district_id', District::whereStateId(request('state'))
-                ->pluck('id')->toArray()))
+            ->filter(request())
             ->latest()
             ->paginate(24)
             ->withQueryString();

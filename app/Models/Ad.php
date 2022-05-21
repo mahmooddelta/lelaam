@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 use Pishran\LaravelPersianSlug\HasPersianSlug;
 use RalphJSmit\Laravel\SEO\Support\HasSEO;
 use Spatie\Image\Manipulations;
@@ -16,6 +17,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\SlugOptions;
 use function auth;
+use function request;
 
 class Ad extends Model implements HasMedia
 {
@@ -115,5 +117,15 @@ class Ad extends Model implements HasMedia
     public function scopeIsChatEnabled(): Builder
     {
         return $this->whereIsChatEnabled(true);
+    }
+
+    public function scopeFilter($query, Request $request): Builder
+    {
+        return $this->when($request->has('search') && request('search') !== '', fn(Builder $query) => $query->where('title', 'LIKE', "%".request('search')."%"))
+            ->when($request->has('category') && request('category') !== '', fn(Builder $query) => $query->where('category_id', Category::whereSlug(request('category'))
+                ->value('id')))
+            ->when($request->has('district') && request('district') !== '', fn(Builder $query) => $query->where('district_id', request('district')))
+            ->when($request->has('state') && request('state') !== '', fn(Builder $query) => $query->whereIn('district_id', District::whereStateId(request('state'))
+                ->pluck('id')->toArray()));
     }
 }
