@@ -12,7 +12,7 @@ class CategoryController extends Controller
     {
         return Inertia::render('Categories', [
             'categories' => CategoryResource::collection(Category::query()->select(['id', 'name', 'slug'])
-                                                             ->withCount(['ads'])
+                                                             ->withCount(['ads' => fn($query) => $query->where('is_published', true)])
                                                              ->paginate(16)),
         ]);
     }
