@@ -7,7 +7,6 @@ use App\Filament\Resources\AdResource\RelationManagers;
 use App\Models\Ad;
 use App\Models\Attribute;
 use App\Models\Category;
-use Filament\Forms;
 use Filament\Forms\Components\BelongsToSelect;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
@@ -134,7 +133,7 @@ class AdResource extends Resource
                                                                    ->required()
                                                                    ->maxLength(255),
 
-                                                               Forms\Components\BelongsToSelect::make('district_id')
+                                                               BelongsToSelect::make('district_id')
                                                                    ->label(__('general.ads.fields.district_id'))
                                                                    ->relationship('district', 'name')
                                                                    ->exists('districts', 'id')
@@ -177,7 +176,7 @@ class AdResource extends Resource
                                                   ->label(__('general.ads.fields.price'))
                                                   ->numeric()
                                                   ->required(),
-                                              Forms\Components\BelongsToSelect::make('currency_id')
+                                              BelongsToSelect::make('currency_id')
                                                   ->label(__('general.ads.fields.currency_id'))
                                                   ->relationship('currency', 'name')
                                                   ->exists('currencies', 'id')
@@ -205,8 +204,8 @@ class AdResource extends Resource
 
     private static function generateInputs(Collection $collection): array
     {
-        return $collection->map(function (Attribute $attribute) use (&$inputs) {
-            $inputs [] = match ($attribute->frontend_type) {
+        return $collection->map(function (Attribute $attribute) {
+            return match ($attribute->frontend_type) {
                 'text' => TextInput::make('attributes.'.$attribute->id)
                     ->label($attribute->name)
                     ->required(),
@@ -229,8 +228,6 @@ class AdResource extends Resource
                     ->label($attribute->name)
                     ->required()
             };
-
-            return $inputs;
         })->flatten()->toArray();
     }
 
