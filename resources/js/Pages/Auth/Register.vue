@@ -25,7 +25,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Register" />
+    <Head title="ثبت نام" />
 
     <JetAuthenticationCard>
         <template #logo>

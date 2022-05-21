@@ -21,7 +21,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Forgot Password" />
+    <Head title="رمز عبور تان را فراموش کرده اید!" />
 
     <JetAuthenticationCard>
         <template #logo>

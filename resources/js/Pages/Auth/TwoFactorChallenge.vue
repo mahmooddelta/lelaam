@@ -38,7 +38,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Two-factor Confirmation" />
+    <Head title="تایید چالش دو مرحله ای" />
 
     <JetAuthenticationCard>
         <template #logo>
