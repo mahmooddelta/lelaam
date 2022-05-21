@@ -8,6 +8,8 @@ import {ref, watch} from "vue";
 defineProps({
     ads: Object,
     states: Object,
+    bookmarked: Object,
+    last_views: Object,
 })
 const selectedState = ref(localStorage.getItem('state') ?? null)
 watch(selectedState, (value) => {
@@ -26,11 +28,15 @@ watch(selectedState, (value) => {
         </Collapse>
 
         <Collapse title="نشانی شده ها">
-
+            <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4">
+                <Ad v-for="bookmark in bookmarked.data" :key="bookmark.id" :ad="bookmark.ad"/>
+            </section>
         </Collapse>
 
         <Collapse title="آخرین بازدید ها">
-
+            <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4">
+                <Ad v-for="last_view in last_views.data" :key="last_view.id" :ad="last_view.ad"/>
+            </section>
         </Collapse>
 
         <div class="divider"></div>

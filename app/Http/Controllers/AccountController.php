@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AdResource;
+use App\Http\Resources\BookmarkResource;
 use App\Models\Ad;
 use App\Models\State;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-use function back;
-use function session;
+use Maize\Markable\Models\Bookmark;
+use Maize\Markable\Models\Like;
+use function auth;
 
 class AccountController extends Controller
 {
@@ -21,6 +22,8 @@ class AccountController extends Controller
                                                 ->latest()
                                                 ->get()),
             'states' => State::select(['id', 'name'])->get(),
+            'bookmarked' => BookmarkResource::collection(Bookmark::where('user_id', auth()->id())->get()),
+            'last_views' => BookmarkResource::collection(Like::where('user_id', auth()->id())->get()),
         ]);
     }
 }

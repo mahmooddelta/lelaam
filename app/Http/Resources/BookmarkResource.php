@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Ad;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,7 +17,8 @@ class BookmarkResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->whenLoaded($this->name, $this->name),
+            'name' => $this->when($this->name, $this->name),
+            'ad' => $this->when($this->markable_id, new AdResource(Ad::find($this->markable_id))),
         ];
     }
 }
