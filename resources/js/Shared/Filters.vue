@@ -33,7 +33,7 @@ watch(filters.state, (value) => {
     <form class="p-4 rounded-lg">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
             <input
-                class="input input-bordered input-transparent"
+                class="input input-bordered bg-transparent"
                 v-model="filters.search"
                 placeholder="جستجو..."
             />
