@@ -5,7 +5,7 @@ defineProps({
 </script>
 
 <template>
-    <div class="w-full card card-side bg-base-300 shadow-xl my-2">
+    <div class="w-full card card-side bg-base-300 border-2 border-primary-500 shadow-xl my-2">
         <div class="card-body text-center">
             <h2 class="font-bold text-lg" v-html="category.name"></h2>
             <p class="text-sm" v-text="`${(category.ads_count || 0)} آگهی `"></p>
