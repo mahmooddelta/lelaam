@@ -8,8 +8,13 @@ use App\Models\Category;
 use App\Models\District;
 use App\Models\State;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use Maize\Markable\Models\Bookmark;
+use Maize\Markable\Models\Like;
+use function auth;
+use function back;
 use function request;
 
 class AdController extends Controller
@@ -42,16 +47,24 @@ class AdController extends Controller
         ]);
     }
 
-    public function show(Ad $ad)
+    public function show(Ad $ad): Response
     {
-        $ad->load(['category:name,slug,id', 'user', 'media', 'attributes', 'values.attribute']);
+        $ad->load(['category:name,slug,id', 'user', 'media', 'attributes', 'values.attribute', 'bookmarkers']);
 
         return Inertia::render('Ad', [
             'ad' => new AdResource($ad),
+            'is_bookmarked' => auth()->check() ? $ad->whereHasBookmark(auth()->user())->exists() : false,
         ]);
     }
 
-    public function create()
+    public function bookmark(Ad $ad): RedirectResponse
+    {
+        Bookmark::toggle($ad, auth()->user());
+
+        return back()->with('flash', 'آگهی با موفقیت به لیست بوکمارک ها اضافه شد.');
+    }
+
+    public function create(): Response
     {
         return Inertia::render('AdCreate', [
 

@@ -21,11 +21,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [WebsiteController::class, 'index'])->name('home');
 Route::get('ads/{category:slug?}', [AdController::class, 'index'])->name('ads');
 Route::get('ad/{ad:slug}', [AdController::class, 'show'])->name('ad.show');
+Route::get('ad/create', [AdController::class, 'create'])->name('ad.create');
 Route::get('categories', [CategoryController::class, 'index'])->name('categories');
 Route::get('chat', [ChatController::class, 'index'])->name('chat');
-Route::get('ad/create', [AdController::class, 'create'])->name('ad.create');
 // Protected routes
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])
     ->group(function () {
         Route::get('account', [AccountController::class, 'index'])->name('account');
+        Route::get('ad/{ad:slug}/bookmark', [AdController::class, 'bookmark'])->name('ad.bookmark');
     });

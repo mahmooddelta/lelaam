@@ -38,6 +38,8 @@ class AdResource extends JsonResource
             'category' => $this->whenLoaded('category', $this->category),
             'district' => $this->when('district', $this?->district?->name ?? 'District'),
             'state' => $this?->district?->state?->name ?? 'State',
+
+            'bookmarks' => $this->whenLoaded('bookmarkers', fn() => BookmarkResource::collection($this->bookmarkers)),
         ];
     }
 }

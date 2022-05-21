@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
+use Maize\Markable\Markable;
+use Maize\Markable\Models\Bookmark;
+use Maize\Markable\Models\Like;
 use Pishran\LaravelPersianSlug\HasPersianSlug;
 use RalphJSmit\Laravel\SEO\Support\HasSEO;
 use Spatie\Image\Manipulations;
@@ -25,6 +28,7 @@ class Ad extends Model implements HasMedia
     use InteractsWithMedia;
     use HasSEO;
     use HasPersianSlug;
+    use Markable;
 
     protected $fillable = [
         'user_id',
@@ -39,6 +43,11 @@ class Ad extends Model implements HasMedia
         'district_id',
         'is_published',
         'is_chat_enabled',
+    ];
+
+    protected static $marks = [
+        Bookmark::class,
+        Like::class,
     ];
 
     protected static function boot()
