@@ -61,19 +61,34 @@ watch(selectedState, (value) => {
         </Collapse>
 
         <Collapse title="پشتیبانی و راهنمایی">
-            <div class="card w-96 bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <h2 class="card-title">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="#fb5858" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                        پشتیبانی
-                    </h2>
-                    <p>برای پرسش سوالات، مشکلات خود میتوانید با شماره های زیر تماس بگیرید</p>
-                    <a href="tel:0787276233" class="btn btn-primary">تماس</a>
+            <section class="flex justify-center">
+                <div class="card w-96 bg-base-100 shadow-xl mr-4">
+                    <div class="card-body">
+                        <h2 class="card-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="#fb5858" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                            پشتیبانی
+                        </h2>
+                        <p>برای پرسش سوالات، مشکلات خود میتوانید با شماره های زیر تماس بگیرید</p>
+                        <a href="tel:0747857970" class="btn btn-primary">تماس</a>
+                    </div>
                 </div>
-            </div>
+                <div class="card w-96 bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="#fb5858" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                            </svg>
+                            ایمیل
+                        </h2>
+                        <p>برای سوالات و مسائل تجاری، میتوانید با ایمیل آدرس زیر ایمیل دهید.</p>
+                        <a href="mailto:lilamapp@gmail.com" class="btn btn-primary">ایمیل</a>
+                    </div>
+                </div>
+            </section>
         </Collapse>
     </Container>
 </template>
