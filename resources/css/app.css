@@ -11,6 +11,12 @@
 @import "vue-select/dist/vue-select.css";
 @import '../../public/custom/css/custom.css';
 
+@import 'swiper/swiper.min.css';
+@import 'swiper/modules/pagination/pagination.min.css';
+@import 'swiper/modules/navigation/navigation.min.css';
+@import 'swiper/modules/lazy/lazy.min.css';
+@import 'swiper/modules/zoom/zoom.min.css';
+
 @layer base {
     html {
         font-family: Vazirmatn, sans-serif;
