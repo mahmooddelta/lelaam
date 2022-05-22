@@ -1,31 +1,7 @@
-<script setup>
-
-import {onMounted} from "vue";
-import {Inertia} from "@inertiajs/inertia";
-
-const props = defineProps({
-    ad: Object,
-    is_bookmarked: Boolean,
-})
-// !TODO add ad to bookmarks without login
-// const bookmark = bookmark => {
-//     let bookmarks = new Set()
-//     if (localStorage.getItem('bookmarks'))
-//         bookmarks.add(Array.from((JSON.stringify(localStorage.getItem('bookmarks'))).split(',')))
-//     console.log(bookmarks)
-//     bookmarks.add(bookmark)
-//     localStorage.setItem('bookmarks', JSON.stringify(Array.from(bookmarks.keys())))
-// }
-// props.is_bookmarked = () => {
-//     const bookmark = localStorage.getItem('bookmark')
-//     return bookmark.includes(this.props.ad.slug)
-// }
-</script>
-
 <template>
     <Head :title="ad.data.title"/>
     <div class="max-w-lg mx-auto overflow-hidden md:max-w-6xl p-6">
-        <nav class="w-full flex-row" aria-label="Breadcrumb">
+        <nav class="w-full" aria-label="Breadcrumb">
             <ol role="list" class="flex items-center space-x-4">
                 <li>
                     <div class="flex items-center">
@@ -58,22 +34,9 @@ const props = defineProps({
                 </li>
             </ol>
         </nav>
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 px-16 py-10">
-            <div class="text-right px-4">
-                <section class="flex justify-between">
-                    <h1 class="text-4xl font-bold" v-text="ad.data.title"></h1>
-                    <Link :href="route('ad.bookmark', { ad: ad.data.slug })" title="نشانی شده" v-if="$page.props.user">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" :fill="is_bookmarked ? '#fb5858' : 'none'" viewBox="0 0 24 24"
-                             :stroke="is_bookmarked ? 'currentColor' : '#fb5858'" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                        </svg>
-                    </Link>
-<!--                    <svg @click="bookmark(ad.data.slug)" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" :fill="is_bookmarked ? '#fb5858' : 'none'"-->
-<!--                         viewBox="0 0 24 24"-->
-<!--                         :stroke="is_bookmarked ? 'currentColor' : '#fb5858'" stroke-width="2">-->
-<!--                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>-->
-<!--                    </svg>-->
-                </section>
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 py-3">
+            <div class="text-right p-4">
+                <h1 class="text-4xl font-bold" v-text="ad.data.title"></h1>
                 <h2 class="text-base-600 py-6 flex">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="#fb5858" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -84,6 +47,22 @@ const props = defineProps({
                     ولایت
                     {{ ad.data.state }}
                 </h2>
+                <section class="flex justify-between pb-4">
+                    <a v-if="ad.data.phone_number" :href="`tel:${ad.data.phone_number}`" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                        تماس با فروشنده
+                    </a>
+                    <Link :href="route('ad.bookmark', { ad: ad.data.slug })" :title="is_bookmarked ? 'نشانی شده' : 'اضافه کردن به نشانی شده ها'"
+                          v-if="$page.props.user">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" :fill="is_bookmarked ? '#fb5858' : 'none'" viewBox="0 0 24 24"
+                             :stroke="is_bookmarked ? 'currentColor' : '#fb5858'" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                        </svg>
+                    </Link>
+                </section>
                 <div class="overflow-x-auto">
                     <table class="table w-full">
                         <tbody>
@@ -107,15 +86,29 @@ const props = defineProps({
                 <p v-html="ad.data.desc"></p>
             </div>
             <!-- Carousel -->
-            <!-- !TODO replace it with swiper -->
-            <div class="carousel max-w-md p-4 space-x-4 rounded-box">
-                <div class="carousel-item" v-if="ad.data.media.length > 0" v-for="image in ad.data.media" :key="image.uuid" :id="image.uuid">
-                    <img :src="image.url" :alt="ad.data.title + '_image_' + image.uuid" class="rounded-box w-full"/>
-                </div>
-                <div class="carousel-item" v-else>
-                    <img :src="ad.data.thumb" alt="No Image Placeholder" class="rounded-box"/>
-                </div>
-            </div>
+            <Swiper :images="ad.data.media" :model-data="ad.data"/>
         </section>
     </div>
 </template>
+<script setup>
+
+import Swiper from "../Shared/Components/Swiper";
+
+const props = defineProps({
+    ad: Object,
+    is_bookmarked: Boolean,
+})
+// !TODO add ad to bookmarks without login
+// const bookmark = bookmark => {
+//     let bookmarks = new Set()
+//     if (localStorage.getItem('bookmarks'))
+//         bookmarks.add(Array.from((JSON.stringify(localStorage.getItem('bookmarks'))).split(',')))
+//     console.log(bookmarks)
+//     bookmarks.add(bookmark)
+//     localStorage.setItem('bookmarks', JSON.stringify(Array.from(bookmarks.keys())))
+// }
+// props.is_bookmarked = () => {
+//     const bookmark = localStorage.getItem('bookmark')
+//     return bookmark.includes(this.props.ad.slug)
+// }
+</script>
