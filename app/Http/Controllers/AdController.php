@@ -22,8 +22,10 @@ class AdController extends Controller
     public function index(?Category $category): Response
     {
         $ads = Ad::query()
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id'])
             ->published()
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id'])
+            //->when(auth()->check(), fn(Builder $query) => $query->orderByDesc('district_id'))
+            //->when(! auth()->check(), fn(Builder $query) => $query->latest())
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
             ->filter(request())
             ->latest()

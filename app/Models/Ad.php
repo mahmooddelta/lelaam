@@ -137,4 +137,11 @@ class Ad extends Model implements HasMedia
             ->when($request->has('state') && request('state') !== '', fn(Builder $query) => $query->whereIn('district_id', District::whereStateId(request('state'))
                 ->pluck('id')->toArray()));
     }
+
+    public function scopeSameState(): Ad|m|Builder
+    {
+        return $this->whereIn('district_id', District::whereStateId(auth()->user()->state_id)
+            ->pluck('id')
+            ->toArray());
+    }
 }
