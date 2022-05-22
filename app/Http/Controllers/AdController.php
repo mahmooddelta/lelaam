@@ -60,7 +60,9 @@ class AdController extends Controller
 
         return Inertia::render('Ad', [
             'ad' => new AdResource($ad),
-            'is_bookmarked' => auth()->check() ? $ad->whereHasBookmark(auth()->user())->exists() : false,
+            'is_bookmarked' => auth()->check() ? $ad->whereHasBookmark(auth()->user())
+                ->whereSlug($ad->slug)
+                ->exists() : false,
         ]);
     }
 
