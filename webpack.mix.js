@@ -1,5 +1,5 @@
 const mix = require('laravel-mix');
-
+const path = require('path');
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -17,6 +17,7 @@ mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
+        require('autoprefixer'),
     ])
     .alias({
         '@': 'resources/js',
@@ -28,8 +29,17 @@ mix.js('resources/js/app.js', 'public/js')
             cert: "C:/laragon/etc/ssl/laragon.crt"
         },
         open: false,
-    });
-
+    }).webpackConfig({ stats: { children: true } })
+    .sourceMaps();
 if (mix.inProduction()) {
     mix.version();
 }
+
+mix.webpackConfig({
+    resolve: {
+        modules: [
+            "node_modules",
+            __dirname + "/vendor/spatie/laravel-medialibrary-pro/resources/js",
+        ],
+    },
+});

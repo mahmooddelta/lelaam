@@ -24,3 +24,12 @@ mix.js('resources/js/ssr.js', 'public/js')
         },
         open: false,
     });
+
+mix.webpackConfig({
+    resolve: {
+        modules: [
+            "node_modules",
+            __dirname + "/vendor/spatie/laravel-medialibrary-pro/resources/js",
+        ],
+    },
+});
