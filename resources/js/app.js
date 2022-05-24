@@ -1,11 +1,12 @@
 import VueSelect from "vue-select";
-
-require('./bootstrap');
-
 import {createApp, h} from 'vue';
 import {createInertiaApp, Head, Link} from '@inertiajs/inertia-vue3';
 import {InertiaProgress} from '@inertiajs/progress';
 import Layout from './Layouts/Layout';
+// Media Library
+import {MediaLibraryAttachment} from '@spatie/media-library-pro-vue3-attachment';
+
+require('./bootstrap');
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -22,6 +23,7 @@ createInertiaApp({
             .component('Head', Head)
             .component('Link', Link)
             .component('v-select', VueSelect)
+            .component('media-library-attachment', MediaLibraryAttachment)
             .mixin({methods: {route}})
             .mount(el);
     },

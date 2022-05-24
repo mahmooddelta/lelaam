@@ -17,6 +17,8 @@
 @import 'swiper/modules/lazy/lazy.min.css';
 @import 'swiper/modules/zoom/zoom.min.css';
 
+@import "@spatie/media-library-pro-styles";
+
 @layer base {
     html {
         font-family: Vazirmatn, sans-serif;

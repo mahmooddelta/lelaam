@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b60d4b1da10b4c20f4a0da03ef31f43",
+    "content-hash": "6bda240d254fbb71e0573412d9ae68d5",
     "packages": [
         {
             "name": "3x1io/filament-user",
@@ -1343,16 +1343,16 @@
         },
         {
             "name": "filament/filament",
-            "version": "v2.12.12",
+            "version": "v2.12.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-filament/admin.git",
-                "reference": "5719c1b468d9233665625a72c61ae2182bba2441"
+                "reference": "699cfeec52c0b848b388e65a6285fc9ba412337f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-filament/admin/zipball/5719c1b468d9233665625a72c61ae2182bba2441",
-                "reference": "5719c1b468d9233665625a72c61ae2182bba2441",
+                "url": "https://api.github.com/repos/laravel-filament/admin/zipball/699cfeec52c0b848b388e65a6285fc9ba412337f",
+                "reference": "699cfeec52c0b848b388e65a6285fc9ba412337f",
                 "shasum": ""
             },
             "require": {
@@ -1400,20 +1400,20 @@
                 "issues": "https://github.com/laravel-filament/filament/issues",
                 "source": "https://github.com/laravel-filament/filament"
             },
-            "time": "2022-05-20T20:15:21+00:00"
+            "time": "2022-05-22T12:33:25+00:00"
         },
         {
             "name": "filament/forms",
-            "version": "v2.12.12",
+            "version": "v2.12.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-filament/forms.git",
-                "reference": "eac8b5ee3d3a04a3b60848b6802545c1b4d256c8"
+                "reference": "986f1e4c6234cb2755e8a025f3b8c7c94a4af2d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-filament/forms/zipball/eac8b5ee3d3a04a3b60848b6802545c1b4d256c8",
-                "reference": "eac8b5ee3d3a04a3b60848b6802545c1b4d256c8",
+                "url": "https://api.github.com/repos/laravel-filament/forms/zipball/986f1e4c6234cb2755e8a025f3b8c7c94a4af2d2",
+                "reference": "986f1e4c6234cb2755e8a025f3b8c7c94a4af2d2",
                 "shasum": ""
             },
             "require": {
@@ -1457,11 +1457,11 @@
                 "issues": "https://github.com/laravel-filament/filament/issues",
                 "source": "https://github.com/laravel-filament/filament"
             },
-            "time": "2022-05-20T20:15:12+00:00"
+            "time": "2022-05-23T08:03:59+00:00"
         },
         {
             "name": "filament/spatie-laravel-media-library-plugin",
-            "version": "v2.12.12",
+            "version": "v2.12.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-filament/spatie-laravel-media-library-plugin.git",
@@ -1498,16 +1498,16 @@
         },
         {
             "name": "filament/support",
-            "version": "v2.12.12",
+            "version": "v2.12.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-filament/support.git",
-                "reference": "c49bebe0210dd4d444f568fb79318fd4be12fe54"
+                "reference": "2267596027215d7a9eb82ddc729e09a6f2a2619e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-filament/support/zipball/c49bebe0210dd4d444f568fb79318fd4be12fe54",
-                "reference": "c49bebe0210dd4d444f568fb79318fd4be12fe54",
+                "url": "https://api.github.com/repos/laravel-filament/support/zipball/2267596027215d7a9eb82ddc729e09a6f2a2619e",
+                "reference": "2267596027215d7a9eb82ddc729e09a6f2a2619e",
                 "shasum": ""
             },
             "require": {
@@ -1543,20 +1543,20 @@
                 "issues": "https://github.com/laravel-filament/filament/issues",
                 "source": "https://github.com/laravel-filament/filament"
             },
-            "time": "2022-05-20T20:15:13+00:00"
+            "time": "2022-05-22T12:33:20+00:00"
         },
         {
             "name": "filament/tables",
-            "version": "v2.12.12",
+            "version": "v2.12.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-filament/tables.git",
-                "reference": "2f1e9c0225c45bdc1f3a860c67af52859de8c1d7"
+                "reference": "6347372c1934fa6a3dbf41ce1fe5fc862dfe7b76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-filament/tables/zipball/2f1e9c0225c45bdc1f3a860c67af52859de8c1d7",
-                "reference": "2f1e9c0225c45bdc1f3a860c67af52859de8c1d7",
+                "url": "https://api.github.com/repos/laravel-filament/tables/zipball/6347372c1934fa6a3dbf41ce1fe5fc862dfe7b76",
+                "reference": "6347372c1934fa6a3dbf41ce1fe5fc862dfe7b76",
                 "shasum": ""
             },
             "require": {
@@ -1597,7 +1597,7 @@
                 "issues": "https://github.com/laravel-filament/filament/issues",
                 "source": "https://github.com/laravel-filament/filament"
             },
-            "time": "2022-05-20T20:15:18+00:00"
+            "time": "2022-05-22T12:33:20+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -2126,16 +2126,16 @@
         },
         {
             "name": "intervention/image",
-            "version": "2.7.1",
+            "version": "2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "744ebba495319501b873a4e48787759c72e3fb8c"
+                "reference": "04be355f8d6734c826045d02a1079ad658322dad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/744ebba495319501b873a4e48787759c72e3fb8c",
-                "reference": "744ebba495319501b873a4e48787759c72e3fb8c",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/04be355f8d6734c826045d02a1079ad658322dad",
+                "reference": "04be355f8d6734c826045d02a1079ad658322dad",
                 "shasum": ""
             },
             "require": {
@@ -2178,8 +2178,8 @@
             "authors": [
                 {
                     "name": "Oliver Vogel",
-                    "email": "oliver@olivervogel.com",
-                    "homepage": "http://olivervogel.com/"
+                    "email": "oliver@intervention.io",
+                    "homepage": "https://intervention.io/"
                 }
             ],
             "description": "Image handling and manipulation library with support for Laravel integration",
@@ -2194,11 +2194,11 @@
             ],
             "support": {
                 "issues": "https://github.com/Intervention/image/issues",
-                "source": "https://github.com/Intervention/image/tree/2.7.1"
+                "source": "https://github.com/Intervention/image/tree/2.7.2"
             },
             "funding": [
                 {
-                    "url": "https://www.paypal.me/interventionphp",
+                    "url": "https://paypal.me/interventionio",
                     "type": "custom"
                 },
                 {
@@ -2206,7 +2206,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-12-16T16:49:26+00:00"
+            "time": "2022-05-21T17:30:32+00:00"
         },
         {
             "name": "jaybizzle/crawler-detect",
@@ -5383,16 +5383,16 @@
         },
         {
             "name": "spatie/image",
-            "version": "2.2.2",
+            "version": "2.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/image.git",
-                "reference": "bdf1146c740746d635344f8291c491371c3f2f25"
+                "reference": "35d2082fa2daa41fc0da8dfad9b930be7c4c5b27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/image/zipball/bdf1146c740746d635344f8291c491371c3f2f25",
-                "reference": "bdf1146c740746d635344f8291c491371c3f2f25",
+                "url": "https://api.github.com/repos/spatie/image/zipball/35d2082fa2daa41fc0da8dfad9b930be7c4c5b27",
+                "reference": "35d2082fa2daa41fc0da8dfad9b930be7c4c5b27",
                 "shasum": ""
             },
             "require": {
@@ -5436,7 +5436,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/image/issues",
-                "source": "https://github.com/spatie/image/tree/2.2.2"
+                "source": "https://github.com/spatie/image/tree/2.2.3"
             },
             "funding": [
                 {
@@ -5448,7 +5448,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-02-21T08:27:27+00:00"
+            "time": "2022-05-21T11:31:51+00:00"
         },
         {
             "name": "spatie/image-optimizer",
@@ -5585,16 +5585,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "10.3.5",
+            "version": "10.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "ecfaa6dff3655fb881949dfb24ba798e9b621335"
+                "reference": "6503d40f46154b241c9382672699e31754544d3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/ecfaa6dff3655fb881949dfb24ba798e9b621335",
-                "reference": "ecfaa6dff3655fb881949dfb24ba798e9b621335",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/6503d40f46154b241c9382672699e31754544d3e",
+                "reference": "6503d40f46154b241c9382672699e31754544d3e",
                 "shasum": ""
             },
             "require": {
@@ -5677,7 +5677,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-medialibrary/issues",
-                "source": "https://github.com/spatie/laravel-medialibrary/tree/10.3.5"
+                "source": "https://github.com/spatie/laravel-medialibrary/tree/10.3.6"
             },
             "funding": [
                 {
@@ -5689,7 +5689,88 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-05-19T15:34:44+00:00"
+            "time": "2022-05-23T06:51:38+00:00"
+        },
+        {
+            "name": "spatie/laravel-medialibrary-pro",
+            "version": "2.5.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:spatie/laravel-medialibrary-pro.git",
+                "reference": "131ed8aa30642edfb093502096d6af45ed35c5e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://satis.spatie.be/dist/spatie/laravel-medialibrary-pro/spatie-laravel-medialibrary-pro-131ed8aa30642edfb093502096d6af45ed35c5e2-zip-d42f7c.zip",
+                "reference": "131ed8aa30642edfb093502096d6af45ed35c5e2",
+                "shasum": "54ee778ac61fe8a7207298227a82eaa838fdd1cb"
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/validation": "^9.0",
+                "php": "^8.0",
+                "spatie/laravel-medialibrary": "^10.2",
+                "symfony/mime": "^6.0"
+            },
+            "require-dev": {
+                "illuminate/support": "^9.0",
+                "livewire/livewire": "^2.10",
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^7.0",
+                "pestphp/pest": "^1.20",
+                "symfony/var-dumper": "^6.0"
+            },
+            "suggest": {
+                "livewire/livewire": "Allow uploads without using a front end framework"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\MediaLibraryPro\\MediaLibraryProServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\MediaLibraryPro\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Spatie\\MediaLibraryPro\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "format": [
+                    "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+                ],
+                "test": [
+                    "vendor/bin/pest"
+                ],
+                "test-coverage": [
+                    "vendor/bin/phpunit --coverage-html coverage"
+                ]
+            },
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Handle media in a Laravel app",
+            "homepage": "https://github.com/spatie/laravel-medialibrary-pro",
+            "keywords": [
+                "laravel-medialibrary-pro",
+                "spatie"
+            ],
+            "support": {
+                "source": "https://github.com/spatie/laravel-medialibrary-pro/tree/2.5.0",
+                "issues": "https://github.com/spatie/laravel-medialibrary-pro/issues"
+            },
+            "time": "2022-05-09T14:03:10+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",

@@ -19,16 +19,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [WebsiteController::class, 'index'])->name('home');
+Route::get('ad/create', [AdController::class, 'create'])->name('ad.create');
+Route::post('ad/create', [AdController::class, 'store'])->name('ad.create.store');
 Route::get('ads/{category:slug?}', [AdController::class, 'index'])->name('ads');
 Route::get('ad/{ad:slug}', [AdController::class, 'show'])->name('ad.show');
-Route::get('ad/create', [AdController::class, 'create'])->name('ad.create');
 Route::get('categories', [CategoryController::class, 'index'])->name('categories');
 Route::get('chat', [ChatController::class, 'index'])->name('chat');
 // Protected routes
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])
     ->group(function () {
-        Route::get('account', [AccountController::class, 'index'])->name('account');
+        Route::get('account', [AccountController::class, 'index'])
+            ->name('account');
         Route::get('account/user/state/{state}/change', [AccountController::class, 'changeState'])
             ->name('account.user.state.change');
-        Route::get('ad/{ad:slug}/bookmark', [AdController::class, 'bookmark'])->name('ad.bookmark');
+        Route::get('ad/{ad:slug}/bookmark', [AdController::class, 'bookmark'])
+            ->name('ad.bookmark');
     });
+
+Route::mediaLibrary();
