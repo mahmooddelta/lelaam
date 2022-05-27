@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Attribute;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,8 +15,9 @@ class AttributeResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->when($this->id, $this->id),
             'name' => $this->name,
-            'frontend_type' => $this->when($this->frontend_type, Attribute::FRONT_END_TYPES[$this->frontend_type]),
+            'frontend_type' => $this->frontend_type,
 
             'ads_count' => $this->when($this->ads_count, $this->ads_count),
             'categories_count' => $this->when($this->categories_count, $this->categories_count),
@@ -25,6 +25,8 @@ class AttributeResource extends JsonResource
 
             'ads' => AdResource::collection($this->whenLoaded('ads')),
             'value' => $this->when($this->pivot, $this->getOriginal('pivot_value')),
+
+            'values' => $this->whenLoaded('values', AttributeValueResource::collection($this->values)),
         ];
     }
 }
