@@ -15,6 +15,7 @@ class AttributeValueResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->when($this->id, $this->id),
             'name' => $this->name,
 
             'ads_count' => $this->ads_count,
