@@ -10,13 +10,15 @@ export default function (params) {
     const fetchItemsHandler = ref(null);
 
     function fetchItems() {
-        Inertia.get(route(`${routeResourceName}`), filters.value, {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-            onBefore: () => isLoading.value = true,
-            onFinish: () => isLoading.value = false,
-        });
+        _.delay(() => {
+            Inertia.get(route(`${routeResourceName}`), filters.value, {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                onBefore: () => isLoading.value = true,
+                onFinish: () => isLoading.value = false,
+            });
+        }, 300)
     }
 
     watch(

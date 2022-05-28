@@ -1,5 +1,6 @@
 <script setup>
 import {ref, watch} from "vue";
+import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     modelValue: {
@@ -22,11 +23,13 @@ watch(
     }
 );
 watch(filters.state, (value) => {
-    Inertia.get(route('ads'), {'state': value}, {
-        preserveScroll: true,
-        preserveState: true,
-        replace: true,
-    });
+    _.delay(() => {
+        Inertia.get(route('ads'), {'state': value}, {
+            preserveScroll: true,
+            preserveState: true,
+            replace: true,
+        });
+    }, 300)
 });
 </script>
 <template>
