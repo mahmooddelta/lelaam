@@ -28,6 +28,14 @@ class AdController extends Controller
 {
     public function index(?Category $category): Response
     {
+        $sortBy = request()->has('sortBy') ? match (request()->sortBy) {
+            'newest', 'oldest', 'default' => 'id',
+            'highestPrice', 'lowestPrice' => 'price',
+        } : 'id';
+        $order = request()->has('sortBy') ? match (request()->sortBy) {
+            'newest', 'highestPrice', 'default' => 'desc',
+            'oldest', 'lowestPrice' => 'asc',
+        } : 'desc';
         $ads = Ad::query()
             ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id'])
             ->published()
@@ -35,7 +43,8 @@ class AdController extends Controller
             //->when(! auth()->check(), fn(Builder $query) => $query->latest())
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
             ->filter(request())
-            ->latest()
+            ->orderBy($sortBy, $order)
+            ->when(request()->has('hasImages') && request('hasImages') === 'true', fn(Builder $builder) => $builder->whereHas('media'))
             ->paginate(24)
             ->withQueryString();
 
@@ -51,6 +60,8 @@ class AdController extends Controller
                 'district' => request()->has('district') ? request('district') : null,
                 'state' => request()->has('state') ? request('state') : null,
                 'search' => request()->has('search') ? request('search') : null,
+                'hasImages' => request()->has('hasImages') ? request('hasImages') : false,
+                'sortBy' => request()->has('sortBy') ? request('sortBy') : 'مرتب سازی بر اساس',
             ],
             'routeResourceName' => request()->route()->getName(),
         ]);

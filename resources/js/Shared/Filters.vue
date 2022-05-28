@@ -24,7 +24,7 @@ watch(
 );
 watch(filters.state, (value) => {
     _.delay(() => {
-        Inertia.get(route('ads'), {'state': value}, {
+        Inertia.get(route().current(), {'state': value}, {
             preserveScroll: true,
             preserveState: true,
             replace: true,
@@ -50,5 +50,28 @@ watch(filters.state, (value) => {
                       :reduce="(option) => option.id"
                       v-model="filters.district"/>
         </div>
+        <!-- Sorts -->
+        <section class="py-4 flex justify-between">
+            <h2 class="text-3xl w-full">همه آگهی ها</h2>
+            <div class="flex justify-end w-full">
+                <div class="form-control w-fit">
+                    <label class="label cursor-pointer">
+                        <input type="checkbox" checked="checked" class="checkbox checkbox-primary" v-model="filters.hasImages"/>
+                        <span class="label-text font-bold ml-2">فقط آگهی های عکس دار</span>
+                    </label>
+                </div>
+
+                <div class="divider divider-horizontal">
+
+                </div>
+                <select name="sorts" id="sorts" class="select select-bordered w-full max-w-xs" v-model="filters.sortBy" placeholder="مرتب سازی بر اساس">
+                    <option selected disabled>مرتب سازی بر اساس</option>
+                    <option value="newest">جدید ترین</option>
+                    <option value="oldest">قدیمی ترین</option>
+                    <option value="highestPrice">بالا ترین قیمت</option>
+                    <option value="lowestPrice">کم ترین قیمت</option>
+                </select>
+            </div>
+        </section>
     </form>
 </template>
