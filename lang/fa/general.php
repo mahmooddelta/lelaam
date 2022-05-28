@@ -6,6 +6,11 @@ return [
     'delete' => 'حذف',
     'delete_bulk' => 'حذف انتخاب شده',
     'status_helper' => 'در سایت نمایش داده شود یا نه؟',
+    'widgets' => [
+        'num_ads' => 'تعداد آگهی ها',
+        'num_categories' => 'تعداد دسته بندی ها',
+        'num_users' => 'تعداد کاربران',
+    ],
     'SEO' => [
         'title' => 'سئو',
         'fields' => [
