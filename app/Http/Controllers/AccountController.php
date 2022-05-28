@@ -33,6 +33,10 @@ class AccountController extends Controller
     {
         auth()->user()?->update(['state_id' => $state->id]);
 
-        return back()->with('flash', 'ولایت شما تغییر یافت.');
+        return back()
+            ->with([
+                       'type' => 'success',
+                       'body' => 'ولایت شما تغییر یافت.',
+                   ]);
     }
 }

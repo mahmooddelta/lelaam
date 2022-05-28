@@ -122,10 +122,23 @@ class AdController extends Controller
 
                 return redirect()
                     ->route('home')
-                    ->with('flash', 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!');
+                    ->with([
+                               'type' => 'success',
+                               'body' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
+                           ]);
             });
         } catch (Exception $exception) {
-            return back()->with('flash', 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!');
+            return back()
+                ->with([
+                           'type' => 'error',
+                           'body', 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
+                       ]);
         }
+
+        return back()
+            ->with([
+                       'type' => 'error',
+                       'body', 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
+                   ]);
     }
 }
