@@ -69,7 +69,7 @@
                         <!-- row 1 -->
                         <tr>
                             <td>قیمت</td>
-                            <td v-html="`<b>${ad.data.price}</b> ${ad.data.currency}`"></td>
+                            <td v-html="price"></td>
                         </tr>
                         <tr v-for="attribute in ad.data.attributes" :key="attribute.id">
                             <td v-text="attribute.name"></td>
@@ -93,10 +93,14 @@
 <script setup>
 
 import Swiper from "../Shared/Components/Swiper";
+import {computed} from "vue";
 
 const props = defineProps({
     ad: Object,
     is_bookmarked: Boolean,
+})
+const price = computed(() => {
+    return props.ad.data.price == null ? `<b class="text-bold">توافقی</b>` : `<b>${props.ad.data.price}</b> ${props.ad.data.currency}`;
 })
 // !TODO add ad to bookmarks without login
 // const bookmark = bookmark => {
