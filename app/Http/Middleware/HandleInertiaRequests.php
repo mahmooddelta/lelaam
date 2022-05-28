@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 
@@ -40,8 +39,14 @@ class HandleInertiaRequests extends Middleware
                 return (new Ziggy)->toArray();
             },
             'can' => [
-                
+
             ],
+            'flash' => function () use ($request) {
+                return [
+                    'type' => $request->session()->get('type'),
+                    'body' => $request->session()->get('body'),
+                ];
+            },
         ]);
     }
 }
