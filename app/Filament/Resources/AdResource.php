@@ -71,27 +71,26 @@ class AdResource extends Resource
                                                                    ->disabled()
                                                                    ->required()
                                                                    ->unique(Ad::class, 'slug', fn($record) => $record),
-
-                                                               RichEditor::make('desc')
-                                                                   ->toolbarButtons([
-                                                                                        'bold',
-                                                                                        'bulletList',
-                                                                                        'h2',
-                                                                                        'h3',
-                                                                                        'italic',
-                                                                                        'link',
-                                                                                        'orderedList',
-                                                                                        'redo',
-                                                                                        'undo',
-                                                                                    ])
-                                                                   ->label(__('general.ads.fields.desc'))
-                                                                   ->required()
-                                                                   ->columnSpan(2),
                                                            ]),
-                                          ])
-                                 ->columns([
-                                               'sm' => 2,
-                                           ]),
+                                          ]),
+                             $layout::make()
+                                 ->schema([
+                                              RichEditor::make('desc')
+                                                  ->toolbarButtons([
+                                                                       'bold',
+                                                                       'bulletList',
+                                                                       'h2',
+                                                                       'h3',
+                                                                       'italic',
+                                                                       'link',
+                                                                       'orderedList',
+                                                                       'redo',
+                                                                       'undo',
+                                                                   ])
+                                                  ->label(__('general.ads.fields.desc'))
+                                                  ->required()
+                                                  ->columnSpan(2),
+                                          ]),
                              $layout::make()
                                  ->schema([
                                               Grid::make()
