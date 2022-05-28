@@ -20,7 +20,7 @@ class DashboardStats extends BaseWidget
             Card::make(__('general.widgets.num_ads'), Ad::published()->count())
                 ->icon('heroicon-s-mail')
                 ->color('primary')
-                ->url('admin/products'),
+                ->url('admin/ads'),
             Card::make(__('general.widgets.num_categories'), Category::count())
                 ->icon('heroicon-s-tag')
                 ->color('success')
@@ -30,7 +30,7 @@ class DashboardStats extends BaseWidget
                 ->count())
                 ->icon('heroicon-s-users')
                 ->color('warning')
-                ->url('admin/brands'),
+                ->url('admin/users'),
         ];
     }
 }
