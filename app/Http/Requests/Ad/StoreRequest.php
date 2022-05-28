@@ -5,7 +5,6 @@ namespace App\Http\Requests\Ad;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Category;
-use App\Models\Currency;
 use App\Models\District;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -37,11 +36,6 @@ class StoreRequest extends FormRequest
                 'required',
                 'string',
             ],
-            'price' => [
-                'required',
-                'numeric',
-                'min:0',
-            ],
             'phone_number' => [
                 'required',
                 'string',
@@ -64,7 +58,10 @@ class StoreRequest extends FormRequest
                 'required',
                 'numeric',
                 'min:0',
-                Rule::exists(Currency::class, 'id'),
+            ],
+            'price' => [
+                'required_unless:currency_id,0',
+                'min:0',
             ],
             'district_id' => [
                 'required',

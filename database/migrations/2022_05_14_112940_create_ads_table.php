@@ -30,13 +30,15 @@ return new class extends Migration{
                 ->unique();
 
             $table->unsignedMediumInteger('price')
-                ->fulltext()
+                ->default(0)
+                ->nullable()
+                ->comment('0 Means Negotiable')
                 ->index();
 
+            $table->fullText('price');
+
             $table->foreignIdFor(Currency::class)
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+                ->nullable();
 
             $table->string('phone_number');
 
