@@ -1,6 +1,6 @@
 <template>
     <div class="fixed z-40 px-16 py-8" v-if="$page.props.flash.body && show">
-        <div class="flex items-center justify-end max-w-3xl alert shadow-lg alert-success" :class="alertType">
+        <div class="flex items-center justify-end max-w-3xl alert shadow-lg" :class="alertType">
             <div class="flex items-center">
                 <svg v-if="$page.props.flash.type === 'success'" xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 mx-4 mr-2 w-6 h-6"
                      fill="none"
@@ -41,23 +41,21 @@
 import {computed, ref, watch} from 'vue';
 import {usePage} from "@inertiajs/inertia-vue3";
 
-const {props: $props} = usePage();
-
 const show = ref(true);
 const alertType = computed(() => {
-    if ($props.flash) {
-        if ($props.flash.type === 'success')
+    if (usePage().props.value.flash) {
+        if (usePage().props.value.flash.type === 'success')
             return 'alert-success';
-        else if ($props.flash.type === 'info')
+        else if (usePage().props.value.flash.type === 'info')
             return 'alert-info';
-        else if ($props.flash.type === 'warning')
+        else if (usePage().props.value.flash.type === 'warning')
             return 'alert-warning';
         else
             return 'alert-error';
     } else
         return '';
 })
-watch(usePage().props.flash, () => {
+watch(usePage().props.value.flash, () => {
     show.value = true
 }, {deep: true})
 </script>
