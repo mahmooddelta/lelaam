@@ -4,7 +4,7 @@ import {createInertiaApp, Head, Link} from '@inertiajs/inertia-vue3';
 import createServer from '@inertiajs/server';
 import route from 'ziggy';
 
-const appName = 'Laravel';
+const appName = 'Lelaam';
 
 createServer((page) =>
     createInertiaApp({

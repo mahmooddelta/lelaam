@@ -2,12 +2,14 @@
     "private": true,
     "scripts": {
         "dev": "npm run development",
-        "development": "mix",
+        "development": "mix && npm run ssr:serve",
         "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "watch-poll": "mix watch --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production --mix-config=webpack.ssr.mix.js && mix --production"
+        "production": "mix --production --mix-config=webpack.ssr.mix.js && mix --production",
+        "ssr:build": "mix --production --mix-config=webpack.ssr.mix.js",
+        "ssr:serve": "node public/js/ssr.js"
     },
     "devDependencies": {
         "@inertiajs/inertia": "^0.11.0",
