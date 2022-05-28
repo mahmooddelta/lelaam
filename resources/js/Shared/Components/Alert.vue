@@ -1,6 +1,6 @@
 <template>
-    <div class="fixed z-40 px-16 py-8">
-        <div v-if="$page.props.flash.body && show" class="flex items-center justify-between mb-8 max-w-3xl bg-green-500 rounded">
+    <div class="fixed z-40 px-16 py-8" v-if="$page.props.flash.body && show">
+        <div class="flex items-center justify-end max-w-3xl alert shadow-lg alert-success" :class="alertType">
             <div class="flex items-center">
                 <svg v-if="$page.props.flash.type === 'success'" xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 mx-4 mr-2 w-6 h-6"
                      fill="none"
@@ -37,20 +37,27 @@
     </div>
 </template>
 
-<script>
-export default {
-    data() {
-        return {
-            show: true,
-        }
-    },
-    watch: {
-        '$page.props.flash': {
-            handler() {
-                this.show = true
-            },
-            deep: true,
-        },
-    },
-}
+<script setup>
+import {computed, ref, watch} from 'vue';
+import {usePage} from "@inertiajs/inertia-vue3";
+
+const {props: $props} = usePage();
+
+const show = ref(true);
+const alertType = computed(() => {
+    if ($props.flash) {
+        if ($props.flash.type === 'success')
+            return 'alert-success';
+        else if ($props.flash.type === 'info')
+            return 'alert-info';
+        else if ($props.flash.type === 'warning')
+            return 'alert-warning';
+        else
+            return 'alert-error';
+    } else
+        return '';
+})
+watch(usePage().props.flash, () => {
+    show.value = true
+}, {deep: true})
 </script>
