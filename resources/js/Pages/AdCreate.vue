@@ -363,12 +363,12 @@ const populateAttributes = (value, index) => {
             </section>
             <!-- Form Submit -->
             <section class="my-6 flex justify-end">
-                <Link as="button" class="btn btn-ghost mr-4" type="button" :href="route('home')">
-                    انصراف
-                </Link>
                 <button class="btn btn-primary" type="submit" :disabled="form.processing">
                     ارسال آگهی
                 </button>
+                <Link as="button" class="btn btn-ghost ml-4" type="button" :href="route('home')">
+                    انصراف
+                </Link>
             </section>
         </form>
     </Container>
