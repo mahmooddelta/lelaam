@@ -28,7 +28,7 @@ defineProps({
         :keyboard="{enabled: true,}"
         :grabCursor="true"
         :navigation="true"
-        :loop="true"
+        :loop="images.length > 0"
         :hashNavigation="{watchState: true,}"
         :lazy="true"
         class="w-full lg:w-[25rem] max-h-[34rem] order-first lg:order-last"
