@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AdController;
+use App\Http\Controllers\Api\AppController;
+use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('categories', [CategoryController::class, 'index'])->name('categories');
+Route::get('states', [AppController::class, 'states'])->name('states');
+Route::get('districts/{state:name?}', [AppController::class, 'districts'])->name('districts');
+Route::get('ads/{category:slug?}', [AdController::class, 'index'])->name('ads');

@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class CategoryController extends Controller
+{
+    public function index(): JsonResource
+    {
+        return CategoryResource::collection(Category::whereIsVisible(true)
+                                                ->whereNull('parent_id')
+                                                ->select(['id', 'parent_id', 'name', 'slug', 'description'])
+                                                ->with(['children' => fn($query) => $query->select(['id', 'name', 'slug', 'parent_id'])])
+                                                ->get());
+    }
+
+    public function store(Request $request)
+    {
+        //
+    }
+
+    public function show(Category $category)
+    {
+        //
+    }
+
+    public function update(Request $request, Category $category)
+    {
+        //
+    }
+
+    public function destroy(Category $category)
+    {
+        //
+    }
+}
