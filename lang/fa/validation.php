@@ -106,7 +106,7 @@ return [
     "regex" => ":attribute یک فرمت معتبر نیست",
     "required" => "فیلد :attribute الزامی است",
     "required_if" => "فیلد :attribute هنگامی که :other برابر با :value است، الزامیست.",
-    'required_unless' => 'قیلد :attribute الزامیست مگر این فیلد :other مقدارش  :values باشد.',
+    'required_unless' => 'فیلد :attribute الزامیست مگر این فیلد :other مقدارش  :values باشد.',
     "required_with" => ":attribute الزامی است زمانی که :values موجود است.",
     "required_with_all" => ":attribute الزامی است زمانی که :values موجود است.",
     "required_without" => ":attribute الزامی است زمانی که :values موجود نیست.",
