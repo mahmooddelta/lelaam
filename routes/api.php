@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AdController;
 use App\Http\Controllers\Api\AppController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,17 @@ Route::post('ad/create', [AdController::class, 'store']);
 Route::put('ad/{ad:slug}/update', [AdController::class, 'update']);
 // Ad Bookmark
 Route::get('ad/{ad:slug}/bookmark', [AdController::class, 'bookmark']);
-// User Bookmarked Ads
-Route::get('user/bookmarked/ads', [AdController::class, 'userBookmarkedAds']);
-// User Ads
-Route::get('user/ads', [AdController::class, 'userAds']);
+// Auth Endpoints
+Route::post('register', [AuthController::class, 'register']);
+Route::middleware(['api'])->prefix('auth')->group(function () {
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('me', [AuthController::class, 'me']);
+});
+Route::middleware(['api', 'jwt'])->group(function () {
+    // User Bookmarked Ads
+    Route::get('user/bookmarked/ads', [AdController::class, 'userBookmarkedAds']);
+    // User Ads
+    Route::get('user/ads', [AdController::class, 'userAds']);
+});
