@@ -10,8 +10,9 @@ Route::get('states', [AppController::class, 'states']);
 Route::get('districts/{state:name?}', [AppController::class, 'districts']);
 // Ads
 Route::get('ads/{category:slug?}', [AdController::class, 'index']);
+Route::get('ad/{ad:slug}', [AdController::class, 'show']);
 Route::post('ad/create', [AdController::class, 'store']);
-Route::post('ad/{ad:slug}/update', [AdController::class, 'update']);
+Route::put('ad/{ad:slug}/update', [AdController::class, 'update']);
 // Ad Bookmark
 Route::get('ad/{ad:slug}/bookmark', [AdController::class, 'bookmark']);
 // User Bookmarked Ads
