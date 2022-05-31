@@ -11,6 +11,9 @@ return [
         'num_categories' => 'تعداد دسته بندی ها',
         'num_users' => 'تعداد کاربران',
     ],
+    'actions' => [
+        'status' => 'تغییر وضعیت',
+    ],
     'SEO' => [
         'title' => 'سئو',
         'fields' => [
@@ -121,6 +124,7 @@ return [
             'photo_section' => 'تصاویر',
             'attribute_values_section' => 'مقدار ویژگی ها',
             'no_user' => 'مهمان',
+            'negotiable' => 'توافقی',
         ],
         'relations' => [
             'attributes' => [

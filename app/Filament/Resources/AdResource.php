@@ -245,25 +245,18 @@ class AdResource extends Resource
                               ->sortable(),
                           Tables\Columns\TextColumn::make('title')
                               ->label(__('general.ads.fields.title'))
+                              ->limit(50)
                               ->searchable()
                               ->sortable(),
                           Tables\Columns\TextColumn::make('price')
+                              ->formatStateUsing(fn(Ad $record): string => $record->price && $record->currency_id ? "{$record->price} {$record?->currency?->name}" : __('general.ads.placeholders.negotiable'))
                               ->label(__('general.ads.fields.price'))
-                              ->searchable()
-                              ->sortable(),
-                          Tables\Columns\TextColumn::make('currency.name')
-                              ->label(__('general.ads.fields.currency_id'))
                               ->searchable()
                               ->sortable(),
                           Tables\Columns\TextColumn::make('phone_number')
                               ->label(__('general.ads.fields.phone_number'))
                               ->searchable()
                               ->sortable(),
-                          Tables\Columns\TextColumn::make('desc')
-                              ->html()
-                              ->label(__('general.ads.fields.desc')),
-                          Tables\Columns\TextColumn::make('address')
-                              ->label(__('general.ads.fields.address')),
                           Tables\Columns\TextColumn::make('district.name')
                               ->label(__('general.ads.fields.district_id'))
                               ->searchable()
@@ -275,17 +268,13 @@ class AdResource extends Resource
                           Tables\Columns\TextColumn::make('created_at')
                               ->label(__('general.created_at'))
                               ->formatStateUsing(fn(Ad $record) => $record->created_at->diffForHumans()),
-                          Tables\Columns\TextColumn::make('updated_at')
-                              ->label(__('general.updated_at'))
-                              ->formatStateUsing(fn(Ad $record) => $record->updated_at->diffForHumans()),
                       ])
             ->filters([
                           //
                       ]);
     }
 
-    public
-    static function getRelations(): array
+    public static function getRelations(): array
     {
         return [
             RelationManagers\AttributesRelationManager::class,
@@ -293,26 +282,22 @@ class AdResource extends Resource
         ];
     }
 
-    public
-    static function getLabel(): string
+    public static function getLabel(): string
     {
         return __('general.ads.title');
     }
 
-    public
-    static function getPluralLabel(): string
+    public static function getPluralLabel(): string
     {
         return __('general.ads.title_plural');
     }
 
-    protected
-    static function getNavigationGroup(): ?string
+    protected static function getNavigationGroup(): ?string
     {
         return __('nav.leelam');
     }
 
-    public
-    static function getPages(): array
+    public static function getPages(): array
     {
         return [
             'index' => Pages\ListAds::route('/'),
