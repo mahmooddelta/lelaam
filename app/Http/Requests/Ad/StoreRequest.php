@@ -6,9 +6,13 @@ use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Category;
 use App\Models\District;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
+use Symfony\Component\HttpFoundation\Response;
+use function request;
+use function response;
 
 class StoreRequest extends FormRequest
 {
@@ -118,5 +122,22 @@ class StoreRequest extends FormRequest
                          'category_id' => Category::whereSlug($this->category_id)
                              ->value('id'),
                      ]);
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        if (request()->is('api/*')) {
+            $errors = $validator->errors();
+
+            $response = response()->json([
+                                             'status' => 'error',
+                                             'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                                             'message' => $errors->messages(),
+                                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            throw new \Illuminate\Http\Exceptions\HttpResponseException($response);
+        }
+
+        return parent::failedValidation($validator);
     }
 }
