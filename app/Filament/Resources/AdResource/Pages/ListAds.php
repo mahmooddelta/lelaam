@@ -38,7 +38,8 @@ class ListAds extends ListRecords
                 ->color('primary')
                 ->visible(fn(Ad $record): bool => auth()->user()->can('update', $record))
                 ->action(fn(Collection $records) => $records->each(fn($record) => $record->update(['is_published' => ! $record->is_published])))
-                ->deselectRecordsAfterCompletion(),
+                ->deselectRecordsAfterCompletion()
+                ->requiresConfirmation(),
             ...parent::getTableBulkActions(),
         ];
     }
