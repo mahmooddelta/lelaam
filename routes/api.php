@@ -23,6 +23,8 @@ Route::middleware(['api'])->prefix('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
+    Route::post('profile/update', [AuthController::class, 'updateProfile']);
+    Route::put('profile/password/update', [AuthController::class, 'profilePasswordUpdate']);
 });
 Route::middleware(['api', 'jwt'])->group(function () {
     // User Bookmarked Ads

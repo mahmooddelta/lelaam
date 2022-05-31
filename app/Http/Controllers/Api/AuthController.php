@@ -5,15 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenExpiredException;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenInvalidException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Symfony\Component\HttpFoundation\Response;
+use function auth;
 use function compact;
+use function response;
 
 class AuthController extends Controller
 {
@@ -25,6 +28,26 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
+
+    private function validateUserInfo(Request $request): array|JsonResponse
+    {
+        $validated = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+        if ($validated->fails()) {
+            $response = response()->json([
+                                             'status' => 'error',
+                                             'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                                             'message' => $validated->errors()->messages(),
+                                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            throw new HttpResponseException($response);
+        }
+
+        return $validated->validated();
     }
 
     /**
@@ -55,21 +78,7 @@ class AuthController extends Controller
      */
     public function register(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-
-        $user = User::create([
-                                 'name' => $request->get('name'),
-                                 'email' => $request->get('email'),
-                                 'password' => Hash::make($request->get('password')),
-                             ]);
+        $user = User::create($this->validateUserInfo($request));
 
         $token = JWTAuth::fromUser($user);
 
@@ -99,7 +108,7 @@ class AuthController extends Controller
             return response()->json(['token_absent'], $e->getStatusCode());
         }
 
-        return response()->json(compact('user'));
+        return response()->json(['user' => UserResource::make($user)]);
     }
 
     /**
@@ -141,5 +150,25 @@ class AuthController extends Controller
                                     'token_type' => 'bearer',
                                     'expires_in' => auth('api')->factory()->getTTL() * 60,
                                 ]);
+    }
+
+    public function updateProfile(Request $request): JsonResponse
+    {
+        return response()->json(
+            [
+                'message' => auth()
+                    ->user()
+                    ?->update($this->validateUserInfo($request)) > 0 ? '.پروفایل ویرایش شد' : '!ویرایش پروفایل ناموفق بود',
+            ]);
+    }
+
+    public function profilePasswordUpdate(Request $request): JsonResponse
+    {
+        return response()->json(
+            [
+                'message' => auth()
+                    ->user()
+                    ?->update(['password' => $request->input('password')]) > 0 ? 'رمزعبور ویرایش شد.' : 'ویرایش رمزعبور ناموفق بود',
+            ]);
     }
 }
