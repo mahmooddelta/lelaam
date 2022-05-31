@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Throwable;
+use UnhandledMatchError;
 use function response;
 
 class Handler extends ExceptionHandler
@@ -80,6 +81,13 @@ class Handler extends ExceptionHandler
 
     private function handleExceptions(Throwable $exception)
     {
+        if ($exception instanceof UnhandledMatchError) {
+            return response()->json([
+                                        'status' => 'error',
+                                        'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                                        'message' => $exception->getMessage(),
+                                    ], Response::HTTP_UNPROCESSABLE_ENTITY, $exception->getHeaders());
+        }
         /**
          * Name: Model Not Found
          * Code: 404
@@ -90,7 +98,7 @@ class Handler extends ExceptionHandler
                                         'status' => 'error',
                                         'status_code' => Response::HTTP_NOT_FOUND,
                                         'message' => 'Model Not Found',
-                                    ], Response::HTTP_NOT_FOUND, $exception->getHeaders());
+                                    ], Response::HTTP_NOT_FOUND);
         }
 
         /**
