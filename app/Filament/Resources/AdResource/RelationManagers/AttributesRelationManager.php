@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\AdResource\RelationManagers;
 
 use App\Filament\Resources\AttributeResource;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\BelongsToManyRelationManager;
 use Filament\Resources\Table;
@@ -16,9 +17,35 @@ class AttributesRelationManager extends BelongsToManyRelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static bool $shouldPreloadAttachFormRecordSelectOptions = true;
+
+    protected function getEditFormSchema(): array
+    {
+        return [
+            TextInput::make('value')
+                ->label(__('general.ads.relations.attributes.value'))
+                ->required(),
+        ];
+    }
+
+    protected function getAttachFormSchema(): array
+    {
+        return [
+            ...parent::getAttachFormSchema(),
+            TextInput::make('value')
+                ->label(__('general.ads.relations.attributes.value'))
+                ->required(),
+        ];
+    }
+
     public static function form(Form $form): Form
     {
         return AttributeResource::form($form);
+    }
+
+    protected function canCreate(): bool
+    {
+        return false;
     }
 
     public static function table(Table $table): Table
