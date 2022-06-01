@@ -14,7 +14,7 @@
 }
 
 /* Global Transparent Background Color*/
-.bg-transparent {
+.bg-adaptable {
     /*background-color: transparent;*/
     background: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
     color: hsl(var(--bc) / var(--tw-text-opacity)) !important;

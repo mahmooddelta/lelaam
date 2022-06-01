@@ -186,7 +186,7 @@ const populateAttributes = (value, index) => {
                             <label class="label">
                                 <span class="label-text font-bold after:content-['*'] after:ml-0.5 after:text-red-500">قیمت</span>
                             </label>
-                            <input type="number" v-model="form.price" placeholder="منصفانه ترین قیمت" class="input input-bordered bg-transparent"
+                            <input type="number" v-model="form.price" placeholder="منصفانه ترین قیمت" class="input input-bordered bg-adaptable"
                                    :class="{'input-error': form.errors.price}"/>
                             <div v-if="form.errors.price" class="text-red-500 text-sm my-2">{{ form.errors.price }}</div>
                         </div>
@@ -288,7 +288,7 @@ const populateAttributes = (value, index) => {
                                     <input :type="attribute.frontend_type"
                                            :id="attribute.id"
                                            @change="populateAttributes($event.target.value, attribute.id)"
-                                           class="input input-bordered bg-transparent">
+                                           class="input input-bordered bg-adaptable">
                                     <!-- !TODO Fix error validation showing up by fixing up adding the attribute in correct attributes index of attribute.id-->
                                     <!-- attributes.0.value -->
                                     <div v-if="form.errors.attributes && form.errors.attributes[attribute.id]['value']" class="text-red-500 text-sm my-2">
@@ -339,7 +339,7 @@ const populateAttributes = (value, index) => {
                             <span class="label-text font-bold after:content-['*'] after:ml-0.5 after:text-red-500">آدرس</span>
                         </label>
                         <input type="text" v-model="form.address" placeholder="آدرس دقیق سرعت پیدا کردن جنس مورد نیاز مشتری را افزایش میدهد"
-                               class="input input-bordered bg-transparent" :class="{'input-error': form.errors.address}"/>
+                               class="input input-bordered bg-adaptable" :class="{'input-error': form.errors.address}"/>
                         <div v-if="form.errors.address" class="text-red-500 text-sm my-2">{{ form.errors.address }}</div>
                     </div>
                     <div class="form-control">
@@ -347,7 +347,7 @@ const populateAttributes = (value, index) => {
                             <span class="label-text font-bold after:content-['*'] after:ml-0.5 after:text-red-500">شماره تماس</span>
                         </label>
                         <input type="tel" v-model="form.phone_number" placeholder="شماره تماس را برای ارتباط با مشتری وارد کنید"
-                               class="input input-bordered bg-transparent" :class="{'input-error': form.errors.phone_number}"/>
+                               class="input input-bordered bg-adaptable" :class="{'input-error': form.errors.phone_number}"/>
                         <div v-if="form.errors.phone_number" class="text-red-500 text-sm my-2">{{ form.errors.phone_number }}</div>
                     </div>
 
@@ -356,7 +356,7 @@ const populateAttributes = (value, index) => {
                             <span class="label-text font-bold after:content-['*'] after:ml-0.5 after:text-red-500">عنوان آگهی</span>
                         </label>
                         <input type="text" v-model="form.title" placeholder="لطفاً کوتاه، دقیق و مشخص بنویسید و به موارد چشمگیر اشاره کنید"
-                               class="input input-bordered bg-transparent" :class="{'input-error': form.errors.title}"/>
+                               class="input input-bordered bg-adaptable" :class="{'input-error': form.errors.title}"/>
                         <div v-if="form.errors.title" class="text-red-500 text-sm my-2">{{ form.errors.title }}</div>
                     </div>
                 </section>
