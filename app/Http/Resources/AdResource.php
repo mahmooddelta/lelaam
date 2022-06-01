@@ -27,7 +27,9 @@ class AdResource extends JsonResource
             'address' => $this->when($this->address, $this->address),
             'thumb' => count($this->media) > 0 ? $this->media?->first()
                 ?->getUrl('thumb') : secure_asset('images/No_image_preview.png'),
+
             'created_at' => $this->created_at->diffForHumans(),
+            'updated_at' => $this->updated_at->diffForHumans(),
 
             'attributes' => $this->whenLoaded('attributes', fn() => AttributeResource::collection($this->attributes)),
             'values' => $this->whenLoaded('values', fn() => AttributeValueResource::collection($this->values)),
