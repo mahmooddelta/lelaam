@@ -20,6 +20,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\SlugOptions;
 use function auth;
+use function now;
 use function request;
 
 class Ad extends Model implements HasMedia
@@ -113,24 +114,34 @@ class Ad extends Model implements HasMedia
             ->saveSlugsTo('slug');
     }
 
-    public function scopePublished(): Builder
+    public function scopePublished(Builder $query): Builder
     {
-        return $this->whereIsPublished(true);
+        return $query->whereIsPublished(true);
     }
 
-    public function scopeIsOwner(): Builder
+    public function scopeNotPublished(Builder $query): Builder
     {
-        return $this->whereUserId(auth()->id());
+        return $query->whereIsPublished(false);
     }
 
-    public function scopeIsChatEnabled(): Builder
+    public function scopeTodayCreated(Builder $query): Ad|\m|Builder
     {
-        return $this->whereIsChatEnabled(true);
+        return $query->whereDay('created_at', now()->day);
     }
 
-    public function scopeFilter($query, Request $request): Builder
+    public function scopeIsOwner(Builder $query): Builder
     {
-        return $this->when($request->has('search') && request('search') !== '', fn(Builder $query) => $query->where('title', 'LIKE', "%".request('search')."%"))
+        return $query->whereUserId(auth()->id());
+    }
+
+    public function scopeIsChatEnabled(Builder $query): Builder
+    {
+        return $query->whereIsChatEnabled(true);
+    }
+
+    public function scopeFilter(Builder $query, Request $request): Builder
+    {
+        return $query->when($request->has('search') && request('search') !== '', fn(Builder $query) => $query->where('title', 'LIKE', "%".request('search')."%"))
             ->when($request->has('category') && request('category') !== '', fn(Builder $query) => $query->where('category_id', Category::whereSlug(request('category'))
                 ->value('id')))
             ->when($request->has('district') && request('district') !== '', fn(Builder $query) => $query->where('district_id', request('district')))
@@ -138,9 +149,9 @@ class Ad extends Model implements HasMedia
                 ->pluck('id')->toArray()));
     }
 
-    public function scopeSameState(): Ad|m|Builder
+    public function scopeSameState(Builder $query): Ad|m|Builder
     {
-        return $this->whereIn('district_id', District::whereStateId(auth()->user()->state_id)
+        return $query->whereIn('district_id', District::whereStateId(auth()->user()->state_id)
             ->pluck('id')
             ->toArray());
     }
