@@ -39,7 +39,7 @@ class AdResource extends Resource
 {
     protected static ?string $model = Ad::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-mail';
+    protected static ?string $navigationIcon = 'heroicon-o-speakerphone';
 
     protected static ?int $navigationSort = 3;
 
