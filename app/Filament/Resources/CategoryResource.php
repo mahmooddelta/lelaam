@@ -21,7 +21,6 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use RalphJSmit\Filament\SEO\SEO;
@@ -172,27 +171,23 @@ class CategoryResource extends Resource
                               ->toggleable(),
                       ])
             ->filters([
-                          Tables\Filters\Filter::make('is_visible')
-                              ->label(__('general.categories.filters.visible'))
-                              ->query(fn(Builder $query): Builder => $query->whereIsVisible(true)),
-                          Tables\Filters\Filter::make('is_not_visible')
-                              ->label(__('general.categories.filters.not_visible'))
-                              ->query(fn(Builder $query): Builder => $query->whereIsVisible(false)),
-                          Tables\Filters\Filter::make('parent')
-                              ->label(__('general.categories.filters.parent'))
-                              ->query(fn(Builder $query): Builder => $query->whereNull('parent_id')),
-                          Tables\Filters\Filter::make('children')
-                              ->label(__('general.categories.filters.parent'))
-                              ->query(fn(Builder $query): Builder => $query->whereNotNull('parent_id')),
-                      ])
-            ->bulkActions([
-                              Tables\Actions\BulkAction::make('delete')
-                                  ->label(__('general.delete_bulk'))
-                                  ->action(fn(Collection $records) => $records->each(fn(Category $record) => $record->delete()))
-                                  ->icon('heroicon-o-trash')
-                                  ->requiresConfirmation()
-                                  ->color('danger'),
-                          ]);
+                          Tables\Filters\TernaryFilter::make('is_visible')
+                              ->label(__('general.categories.filters.status'))
+                              ->placeholder(__('general.categories.filters.status_placeholder'))
+                              ->trueLabel(__('general.categories.filters.visible'))
+                              ->falseLabel(__('general.categories.filters.not_visible')),
+                          Tables\Filters\TernaryFilter::make('parent_id')
+                              ->nullable()
+                              ->label(__('general.categories.filters.parent_status'))
+                              ->placeholder(__('general.categories.filters.parent_status_placeholder'))
+                              ->trueLabel(__('general.categories.filters.parent'))
+                              ->falseLabel(__('general.categories.filters.child'))
+                              ->queries(
+                                  true : fn(Builder $query) => $query->whereNull('parent_id'),
+                                  false: fn(Builder $query) => $query->whereNotNull('parent_id'),
+                                  blank: fn(Builder $query) => $query,
+                              ),
+                      ]);
     }
 
     public static function getRelations(): array

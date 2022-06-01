@@ -37,10 +37,14 @@ return [
             'num_children' => 'تعداد زیردسته ها',
         ],
         'filters' => [
+            'status' => 'وضعیت',
+            'status_placeholder' => 'همه وضعیت ها',
             'visible' => 'فعال',
             'not_visible' => 'غیر فعال',
+            'parent_status' => 'مرتبه',
+            'parent_status_placeholder' => 'همه مرتبه ها',
             'parent' => 'دسته بندی های اصلی',
-            'children' => 'زیردسته ها',
+            'child' => 'زیردسته ها',
         ],
         'relations' => [
             'children' => 'زیردسته ها',
