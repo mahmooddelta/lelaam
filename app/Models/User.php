@@ -5,6 +5,7 @@ namespace App\Models;
 use BezhanSalleh\FilamentShield\Traits\HasFilamentShield;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -74,6 +75,11 @@ class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
     public function ads(): HasMany
     {
         return $this->hasMany(Ad::class);
+    }
+
+    public function state(): BelongsTo
+    {
+        return $this->belongsTo(State::class);
     }
 
     /**

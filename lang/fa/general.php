@@ -184,4 +184,32 @@ return [
             'value' => 'قیمت',
         ],
     ],
+    'users' => [
+        'title' => 'کاربر',
+        'title_plural' => 'کاربران',
+        'fields' => [
+            "name" => "اسم",
+            "email" => "ایمیل",
+            "email_verified_at" => "ایمیل تایید شده است",
+            "password" => "رمز عبور",
+            "roles" => "نقش ها",
+            "phone" => "شماره تماس",
+            "state_id" => "ولایت",
+            "phone_verified_at" => "شماره تماس تایید شده است",
+        ],
+        'filters' => [
+            'email' => [
+                'status' => 'وضعیت تاییدی ایمیل',
+                'status_placeholder' => 'همه وضعیت ها',
+                "verified" => "تایید شده",
+                "unverified" => "تایید نشده",
+            ],
+            'phone' => [
+                'status' => 'وضعیت تاییدی شماره تماس',
+                'status_placeholder' => 'همه وضعیت ها',
+                "verified" => "تایید شده",
+                "unverified" => "تایید نشده",
+            ],
+        ],
+    ],
 ];
