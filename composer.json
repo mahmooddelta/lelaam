@@ -9,7 +9,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
-        "3x1io/filament-user": "^1.1",
         "bezhansalleh/filament-shield": "1.*",
         "doctrine/dbal": "^3.3",
         "filament/filament": "^2.12",
@@ -25,6 +24,7 @@
         "maize-tech/laravel-markable": "^1.0",
         "orangehill/iseed": "^3.0",
         "php-open-source-saver/jwt-auth": "^1.4",
+        "phpsa/filament-password-reveal": "^1.0",
         "pishran/laravel-persian-slug": "^2.2",
         "ralphjsmit/laravel-filament-seo": "^1.0",
         "spatie/laravel-collection-macros": "^7.11",

@@ -4,68 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4ac59b40db2b8d559ce5cc2cb1b5394",
+    "content-hash": "ee86c61eb450175eec18ef334b5aad86",
     "packages": [
-        {
-            "name": "3x1io/filament-user",
-            "version": "v1.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/3x1io/filament-user.git",
-                "reference": "847c46c1816688ecff655a07b8ab3d94cfd8c776"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/3x1io/filament-user/zipball/847c46c1816688ecff655a07b8ab3d94cfd8c776",
-                "reference": "847c46c1816688ecff655a07b8ab3d94cfd8c776",
-                "shasum": ""
-            },
-            "require": {
-                "bezhansalleh/filament-shield": "^1.1",
-                "filament/filament": "^2.9",
-                "php": "^8.0",
-                "spatie/laravel-package-tools": "^1.10"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "io3x1\\FilamentUser\\FilamentUserProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "io3x1\\FilamentUser\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "3x1",
-                    "email": "info@3x1.io",
-                    "role": "CEO"
-                }
-            ],
-            "description": "User Manager Resource For Filament Admin",
-            "homepage": "https://3x1.io",
-            "keywords": [
-                "cli",
-                "filament",
-                "laravel",
-                "resource",
-                "ui",
-                "user"
-            ],
-            "support": {
-                "issues": "https://github.com/3x1io/filament-user/issues",
-                "source": "https://github.com/3x1io/filament-user/tree/v1.1.2"
-            },
-            "time": "2022-04-27T15:42:28+00:00"
-        },
         {
             "name": "akaunting/laravel-money",
             "version": "3.0.1",
@@ -4612,6 +4552,72 @@
                 }
             ],
             "time": "2021-12-04T23:24:31+00:00"
+        },
+        {
+            "name": "phpsa/filament-password-reveal",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpsa/filament-password-reveal.git",
+                "reference": "2e19cc2a3af704d2fb699e5efcf7135d9d8938ec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpsa/filament-password-reveal/zipball/2e19cc2a3af704d2fb699e5efcf7135d9d8938ec",
+                "reference": "2e19cc2a3af704d2fb699e5efcf7135d9d8938ec",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^2.9",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.10"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Phpsa\\FilamentPasswordReveal\\FilamentPasswordRevealProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phpsa\\FilamentPasswordReveal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Craig G Smith",
+                    "email": "vxdhost@gmail.com"
+                }
+            ],
+            "description": "Password Input with optino to show",
+            "homepage": "https://cgs4k.nz",
+            "keywords": [
+                "cli",
+                "filament",
+                "fun",
+                "laravel",
+                "resource",
+                "ui",
+                "user",
+                "widget"
+            ],
+            "support": {
+                "issues": "https://github.com/phpsa/filament-password-reveal/issues",
+                "source": "https://github.com/phpsa/filament-password-reveal/tree/v1.0.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/phpsa",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-05-06T01:53:05+00:00"
         },
         {
             "name": "pishran/laravel-persian-slug",
