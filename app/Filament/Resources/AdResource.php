@@ -10,6 +10,7 @@ use App\Models\Category;
 use Filament\Forms\Components\BelongsToSelect;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Placeholder;
@@ -24,6 +25,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -31,6 +33,7 @@ use RalphJSmit\Filament\SEO\SEO;
 use function __;
 use function count;
 use function is_null;
+use function now;
 
 class AdResource extends Resource
 {
@@ -238,39 +241,124 @@ class AdResource extends Resource
                               ->label(__('general.ads.fields.user_id'))
                               ->default(__('general.ads.placeholders.no_user'))
                               ->searchable()
+                              ->toggleable()
                               ->sortable(),
                           Tables\Columns\TextColumn::make('category.name')
                               ->label(__('general.ads.fields.category_id'))
                               ->searchable()
+                              ->toggleable()
                               ->sortable(),
                           Tables\Columns\TextColumn::make('title')
                               ->label(__('general.ads.fields.title'))
                               ->limit(50)
                               ->searchable()
+                              ->toggleable()
                               ->sortable(),
                           Tables\Columns\TextColumn::make('price')
                               ->formatStateUsing(fn(Ad $record): string => $record->price && $record->currency_id ? "{$record->price} {$record?->currency?->name}" : __('general.ads.placeholders.negotiable'))
                               ->label(__('general.ads.fields.price'))
                               ->searchable()
+                              ->toggleable()
                               ->sortable(),
                           Tables\Columns\TextColumn::make('phone_number')
                               ->label(__('general.ads.fields.phone_number'))
                               ->searchable()
+                              ->toggleable()
                               ->sortable(),
                           Tables\Columns\TextColumn::make('district.name')
                               ->label(__('general.ads.fields.district_id'))
                               ->searchable()
+                              ->toggleable()
                               ->sortable(),
                           Tables\Columns\BooleanColumn::make('is_published')
                               ->label(__('general.ads.fields.is_published'))
                               ->searchable()
+                              ->toggleable()
                               ->sortable(),
                           Tables\Columns\TextColumn::make('created_at')
                               ->label(__('general.created_at'))
+                              ->toggleable()
                               ->formatStateUsing(fn(Ad $record) => $record->created_at->diffForHumans()),
                       ])
             ->filters([
-                          //
+                          Tables\Filters\TernaryFilter::make('is_published')
+                              ->label(__('general.ads.filters.status'))
+                              ->placeholder(__('general.ads.filters.status_placeholder'))
+                              ->trueLabel(__('general.ads.filters.published'))
+                              ->falseLabel(__('general.ads.filters.not_published')),
+                          Tables\Filters\SelectFilter::make('category_id')
+                              ->label(__('general.ads.filters.category'))
+                              ->options(Category::pluck('name', 'id')->toArray()),
+                          Tables\Filters\SelectFilter::make('district_id')
+                              ->label(__('general.ads.filters.district'))
+                              ->relationship('district', 'name'),
+                          Tables\Filters\TernaryFilter::make('is_chat_enabled')
+                              ->label(__('general.ads.filters.chat_status'))
+                              ->placeholder(__('general.ads.filters.chat_status_placeholder'))
+                              ->trueLabel(__('general.ads.filters.chat_enabled'))
+                              ->falseLabel(__('general.ads.filters.chat_disabled')),
+                          Tables\Filters\Filter::make('created_at_on')
+                              ->form([
+                                         DatePicker::make('create_on')
+                                             ->label(__('general.ads.filters.created_on')),
+                                     ])
+                              ->query(function (Builder $query, array $data): Builder {
+                                  return $query
+                                      ->when(
+                                          $data['create_on'],
+                                          fn(Builder $query, $date): Builder => $query->whereDate('created_at', '=', $date),
+                                      );
+                              }),
+                          Tables\Filters\Filter::make('updated_at_on')
+                              ->form([
+                                         DatePicker::make('updated_at')
+                                             ->label(__('general.ads.filters.updated_on')),
+                                     ])
+                              ->query(function (Builder $query, array $data): Builder {
+                                  return $query
+                                      ->when(
+                                          $data['updated_at'],
+                                          fn(Builder $query, $date): Builder => $query->whereDate('updated_at', '=', $date),
+                                      );
+                              }),
+                          Tables\Filters\Filter::make('created_at')
+                              ->form([
+                                         DatePicker::make('created_from')
+                                             ->label(__('general.ads.filters.created_from')),
+                                         DatePicker::make('created_until')
+                                             ->default(now())
+                                             ->label(__('general.ads.filters.created_until')),
+                                     ])
+                              ->query(function (Builder $query, array $data): Builder {
+                                  return $query
+                                      ->when(
+                                          $data['created_from'],
+                                          fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                                      )
+                                      ->when(
+                                          $data['created_until'],
+                                          fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                                      );
+                              }),
+                          Tables\Filters\Filter::make('updated_at')
+                              ->form([
+                                         DatePicker::make('updated_from')
+                                             ->label(__('general.ads.filters.updated_from')),
+                                         DatePicker::make('updated_until')
+                                             ->default(now())
+                                             ->label(__('general.ads.filters.updated_until')),
+                                     ])
+                              ->query(function (Builder $query, array $data): Builder {
+                                  return $query
+                                      ->when(
+                                          $data['updated_from'],
+                                          fn(Builder $query, $date): Builder => $query->whereDate('updated_at', '>=', $date),
+                                      )
+                                      ->when(
+                                          $data['updated_until'],
+                                          fn(Builder $query, $date): Builder => $query->whereDate('updated_at', '<=', $date),
+                                      );
+                              }),
                       ]);
     }
 

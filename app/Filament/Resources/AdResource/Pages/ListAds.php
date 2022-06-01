@@ -48,4 +48,14 @@ class ListAds extends ListRecords
     {
         return Ad::query()->latest();
     }
+
+    protected function getTableFiltersFormColumns(): int|array
+    {
+        return 2;
+    }
+
+    protected function getTableFiltersFormWidth(): string
+    {
+        return '4xl';
+    }
 }
