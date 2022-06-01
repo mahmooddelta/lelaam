@@ -7,9 +7,17 @@ return [
     'delete_bulk' => 'حذف انتخاب شده',
     'status_helper' => 'در سایت نمایش داده شود یا نه؟',
     'widgets' => [
-        'num_ads' => 'تعداد آگهی ها',
+        'total_num_ads' => 'تعداد آگهی ها',
+        'total_num_published_ads' => 'تعداد آگهی های منتشر شده',
+        'total_num_not_published_ads' => 'تعداد آگهی های منتشر نشده',
         'num_categories' => 'تعداد دسته بندی ها',
         'num_users' => 'تعداد کاربران',
+        'today_num_ads' => 'تعداد آگهی های ثبت شده امروز',
+        'today_num_published_ads' => 'تعداد آگهی های منتشر شده امروز',
+        'today_num_not_published_ads' => 'تعداد آگهی های منتشر نشده امروز',
+        'ads_chart' => 'آگهی ها',
+        'ads_published_chart' => 'آگهی های منتشر شده',
+        'ads_not_published_chart' => 'آگهی های منتشر نشده',
     ],
     'actions' => [
         'status' => 'تغییر وضعیت',
