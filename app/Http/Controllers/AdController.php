@@ -37,7 +37,7 @@ class AdController extends Controller
             'oldest', 'lowestPrice' => 'asc',
         } : 'desc';
         $ads = Ad::query()
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id'])
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id'])
             ->published()
             //->when(auth()->check(), fn(Builder $query) => $query->orderByDesc('district_id'))
             //->when(! auth()->check(), fn(Builder $query) => $query->latest())

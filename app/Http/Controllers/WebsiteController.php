@@ -24,7 +24,7 @@ class WebsiteController extends Controller
                     return $category;
                 }),
             'ads' => AdResource::collection(Ad::query()->published()
-                                                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id'])
+                                                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'updated_at', 'id'])
                                                 ->with('media')
                                                 ->latest()
                                                 ->take(40)
