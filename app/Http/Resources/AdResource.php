@@ -29,7 +29,7 @@ class AdResource extends JsonResource
                 ?->getUrl('thumb') : secure_asset('images/No_image_preview.png'),
 
             'created_at' => $this->created_at->diffForHumans(),
-            'updated_at' => $this->updated_at->diffForHumans(),
+            'updated_at' => $this->when($this->updated_at, $this->updated_at?->diffForHumans()),
 
             'attributes' => $this->whenLoaded('attributes', fn() => AttributeResource::collection($this->attributes)),
             'values' => $this->whenLoaded('values', fn() => AttributeValueResource::collection($this->values)),
