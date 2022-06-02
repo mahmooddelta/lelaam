@@ -29,22 +29,23 @@ class AdController extends Controller
     public function index(?Category $category): Response
     {
         $sortBy = request()->has('sortBy') ? match (request()->sortBy) {
-            'newest', 'oldest', 'default' => 'id',
+            default => 'id',
             'highestPrice', 'lowestPrice' => 'price',
         } : 'id';
-        $order = request()->has('sortBy') ? match (request()->sortBy) {
-            'newest', 'highestPrice', 'default' => 'desc',
-            'oldest', 'lowestPrice' => 'asc',
-        } : 'desc';
+        $order = match (request()->sortBy) {
+            default => true,
+            'oldest', 'lowestPrice' => false,
+        };
         $ads = Ad::query()
             ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id'])
             ->published()
-            //->when(auth()->check(), fn(Builder $query) => $query->orderByDesc('district_id'))
-            //->when(! auth()->check(), fn(Builder $query) => $query->latest())
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
             ->filter(request())
-            ->orderBy($sortBy, $order)
             ->when(request()->has('hasImages') && request('hasImages') === 'true', fn(Builder $builder) => $builder->whereHas('media'))
+            ->get()
+            ->sortBy(                                           auth()->check() ? fn(Ad $ad) => District::whereStateId(auth()->user()->state_id)
+                ->get()
+                ->find($ad->district_id) : $sortBy, descending: $order)
             ->paginate(24)
             ->withQueryString();
 

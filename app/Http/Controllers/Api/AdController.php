@@ -7,6 +7,7 @@ use App\Http\Requests\Ad\StoreRequest;
 use App\Http\Resources\AdResource;
 use App\Models\Ad;
 use App\Models\Category;
+use App\Models\District;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -46,15 +47,18 @@ class AdController extends Controller
             'hasImages' => request()->has('hasImages') ? request('hasImages') : false,
             'sortBy' => request()->has('sortBy') ? request('sortBy') : 'مرتب سازی بر اساس',
         ];
-        $ads = AdResource::collection(Ad::query()
-                                          ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id'])
-                                          ->published()
-                                          ->when($category->exists, fn(Builder $query) => $query->where('category_id', $category->id))
-                                          ->filter(request())
-                                          ->orderBy($sortBy, $order)
-                                          ->when(request()->has('hasImages') && request('hasImages') === 'true', fn(Builder $builder) => $builder->whereHas('media'))
-                                          ->paginate(24)
-                                          ->withQueryString());
+        $ads = Ad::query()
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id'])
+            ->published()
+            ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
+            ->filter(request())
+            ->when(request()->has('hasImages') && request('hasImages') === 'true', fn(Builder $builder) => $builder->whereHas('media'))
+            ->get()
+            ->sortBy(                                           auth()->check() ? fn(Ad $ad) => District::whereStateId(auth()->user()->state_id)
+                ->get()
+                ->find($ad->district_id) : $sortBy, descending: $order)
+            ->paginate(24)
+            ->withQueryString();
 
         return response()->json(compact('ads', 'filters'));
     }
