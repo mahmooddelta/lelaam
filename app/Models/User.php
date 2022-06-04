@@ -17,6 +17,7 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
+use function app;
 
 class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
 {
@@ -72,8 +73,12 @@ class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
         'profile_photo_url',
     ];
 
-   public function canAccessFilament(): bool
+    public function canAccessFilament(): bool
     {
+        if (app()->environment(['local', 'staging'])) {
+            return true;
+        }
+
         return str_ends_with($this->email, '@leelam.af') && $this->hasVerifiedEmail();
     }
 
