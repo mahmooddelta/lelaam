@@ -35,8 +35,6 @@ return new class extends Migration{
                 ->comment('0 Means Negotiable')
                 ->index();
 
-            $table->fullText('price');
-
             $table->foreignIdFor(Currency::class)
                 ->nullable();
 
