@@ -72,6 +72,11 @@ class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
         'profile_photo_url',
     ];
 
+   public function canAccessFilament(): bool
+    {
+        return str_ends_with($this->email, '@leelam.af') && $this->hasVerifiedEmail();
+    }
+
     public function ads(): HasMany
     {
         return $this->hasMany(Ad::class);
