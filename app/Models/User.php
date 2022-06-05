@@ -111,9 +111,4 @@ class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
     {
         return [];
     }
-
-    public function setPasswordAttribute($value): string
-    {
-        return Hash::make($value);
-    }
 }
