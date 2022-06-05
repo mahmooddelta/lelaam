@@ -60,17 +60,6 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <JetLabel for="phone" value="شماره تماس" />
-                <JetInput
-                    id="phone"
-                    v-model="form.phone"
-                    type="phone"
-                    class="mt-1 block w-full"
-                    required
-                />
-            </div>
-
-            <div class="mt-4">
                 <JetLabel for="password" value="رمز عبور" />
                 <JetInput
                     id="password"
@@ -91,6 +80,28 @@ const submit = () => {
                     class="mt-1 block w-full"
                     required
                     autocomplete="new-password"
+                />
+            </div>
+
+            <div class="mt-4">
+                <JetLabel for="phone" value="شماره تماس" />
+                <JetInput
+                    id="phone"
+                    v-model="form.phone"
+                    type="phone"
+                    class="mt-1 block w-full"
+                    required
+                />
+            </div>
+
+            <div class="mt-4">
+                <JetLabel for="phone" value="شماره تماس" />
+                <JetInput
+                    id="phone"
+                    v-model="form.phone"
+                    type="phone"
+                    class="mt-1 block w-full"
+                    required
                 />
             </div>
 
