@@ -29,19 +29,18 @@ class AdController extends Controller
     public function index(?Category $category): Response
     {
         $sortBy = request()->has('sortBy') ? match (request()->sortBy) {
-            default => 'id',
             'highestPrice', 'lowestPrice' => 'price',
+            default => 'id',
         } : 'id';
         $order = match (request()->sortBy) {
-            default => true,
             'oldest', 'lowestPrice' => false,
+            default => true,
         };
         $ads = Ad::query()
             ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id'])
             ->published()
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
             ->filter(request())
-            ->when(request()->has('hasImages') && request('hasImages') === 'true', fn(Builder $builder) => $builder->whereHas('media'))
             ->get()
             ->sortBy(                                           auth()->check() ? fn(Ad $ad) => District::whereStateId(auth()->user()->state_id)
                 ->get()

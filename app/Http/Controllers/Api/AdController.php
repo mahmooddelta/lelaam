@@ -52,7 +52,6 @@ class AdController extends Controller
             ->published()
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
             ->filter(request())
-            ->when(request()->has('hasImages') && request('hasImages') === 'true', fn(Builder $builder) => $builder->whereHas('media'))
             ->get()
             ->sortBy(                                           auth()->check() ? fn(Ad $ad) => District::whereStateId(auth()->user()->state_id)
                 ->get()
