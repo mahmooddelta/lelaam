@@ -141,12 +141,13 @@ class Ad extends Model implements HasMedia
 
     public function scopeFilter(Builder $query, Request $request): Builder
     {
-        return $query->when($request->has('search') && request('search') !== '', fn(Builder $query) => $query->where('title', 'LIKE', "%".request('search')."%"))
-            ->when($request->has('category') && request('category') !== '', fn(Builder $query) => $query->where('category_id', Category::whereSlug(request('category'))
-                ->value('id')))
-            ->when($request->has('district') && request('district') !== '', fn(Builder $query) => $query->where('district_id', request('district')))
-            ->when($request->has('state') && request('state') !== '', fn(Builder $query) => $query->whereIn('district_id', District::whereStateId(request('state'))
-                ->pluck('id')->toArray()));
+        return $query->when($request->has('search') && $request->search !== null, fn(Builder $query) => $query->where('title', 'LIKE', "%".$request->search."%"))
+            ->when($request->has('district') && $request->district !== null, fn(Builder $query) => $query->where('district_id', 0))
+            ->when($request->has('state') && $request->state !== null, fn(Builder $query) => $query->whereIn('district_id', District::whereStateId(State::whereName($request->state)
+                                                                                                                                                       ->value('id'))
+                ->pluck('id')
+                ->toArray()))
+            ->when(request()->has('hasImages') && request('hasImages') === 'true', fn(Builder $builder) => $builder->whereHas('media'));
     }
 
     public function scopeSameState(Builder $query): Ad|m|Builder
