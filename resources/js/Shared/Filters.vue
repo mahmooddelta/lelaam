@@ -10,6 +10,7 @@ const props = defineProps({
     categories: Object,
     states: Object,
     districts: Object,
+    filters: Object,
 });
 const emits = defineEmits(["update:modelValue"]);
 const filters = ref({...props.modelValue});
@@ -40,31 +41,34 @@ watch(filters.state, (value) => {
                 v-model="filters.search"
                 placeholder="جستجو..."
             />
-            <v-select class="" placeholder="دسته بندی" :value="filters.category" :options="categories" label="name"
+            <v-select placeholder="دسته بندی" :value="filters.category" :options="categories" label="name"
                       :reduce="(option) => option.slug"
                       v-model="filters.category"/>
-            <v-select class="" :value="filters.state" placeholder="ولایت"
+            <v-select :value="filters.state" placeholder="ولایت"
                       :options="states"
-                      label="name" :reduce="(option) => option.id" v-model="filters.state"/>
-            <v-select :value="filters.district" class="" placeholder="ناحیه" :options="districts" label="name"
-                      :reduce="(option) => option.id"
+                      label="name"
+                      :reduce="(option) => option.name"
+                      v-model="filters.state"/>
+            <v-select :value="filters.district" placeholder="ناحیه" :options="districts"
+                      label="name"
+                      :reduce="(option) => option.name"
                       v-model="filters.district"/>
         </div>
         <!-- Sorts -->
-        <section class="py-4 flex justify-between">
-            <h2 class="text-3xl w-full">همه آگهی ها</h2>
-            <div class="flex justify-end w-full">
-                <div class="form-control w-fit">
+        <section class="py-4 flex justify-between items-center">
+            <h2 class="text-3xl w-full hidden md:inline-block">همه آگهی ها</h2>
+            <div class="flex flex-col md:flex-row md:justify-end shrink-0 w-full md:w-fit">
+                <div class="form-control order-last md:order-first mt-2 md:mt-0">
                     <label class="label cursor-pointer">
                         <input type="checkbox" checked="checked" class="checkbox checkbox-primary" v-model="filters.hasImages"/>
                         <span class="label-text font-bold ml-2">فقط آگهی های عکس دار</span>
                     </label>
                 </div>
 
-                <div class="divider divider-horizontal">
+                <div class="divider divider-horizontal"></div>
 
-                </div>
-                <select name="sorts" id="sorts" class="select select-bordered w-full max-w-xs" v-model="filters.sortBy" placeholder="مرتب سازی بر اساس">
+                <select name="sorts" id="sorts" class="select select-bordered w-full md:w-fit" v-model="filters.sortBy"
+                        placeholder="مرتب سازی بر اساس">
                     <option selected disabled>مرتب سازی بر اساس</option>
                     <option value="newest">جدید ترین</option>
                     <option value="oldest">قدیمی ترین</option>

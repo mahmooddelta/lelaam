@@ -14,6 +14,7 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    filters: Object,
 })
 
 const {filters, isLoading} = useFilters({
@@ -25,7 +26,7 @@ const {filters, isLoading} = useFilters({
 <template>
     <Head title="همه آگهی ها"/>
     <section class="w-full">
-        <Filters :categories="categories" :states="states" :districts="districts" v-model="filters"/>
+        <Filters :categories="categories" :states="states" :districts="districts" :filters="filters" v-model="filters"/>
     </section>
     <section class="w-full text-center my-4">
         <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-4 gap-4 px-4">
