@@ -2,5 +2,5 @@
 import Logo from "../Shared/Logo";</script>
 
 <template>
-    <Logo/>
+    <img src="/images/logo.png" alt="Logo" class="h-32">
 </template>
