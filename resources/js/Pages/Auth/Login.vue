@@ -45,7 +45,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <JetLabel for="email" value="ایمیل آدرس یا شماره تلفن" class="text-primary-500"/>
+                <JetLabel for="email" value="ایمیل آدرس یا شماره تلفن"/>
                 <JetInput
                     id="email"
                     v-model="form.email"
@@ -57,7 +57,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <JetLabel for="password" value="رمز عبور" class="text-primary-500"/>
+                <JetLabel for="password" value="رمز عبور"/>
                 <JetInput
                     id="password"
                     v-model="form.password"
@@ -75,7 +75,7 @@ const submit = () => {
                 </label>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex items-center justify-between mt-4">
                 <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm hover:text-primary-500">
                     رمز عبور تان را فراموش کرده اید؟
                 </Link>

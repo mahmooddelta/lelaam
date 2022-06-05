@@ -106,7 +106,7 @@ const submit = () => {
                 </JetLabel>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex items-center justify-between mt-4">
                 <Link :href="route('login')" class="underline text-sm hover:text-primary-500">
                     قبلاً ثبت نام کرده اید؟
                 </Link>
