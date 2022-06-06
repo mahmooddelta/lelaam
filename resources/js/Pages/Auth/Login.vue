@@ -14,7 +14,7 @@ defineProps({
 });
 
 const form = useForm({
-    email: '',
+    identity: '',
     password: '',
     remember: false,
 });
@@ -31,7 +31,7 @@ const submit = () => {
 
 <template>
     <Head title="ورود به سیستم"/>
-
+    identity
     <JetAuthenticationCard>
         <template #logo>
             <JetAuthenticationCardLogo/>
@@ -45,11 +45,11 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <JetLabel for="email" value="ایمیل آدرس یا شماره تلفن"/>
+                <JetLabel for="identity" value="ایمیل آدرس یا شماره تلفن"/>
                 <JetInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
+                    id="identity"
+                    v-model="form.identity"
+                    type="text"
                     class="mt-2 block w-full"
                     required
                     autofocus
