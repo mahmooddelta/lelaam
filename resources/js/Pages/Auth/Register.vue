@@ -7,6 +7,8 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import {getAuth, RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth'
+import {computed, onMounted, ref} from "vue";
 
 const form = useForm({
     name: '',
@@ -17,77 +19,95 @@ const form = useForm({
     terms: false,
 });
 
-const submit = () => {
-    // if (otpVerified.value) {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    });
-    // } else
-    //     alert('بدون تایید شماره تلفن ثبت نام امکان پذیر نیست!');
-};
+const message = ref('');
 
-// const auth = getAuth();
-// const isRecaptchaSolved = ref(false);
-// const otpSent = ref(false);
-//
-// onMounted(() => {
-//     auth.languageCode = 'fa';
-//     setTimeout(() => {
-//         window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-//             'size': 'invisible',
-//             'callback': (response) => isRecaptchaSolved.value = true,
-//             'expired-callback': () => isRecaptchaSolved.value = false,
-//         }, auth);
-//         recaptchaVerifier.render().then((widgetId) => {
-//             window.recaptchaWidgetId = widgetId;
-//         });
-//     }, 1000)
-// });
-// const appVerifier = ref(window.recaptchaVerifier);
-// const otp = ref(null);
-//
-// const sendOtp = () => {
-//     if (isRecaptchaSolved.value) {
-//         if (form.phone.length !== 10) {
-//             alert('شماره تلفن باید حداقل 10 رقم باشد!');
-//         } else {
-//             //
-//             let countryCode = '+93' // Afghanistan
-//             let phoneNumber = countryCode + form.phone
-//             //
-//             signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-//                 .then(function (confirmationResult) {
-//                     // SMS sent. Prompt user to type the code from the message, then sign the
-//                     // user in with confirmationResult.confirm(code).
-//                     window.confirmationResult = confirmationResult;
-//                     //
-//                     alert('کد تاییدی ارسال شد.')
-//                     otpSent.value = true;
-//                 }).catch(function (error) {
-//                 grecaptcha.reset(window.recaptchaWidgetId);
-//                 alert('خطا! ارسال کد تاییدی با مشکل روبرو شد.')
-//                 console.log(error)
-//             });
-//         }
-//     } else {
-//         alert('لطفا پازل را حل کنید!')
-//     }
-// };
-// const otpVerified = ref(false);
-// const verifyOtp = () => {
-//     if (form.phone.length !== 10 || otp.length !== 6) {
-//         alert('شماره تلفن یا کد وارد شده درست نیست!');
-//     } else {
-//         window.confirmationResult.confirm(otp.value).then(function (result) {
-//             otpVerified.value = true;
-//             console.log(code, result)
-//         }).catch(function (error) {
-//             otpVerified.value = false;
-//             alert('کد وارد شده صحیح نیست!')
-//         });
-//     }
-// };
-// const isPhoneInputted = computed(() => form.phone.length === 10);
+const submit = () => {
+    if (otpVerified.value) {
+        form.post(route('register'), {
+            onFinish: () => form.reset('password', 'password_confirmation'),
+        });
+    } else
+        alert('بدون تایید شماره تلفن ثبت نام امکان پذیر نیست!');
+};
+const errors = ref('');
+const handleOTPExceptions = error => {
+    if (error.message === 'TOO_MANY_ATTEMPTS_TRY_LATER')
+        errors.value = 'تعداد ارسال کد از مقدار مجاز عبور نموده است. لطفاً بعداً کوشش کنید!';
+    else if (error.message === 'ERROR_SESSION_EXPIRED')
+        errors.value = 'کد وارد شده منقضی شده است. لطفاً روی ارسال دوباره کلیک کنید!';
+    else if (error.message === 'ERROR_QUOTA_EXCEEDED')
+        errors.value = 'مشکلی رخ داده است. لطفاً بعداً دوباره کوشش نمایید!';
+    else if (error.message === 'ERROR_INVALID_VERIFICATION_CODE')
+        errors.value = 'کد وارد شده درست نیست!';
+    else
+        errors.value = 'مشکلی در ارسال کد تایید رخ داده است. لطفاً بعداً دوباره کوشش نمایید.';
+
+    if (errors.value !== '')
+        alert(errors.value)
+};
+const auth = getAuth();
+const isRecaptchaSolved = ref(false);
+const otpSent = ref(false);
+
+onMounted(() => {
+    auth.languageCode = 'fa';
+    setTimeout(() => {
+        window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+            // 'size': 'invisible',
+            'callback': (response) => isRecaptchaSolved.value = true,
+            'expired-callback': () => isRecaptchaSolved.value = false,
+        }, auth);
+        recaptchaVerifier.render().then((widgetId) => {
+            window.recaptchaWidgetId = widgetId;
+        });
+    }, 1000)
+});
+const otp = ref(null);
+
+const sendOtp = () => {
+    if (isRecaptchaSolved.value) {
+        if (form.phone.length !== 10) {
+            alert('شماره تلفن باید حداقل 10 رقم باشد!');
+        } else {
+            //
+            let countryCode = '+93' // Afghanistan
+            let phoneNumber = countryCode + form.phone
+            //
+            signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+                .then(function (confirmationResult) {
+                    // SMS sent. Prompt user to type the code from the message, then sign the
+                    // user in with confirmationResult.confirm(code).
+                    window.confirmationResult = confirmationResult;
+                    //
+                    alert('کد تاییدی ارسال شد.')
+                    otpSent.value = true;
+                })
+                .catch(function (error) {
+                    grecaptcha.reset(window.recaptchaWidgetId);
+                    isRecaptchaSolved.value = false;
+                    otpSent.value = false;
+                    handleOTPExceptions(error);
+                });
+        }
+    } else {
+        alert('لطفا پازل را حل کنید!')
+    }
+};
+const otpVerified = ref(false);
+const verifyOtp = () => {
+    if (form.phone.length !== 10 || otp.value.length !== 6) {
+        alert('شماره تلفن یا کد وارد شده درست نیست!');
+    } else {
+        window.confirmationResult.confirm(otp.value).then(function (result) {
+            otpVerified.value = true;
+            console.log(otp.value, result)
+        }).catch(function (error) {
+            otpVerified.value = false;
+            handleOTPExceptions(error);
+        });
+    }
+};
+const isPhoneInputted = computed(() => form.phone.length === 10);
 </script>
 
 <template>
@@ -148,7 +168,6 @@ const submit = () => {
                     autocomplete="new-password"
                 />
             </div>
-            <div id="recaptcha-container"></div>
             <div class="mt-4">
                 <JetLabel for="phone" value="شماره تماس"/>
                 <JetInput
@@ -158,12 +177,13 @@ const submit = () => {
                     class="mt-1 block w-full"
                     required
                 />
-                <!--                <section class="flex mt-2 justify-start pr-2" v-show="isPhoneInputted">-->
-                <!--                    <button id="sign-in-button" class="btn btn-outline btn-primary mx-1" @click="sendOtp" v-show="!otpSent" type="button">ارسال کد</button>-->
-                <!--                    <input v-show="otpSent" class="input input-bordered bg-adaptable" type="text" minlength="6" maxlength="6" min="0" max="9" v-model="otp"-->
-                <!--                           placeholder="OTP"/>-->
-                <!--                    <button @click="sendOtp" v-show="otpSent" class="btn btn-outline btn-primary mx-1" type="button">ارسال دوباره</button>-->
-                <!--                </section>-->
+                <div id="recaptcha-container" class="flex justify-center w-full my-2" v-show="!isRecaptchaSolved"></div>
+                <section class="flex mt-2 justify-between pr-2" v-show="isPhoneInputted">
+                    <button id="sign-in-button" class="btn btn-outline btn-primary mx-1" @click="sendOtp" v-show="!otpSent" type="button">ارسال کد</button>
+                    <input v-show="otpSent" class="input input-bordered bg-adaptable" type="text" minlength="6" maxlength="6" min="0" max="9" v-model="otp"
+                           placeholder="کد یکبار مصرف"/>
+                    <button @click="sendOtp" v-show="otpSent" class="btn btn-outline btn-primary mx-1" type="button">ارسال دوباره</button>
+                </section>
             </div>
 
             <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
@@ -185,7 +205,9 @@ const submit = () => {
                     قبلاً ثبت نام کرده اید؟
                 </Link>
 
-                <JetButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <JetButton class="ml-4 disabled:opacity-75"
+                           @click="verifyOtp"
+                           :disabled="form.processing || !isRecaptchaSolved">
                     ثبت نام
                 </JetButton>
             </div>
