@@ -18,7 +18,7 @@ class AttributeValueResource extends JsonResource
             'id' => $this->when($this->id, $this->id),
             'name' => $this->name,
 
-            'ads_count' => $this->ads_count,
+            'ads_count' => $this->when($this->ads_count, $this->ads_count),
 
             'attribute_id' => $this->when($this->attribute_id, $this->attribute_id),
 

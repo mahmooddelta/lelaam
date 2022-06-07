@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Attribute;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,7 +27,7 @@ class AttributeResource extends JsonResource
             'ads' => AdResource::collection($this->whenLoaded('ads')),
             'value' => $this->when($this->pivot, $this->getOriginal('pivot_value')),
 
-            'values' => $this->whenLoaded('values', AttributeValueResource::collection($this->values)),
+            'values' => AttributeValueResource::collection($this->whenLoaded('values')),
         ];
     }
 }
