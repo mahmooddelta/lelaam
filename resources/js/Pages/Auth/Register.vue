@@ -25,7 +25,7 @@ const form = useForm({
     password_confirmation: '',
     terms: false,
     phoneVerified: otpVerified.value,
-    state: null,
+    state: 'انتخاب ولایت',
 });
 const isPhoneInputted = computed(() => form.phone.length === 10);
 const props = defineProps({
@@ -157,7 +157,6 @@ const verifyOtp = () => {
                     v-model="form.email"
                     type="email"
                     class="mt-1 block w-full"
-                    required
                 />
             </div>
 
@@ -205,7 +204,8 @@ const verifyOtp = () => {
                 <div id="recaptcha-container" class="flex justify-center w-full my-2" v-show="!isRecaptchaSolved"></div>
                 <section class="flex mt-2 justify-between pr-2" v-show="isPhoneInputted">
                     <button id="sign-in-button" class="btn btn-outline btn-primary mx-1" @click="sendOtp" v-show="!otpSent" type="button">ارسال کد</button>
-                    <input v-show="otpSent" @focusout="verifyOtp" class="input input-bordered bg-adaptable" type="text" minlength="6" maxlength="6" min="0" max="9" v-model="otp"
+                    <input v-show="otpSent" @focusout="verifyOtp" class="input input-bordered bg-adaptable" type="text" minlength="6" maxlength="6" min="0"
+                           max="9" v-model="otp" required
                            placeholder="کد یکبار مصرف"/>
                     <button @click="sendOtp" v-show="otpSent" class="btn btn-outline btn-primary mx-1" type="button">ارسال دوباره</button>
                 </section>
