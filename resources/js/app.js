@@ -9,7 +9,7 @@ import {MediaLibraryAttachment} from '@spatie/media-library-pro-vue3-attachment'
 import {initializeApp} from "firebase/app";
 import {getAnalytics} from "firebase/analytics";
 // Toast
-import Toast, {POSITION} from 'vue-toastification'
+import Toast, {POSITION, useToast} from 'vue-toastification'
 
 require('./bootstrap');
 
@@ -29,6 +29,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+
+window.toast = useToast();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
