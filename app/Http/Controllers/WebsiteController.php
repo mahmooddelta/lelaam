@@ -6,8 +6,14 @@ use App\Http\Resources\AdResource;
 use App\Models\Ad;
 use App\Models\Category;
 use App\Models\State;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
+use function auth;
+use function now;
+use function to_route;
 
 class WebsiteController extends Controller
 {
@@ -39,5 +45,22 @@ class WebsiteController extends Controller
         return Inertia::render('Auth/Register', [
             'states' => State::select(['id', 'name'])->get(),
         ]);
+    }
+
+    public function phoneUnverified(): Response
+    {
+        return Inertia::render('PhoneNotVerified');
+    }
+
+    public function phoneVerify(Request $request): RedirectResponse
+    {
+        Validator::make($request->all(), [
+            'phone' => 'required|string|min:10|max:14|exists:users,phone',
+            'phoneVerified' => ['nullable', 'boolean'],
+        ])->validate();
+
+        auth()->user()->update(['phone_verified_at' => $request->phoneVerified === true ? now() : null,]);
+
+        return to_route('account');
     }
 }

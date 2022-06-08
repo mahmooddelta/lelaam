@@ -26,8 +26,13 @@ Route::get('ads/{category:slug?}', [AdController::class, 'index'])->name('ads');
 Route::get('ad/{ad:slug}', [AdController::class, 'show'])->name('ad.show');
 Route::get('categories', [CategoryController::class, 'index'])->name('categories');
 Route::get('chat', [ChatController::class, 'index'])->name('chat');
+// Phone Verification
+Route::get('phone/unverified', [WebsiteController::class, 'phoneUnverified'])->name('phone.unverified');
+Route::post('phone/verify', [WebsiteController::class, 'phoneVerify'])
+    ->name('phone.verify')
+    ->middleware('auth');
 // Protected routes
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'phone.verified'])
     ->group(function () {
         Route::get('account', [AccountController::class, 'index'])
             ->name('account');

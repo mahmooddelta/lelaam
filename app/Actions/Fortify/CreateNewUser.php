@@ -27,7 +27,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'phone' => ['required', 'string', 'min:10', 'max:14', 'unique:users'],
-            'phone_verified_at' => ['nullable', 'boolean'],
+            'phoneVerified' => ['nullable', 'boolean'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
             'state' => ['required', 'integer', 'min:0', Rule::exists(State::class, 'id')],
         ])->validate();
