@@ -9,6 +9,7 @@ import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import {getAuth, RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth'
 import {computed, onMounted, ref} from "vue";
+import {Inertia} from "@inertiajs/inertia";
 
 const errors = ref('');
 const auth = getAuth();
@@ -24,11 +25,15 @@ const form = useForm({
     password_confirmation: '',
     terms: false,
     phoneVerified: otpVerified.value,
+    state: null,
 });
 const isPhoneInputted = computed(() => form.phone.length === 10);
+const props = defineProps({
+    states: Object,
+});
 
 const submit = () => {
-    if (otpVerified.value) {
+    if (otpVerified.value === true) {
         form.transform(data => ({
             ...data,
             phoneVerified: otpVerified.value,
@@ -54,6 +59,14 @@ const handleOTPExceptions = error => {
         toast.error(errors.value, {timeout: 2000});
 };
 onMounted(() => {
+    // Load states
+    Inertia.visit(route('states.load'), {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        onSuccess: response => props.states.value = response,
+    })
+    // Recaptcha
     auth.languageCode = 'fa';
     setTimeout(() => {
         window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
@@ -143,6 +156,15 @@ const verifyOtp = () => {
                     class="mt-1 block w-full"
                     required
                 />
+            </div>
+
+            <div class="mt-4">
+                <JetLabel for="state" value="ولایت"/>
+                <select name="state" id="state" class="select select-bordered w-full mt-1 block" v-model="form.state"
+                        placeholder="انتخاب ولایت">
+                    <option selected disabled>انتخاب ولایت</option>
+                    <option v-for="state in states" :key="state.id" :value="state.id" v-text="state.name"></option>
+                </select>
             </div>
 
             <div class="mt-4">

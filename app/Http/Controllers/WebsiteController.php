@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AdResource;
 use App\Models\Ad;
 use App\Models\Category;
+use App\Models\State;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class WebsiteController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         return Inertia::render('Index', [
             'categories' => Category::query()->select(['id', 'name', 'slug'])
@@ -29,6 +31,13 @@ class WebsiteController extends Controller
                                                 ->latest()
                                                 ->take(40)
                                                 ->get()),
+        ]);
+    }
+
+    public function states(): Response
+    {
+        return Inertia::render('Auth/Register', [
+            'states' => State::select(['id', 'name'])->get(),
         ]);
     }
 }
