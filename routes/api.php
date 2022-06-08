@@ -11,12 +11,12 @@ Route::get('category/{category:slug}/attributes', [CategoryController::class, 'a
 Route::get('states', [AppController::class, 'states']);
 Route::get('districts/{state:name?}', [AppController::class, 'districts']);
 // Ads
-Route::get('ads/{category:slug?}', [AdController::class, 'index']);
-Route::get('ad/{ad:slug}', [AdController::class, 'show']);
-Route::post('ad/create', [AdController::class, 'store']);
-Route::put('ad/{ad:slug}/update', [AdController::class, 'update']);
+Route::get('posts/{category:slug?}', [AdController::class, 'index']);
+Route::get('post/{ad:slug}', [AdController::class, 'show']);
+Route::post('post/create', [AdController::class, 'store']);
+Route::put('post/{ad:slug}/update', [AdController::class, 'update']);
 // Ad Bookmark
-Route::get('ad/{ad:slug}/bookmark', [AdController::class, 'bookmark']);
+Route::get('post/{ad:slug}/bookmark', [AdController::class, 'bookmark']);
 // Auth Endpoints
 Route::post('register', [AuthController::class, 'register']);
 Route::middleware(['api'])->prefix('auth')->group(function () {
@@ -29,7 +29,7 @@ Route::middleware(['api'])->prefix('auth')->group(function () {
 });
 Route::middleware(['api', 'jwt'])->group(function () {
     // User Bookmarked Ads
-    Route::get('user/bookmarked/ads', [AdController::class, 'userBookmarkedAds']);
+    Route::get('user/bookmarked/posts', [AdController::class, 'userBookmarkedAds']);
     // User Ads
     Route::get('user/ads', [AdController::class, 'userAds']);
 });
