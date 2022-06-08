@@ -220,4 +220,24 @@ return [
             ],
         ],
     ],
+    'report_types' => [
+        'title' => 'نوع گزارش',
+        'title_plural' => 'انواع گزارش',
+        'fields' => [
+            'name' => 'نام',
+            'description' => 'توضیحات',
+            'is_active' => 'فعال',
+        ],
+        'placeholders' => [
+
+        ],
+        'filters' => [
+            'is_active' => [
+                'status' => 'وضعیت فعال بودن',
+                'status_placeholder' => 'همه وضعیت ها',
+                "is_active" => "فعال",
+                "is_inactive" => "غیرفعال",
+            ],
+        ],
+    ],
 ];
