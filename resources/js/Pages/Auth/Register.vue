@@ -10,6 +10,12 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import {getAuth, RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth'
 import {computed, onMounted, ref} from "vue";
 
+const errors = ref('');
+const auth = getAuth();
+const isRecaptchaSolved = ref(false);
+const otpSent = ref(false);
+const otp = ref(null);
+const otpVerified = ref(false);
 const form = useForm({
     name: '',
     email: '',
@@ -17,19 +23,21 @@ const form = useForm({
     password: '',
     password_confirmation: '',
     terms: false,
+    phoneVerified: otpVerified.value,
 });
-
-const message = ref('');
+const isPhoneInputted = computed(() => form.phone.length === 10);
 
 const submit = () => {
     if (otpVerified.value) {
-        form.post(route('register'), {
+        form.transform(data => ({
+            ...data,
+            phoneVerified: otpVerified.value,
+        })).post(route('register'), {
             onFinish: () => form.reset('password', 'password_confirmation'),
         });
     } else
-        alert('بدون تایید شماره تلفن ثبت نام امکان پذیر نیست!');
+        toast.error('بدون تایید شماره تلفن ثبت نام امکان پذیر نیست!', {timeout: 2000});
 };
-const errors = ref('');
 const handleOTPExceptions = error => {
     if (error.message === 'TOO_MANY_ATTEMPTS_TRY_LATER')
         errors.value = 'تعداد ارسال کد از مقدار مجاز عبور نموده است. لطفاً بعداً کوشش کنید!';
@@ -43,12 +51,8 @@ const handleOTPExceptions = error => {
         errors.value = 'مشکلی در ارسال کد تایید رخ داده است. لطفاً بعداً دوباره کوشش نمایید.';
 
     if (errors.value !== '')
-        alert(errors.value)
+        toast.error(errors.value, {timeout: 2000});
 };
-const auth = getAuth();
-const isRecaptchaSolved = ref(false);
-const otpSent = ref(false);
-
 onMounted(() => {
     auth.languageCode = 'fa';
     setTimeout(() => {
@@ -62,12 +66,10 @@ onMounted(() => {
         });
     }, 1000)
 });
-const otp = ref(null);
-
 const sendOtp = () => {
     if (isRecaptchaSolved.value) {
         if (form.phone.length !== 10) {
-            alert('شماره تلفن باید حداقل 10 رقم باشد!');
+            toast.error('شماره تلفن باید حداقل 10 رقم باشد!', {timeout: 2000});
         } else {
             //
             let countryCode = '+93' // Afghanistan
@@ -79,7 +81,7 @@ const sendOtp = () => {
                     // user in with confirmationResult.confirm(code).
                     window.confirmationResult = confirmationResult;
                     //
-                    alert('کد تاییدی ارسال شد.')
+                    toast.success('کد تاییدی ارسال شد.', {timeout: 3000});
                     otpSent.value = true;
                 })
                 .catch(function (error) {
@@ -90,13 +92,12 @@ const sendOtp = () => {
                 });
         }
     } else {
-        alert('لطفا پازل را حل کنید!')
+        toast.error('لطفا پازل را حل کنید!', {timeout: 2000});
     }
 };
-const otpVerified = ref(false);
 const verifyOtp = () => {
     if (form.phone.length !== 10 || otp.value.length !== 6) {
-        alert('شماره تلفن یا کد وارد شده درست نیست!');
+        toast.error('شماره تلفن یا کد وارد شده درست نیست!', {timeout: 2000});
     } else {
         window.confirmationResult.confirm(otp.value).then(function (result) {
             otpVerified.value = true;
@@ -107,7 +108,6 @@ const verifyOtp = () => {
         });
     }
 };
-const isPhoneInputted = computed(() => form.phone.length === 10);
 </script>
 
 <template>
