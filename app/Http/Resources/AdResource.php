@@ -37,7 +37,7 @@ class AdResource extends JsonResource
             'media' => $this->whenLoaded('media', fn() => MediaResource::collection($this->media)),
 
             'user' => $this->when('user', $this?->user?->name ?? 'مهمان'),
-            'category' => $this->whenLoaded('category', $this->category),
+            'category' => $this->whenLoaded('category', CategoryResource::make($this->category)),
             'district' => $this->when('district', $this?->district?->name ?? 'District'),
             'state' => $this?->district?->state?->name ?? 'State',
 
