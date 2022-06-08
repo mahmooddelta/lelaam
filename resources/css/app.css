@@ -17,7 +17,9 @@
 @import 'swiper/modules/lazy/lazy.min.css';
 @import 'swiper/modules/zoom/zoom.min.css';
 
-@import "@spatie/media-library-pro-styles";
+@import '@spatie/media-library-pro-styles';
+
+@import 'vue-toastification/dist/index.css';
 
 @layer base {
     html {

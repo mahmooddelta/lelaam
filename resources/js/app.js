@@ -8,6 +8,8 @@ import {MediaLibraryAttachment} from '@spatie/media-library-pro-vue3-attachment'
 // Import the functions you need from the SDKs you need
 import {initializeApp} from "firebase/app";
 import {getAnalytics} from "firebase/analytics";
+// Toast
+import Toast, {POSITION} from 'vue-toastification'
 
 require('./bootstrap');
 
@@ -43,6 +45,10 @@ createInertiaApp({
             .component('v-select', VueSelect)
             .component('media-library-attachment', MediaLibraryAttachment)
             .mixin({methods: {route}})
+            .use(Toast, {
+                position: POSITION.TOP_RIGHT,
+                rtl: true,
+            })
             .mount(el);
     },
 });
