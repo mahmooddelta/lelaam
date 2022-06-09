@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\ReportTypeResource\Pages;
 
 use App\Filament\Resources\ReportTypeResource;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Resources\Pages\ManageRecords;
 
-class ListReportTypes extends ListRecords
+class ManageReportTypes extends ManageRecords
 {
     protected static string $resource = ReportTypeResource::class;
 }

@@ -10,7 +10,6 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use function __;
 
 class ReportTypeResource extends Resource
 {
@@ -51,10 +50,12 @@ class ReportTypeResource extends Resource
                               ->label(__('general.report_types.fields.name'))
                               ->sortable()
                               ->searchable(),
+
                           Tables\Columns\TextColumn::make('description')
                               ->label(__('general.report_types.fields.description'))
                               ->toggleable()
                               ->limit(60),
+
                           Tables\Columns\BooleanColumn::make('is_active')
                               ->label(__('general.report_types.fields.is_active'))
                               ->sortable()
@@ -69,19 +70,10 @@ class ReportTypeResource extends Resource
                       ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListReportTypes::route('/'),
-            'create' => Pages\CreateReportType::route('/create'),
-            'edit' => Pages\EditReportType::route('/{record}/edit'),
+            'index' => Pages\ManageReportTypes::route('/'),
         ];
     }
 
@@ -99,5 +91,4 @@ class ReportTypeResource extends Resource
     {
         return __('nav.leelam');
     }
-
 }
