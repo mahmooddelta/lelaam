@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Ad\StoreRequest;
+use App\Http\Resources\AdReportResource;
 use App\Http\Resources\AdResource;
 use App\Models\Ad;
 use App\Models\Category;
@@ -160,7 +161,7 @@ class AdController extends Controller
     {
         Bookmark::toggle($ad, auth()->user());
 
-        return response()->json(['message', 'آگهی با موفقیت به لیست بوکمارک ها اضافه شد.']);
+        return response()->json(['message' => 'آگهی با موفقیت به لیست بوکمارک ها اضافه شد.']);
     }
 
     public function userAds(): JsonResponse
@@ -187,6 +188,39 @@ class AdController extends Controller
 
         return response()->json([
                                     'ads' => AdResource::collection($ads),
+                                ]);
+    }
+
+    public function reports(): JsonResponse
+    {
+        return response()->json(
+            [
+                'reports' => AdReportResource::collection(auth('api')
+                                                              ->user()
+                                                              ?->reports()
+                                                              ->active()
+                                                              ->with(['ad:id,title'])
+                                                              ->get()),
+            ]);
+    }
+
+    public function report(Ad $ad, Request $request): JsonResponse
+    {
+        $request->validate(
+            [
+                'type' => 'required|exists:report_types,id',
+                'description' => 'required',
+            ]);
+
+        $ad->reports()->create(
+            [
+                'user_id' => auth()->id(),
+                'report_type_id' => $request->input('type'),
+                'description' => $request->input('description'),
+            ]);
+
+        return response()->json([
+                                    'message' => 'گزارش تخلف یا مشکل شما ارسال شد. لطفاً منتظر بررسی مدیر سایت باشید!',
                                 ]);
     }
 }
