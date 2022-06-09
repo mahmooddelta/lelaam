@@ -603,6 +603,158 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => '2022-05-14 14:44:08',
                 'updated_at' => '2022-05-14 14:44:08',
             ),
+            73 => 
+            array (
+                'id' => 74,
+                'name' => 'view_adreport',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            74 => 
+            array (
+                'id' => 75,
+                'name' => 'view_any_adreport',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            75 => 
+            array (
+                'id' => 76,
+                'name' => 'create_adreport',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            76 => 
+            array (
+                'id' => 77,
+                'name' => 'delete_adreport',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            77 => 
+            array (
+                'id' => 78,
+                'name' => 'delete_any_adreport',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            78 => 
+            array (
+                'id' => 79,
+                'name' => 'update_adreport',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            79 => 
+            array (
+                'id' => 80,
+                'name' => 'export_adreport',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            80 => 
+            array (
+                'id' => 81,
+                'name' => 'view_reporttype',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            81 => 
+            array (
+                'id' => 82,
+                'name' => 'view_any_reporttype',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            82 => 
+            array (
+                'id' => 83,
+                'name' => 'create_reporttype',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            83 => 
+            array (
+                'id' => 84,
+                'name' => 'delete_reporttype',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            84 => 
+            array (
+                'id' => 85,
+                'name' => 'delete_any_reporttype',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            85 => 
+            array (
+                'id' => 86,
+                'name' => 'update_reporttype',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            86 => 
+            array (
+                'id' => 87,
+                'name' => 'export_reporttype',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:50',
+                'updated_at' => '2022-06-09 14:06:50',
+            ),
+            87 => 
+            array (
+                'id' => 88,
+                'name' => 'view_filament_info_widget',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:51',
+                'updated_at' => '2022-06-09 14:06:51',
+            ),
+            88 => 
+            array (
+                'id' => 89,
+                'name' => 'view_today_ad_stats',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:51',
+                'updated_at' => '2022-06-09 14:06:51',
+            ),
+            89 => 
+            array (
+                'id' => 90,
+                'name' => 'view_ad_stats',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:51',
+                'updated_at' => '2022-06-09 14:06:51',
+            ),
+            90 => 
+            array (
+                'id' => 91,
+                'name' => 'view_dashboard_stats',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:51',
+                'updated_at' => '2022-06-09 14:06:51',
+            ),
+            91 => 
+            array (
+                'id' => 92,
+                'name' => 'view_ads_chart',
+                'guard_name' => 'web',
+                'created_at' => '2022-06-09 14:06:51',
+                'updated_at' => '2022-06-09 14:06:51',
+            ),
         ));
         
         
