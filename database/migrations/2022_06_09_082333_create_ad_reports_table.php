@@ -31,9 +31,10 @@ return new class extends Migration{
 
             $table->text('description');
 
-            $table->string('status', 60)->default(AdReport::STATUS['pending']);
+            $table->string('status', 60)
+                ->default(array_search(AdReport::STATUS['pending'], AdReport::STATUS));
 
-            $table->boolean('is_active')->default(false);
+            $table->boolean('is_active')->default(true);
 
             $table->timestamps();
         });

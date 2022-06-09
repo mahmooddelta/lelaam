@@ -31,17 +31,17 @@ class AdResource extends JsonResource
             'created_at' => $this->whenNotNull($this->created_at?->diffForHumans()),
             'updated_at' => $this->whenNotNull($this->updated_at?->diffForHumans()),
 
-            'attributes' => $this->whenLoaded('attributes', fn() => AttributeResource::collection($this->attributes)),
-            'values' => $this->whenLoaded('values', fn() => AttributeValueResource::collection($this->values)),
+            'attributes' => AttributeResource::collection($this->whenLoaded('attributes')),
+            'values' => AttributeValueResource::collection($this->whenLoaded('values')),
 
-            'media' => $this->whenLoaded('media', fn() => MediaResource::collection($this->media)),
+            'media' => MediaResource::collection($this->whenLoaded('media')),
 
             'user' => $this->when('user', $this?->user?->name ?? 'مهمان'),
-            'category' => $this->whenLoaded('category', CategoryResource::make($this->category)),
+            'category' => CategoryResource::make($this->whenLoaded('category')),
             'district' => $this->when('district', $this?->district?->name ?? 'District'),
             'state' => $this?->district?->state?->name ?? 'State',
 
-            'bookmarks' => $this->whenLoaded('bookmarkers', fn() => BookmarkResource::collection($this->bookmarkers)),
+            'bookmarks' => BookmarkResource::collection($this->whenLoaded('bookmarkers')),
         ];
     }
 }

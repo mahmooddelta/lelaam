@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
+use m;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Bookmark;
 use Maize\Markable\Models\Like;
@@ -94,6 +96,11 @@ class Ad extends Model implements HasMedia
         return $this->belongsTo(User::class);
     }
 
+    public function reports(): HasMany
+    {
+        return $this->hasMany(AdReport::class);
+    }
+
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
@@ -124,7 +131,7 @@ class Ad extends Model implements HasMedia
         return $query->whereIsPublished(false);
     }
 
-    public function scopeTodayCreated(Builder $query): Ad|\m|Builder
+    public function scopeTodayCreated(Builder $query): Ad|m|Builder
     {
         return $query->whereDay('created_at', now()->day);
     }

@@ -11,9 +11,10 @@ const props = defineProps({
     states: Object,
     bookmarked: Object,
     last_views: Object,
-    user: Object,
+    user_state: Number,
+    reports: Object,
 })
-const selectedState = ref(props.user.state_id ?? null);
+const selectedState = ref(props.user_state ?? null);
 watch(selectedState, (value) => {
     // localStorage.setItem('state', value)
     // localStorage.getItem('state')
@@ -23,6 +24,19 @@ watch(selectedState, (value) => {
         replace: true,
     }))
 })
+
+const badgeType = type => {
+    switch (type) {
+        case 'pending':
+            return 'badge-info';
+        case 'resolved':
+            return 'badge-success';
+        case 'rejected':
+            return 'badge-danger';
+        default:
+            return 'badge-secondary';
+    }
+};
 </script>
 
 <template>
@@ -31,20 +45,69 @@ watch(selectedState, (value) => {
     <Container>
         <Collapse title="اعلانات من">
             <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4">
-                <Ad v-for="ad in ads.data" :key="ad.id" :ad="ad"/>
+                <Ad v-for="ad in ads.data" :key="ad.id" :ad="ad" v-if="ads.data.length > 0"/>
+                <div class="text-center" v-else>
+                    <p class="text-2xl">
+                        شما هیچ اعلانی ثبت نکرده اید!
+                    </p>
+                </div>
             </section>
         </Collapse>
 
         <Collapse title="نشانی شده ها">
             <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4">
-                <Ad v-for="bookmark in bookmarked.data" :key="bookmark.id" :ad="bookmark.ad"/>
+                <Ad v-for="bookmark in bookmarked.data" :key="bookmark.id" :ad="bookmark.ad" v-if="bookmarked.data.length > 0"/>
+                <div class="text-center" v-else>
+                    <p class="text-2xl">
+                        شما هیچ اعلانی نشانی نکرده اید!
+                    </p>
+                </div>
             </section>
         </Collapse>
 
         <Collapse title="آخرین بازدید ها">
             <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4">
-                <Ad v-for="last_view in last_views.data" :key="last_view.id" :ad="last_view.ad"/>
+                <Ad v-for="last_view in last_views.data" :key="last_view.id" :ad="last_view.ad" v-if="last_views.data.length > 0"/>
+                <div class="text-center" v-else>
+                    <p class="text-2xl">
+                        شما هیچ اعلانی را بازدید نکرده اید!
+                    </p>
+                </div>
             </section>
+        </Collapse>
+
+        <Collapse title="گزارش های تخطی و اشتباه">
+            <div class="overflow-x-auto" v-if="reports.data.length > 0">
+                <table class="table w-full">
+                    <!-- head -->
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>نوع گزارش</th>
+                        <th>آگهی</th>
+                        <th>توضیحات</th>
+                        <th>وضعیت</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- row 1 -->
+                    <tr class="hover" v-for="(report, index) in reports.data" :key="report.name">
+                        <td v-text="index + 1"></td>
+                        <td v-text="report.report_type.name"></td>
+                        <td v-text="report.ad.title"></td>
+                        <td v-html="report.description"></td>
+                        <td>
+                            <div class="badge" :class="badgeType(report.status)" v-text="report.status_label"></div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center" v-else>
+                <p class="text-2xl">
+                    شما هیچ گزارشی ثبت نکرده اید!
+                </p>
+            </div>
         </Collapse>
 
         <div class="divider"></div>

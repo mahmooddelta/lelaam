@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RalphJSmit\Helpers\Laravel\Concerns\HasFactory;
@@ -43,5 +44,10 @@ class AdReport extends Model
     public function getStatusMessageAttribute(): string
     {
         return self::STATUS[$this->status];
+    }
+
+    public function scopeActive(Builder $builder): Builder
+    {
+        return $builder->whereIsActive(true);
     }
 }

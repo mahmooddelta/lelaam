@@ -40,6 +40,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             ->name('account.user.state.change');
         Route::get('post/{ad:slug}/bookmark', [AdController::class, 'bookmark'])
             ->name('ad.bookmark');
+        Route::post('post/{ad:slug}/report', [AdController::class, 'report'])
+            ->name('post.report');
     });
 
 Route::mediaLibrary();

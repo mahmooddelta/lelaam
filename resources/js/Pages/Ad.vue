@@ -36,7 +36,7 @@
         </nav>
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 py-3">
             <div class="text-right p-4">
-                <h1 class="text-4xl font-bold" v-text="ad.data.title"></h1>
+                <h1 class="text-3xl lg:text-4xl font-bold" v-text="ad.data.title"></h1>
                 <h2 class="text-base-600 py-6 flex">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="#fb5858" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -48,20 +48,91 @@
                     {{ ad.data.state }}
                 </h2>
                 <section class="flex justify-between pb-4">
-                    <a v-if="ad.data.phone_number" :href="`tel:${ad.data.phone_number}`" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <a v-if="ad.data.phone_number" :href="`tel:${ad.data.phone_number}`" class="btn btn-primary btn-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                   d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                         </svg>
                         تماس با فروشنده
                     </a>
-                    <Link :href="route('ad.bookmark', { ad: ad.data.slug })" :title="is_bookmarked ? 'نشانی شده' : 'اضافه کردن به نشانی شده ها'"
-                          v-if="$page.props.user">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" :fill="is_bookmarked ? '#fb5858' : 'none'" viewBox="0 0 24 24"
-                             :stroke="is_bookmarked ? 'currentColor' : '#fb5858'" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                        </svg>
-                    </Link>
+                    <div class="flex justify-end">
+                        <button class="btn btn-outline btn-primary btn-sm modal-button"
+                                @click="wantsToReportAd = true"
+                                v-if="$page.props.user && can_report">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            گزارش تخلف و مشکل آگهی
+                        </button>
+                        <span>
+                            <!-- Report Post Modal -->
+                            <DialogModal :show="wantsToReportAd" @close="wantsToReportAd = null" class="my-24">
+                                <template #title>
+                                    گزارش تخلف و مشکل در آگهی
+                                </template>
+
+                                <template #content>
+                                    <section class="py-4">
+                                        <!-- Type -->
+                                        <div class="mt-4">
+                                            <label class="block font-medium text-sm" for="type">
+                                                <span class="label-text font-bold after:content-['*'] after:ml-0.5 after:text-red-500">
+                                                    نوع تخلف یا مشکل
+                                                </span>
+                                            </label>
+                                            <select name="type" id="type" class="select select-bordered w-full mt-1 block" v-model="form.type"
+                                                    placeholder="انتخاب نوع">
+                                                <option selected disabled>انتخاب نوع</option>
+                                                <option v-for="type in report_types" :key="type.id" :value="type.id" v-text="type.name"></option>
+                                            </select>
+                                            <div v-if="form.errors.type" class="text-red-500 text-sm my-2">{{ form.errors.type }}</div>
+                                        </div>
+                                        <!-- Description -->
+                                        <div class="my-4">
+                                        <label for="description" class="label block font-medium">
+                                            <span class="label-text font-bold after:content-['*'] after:ml-0.5 after:text-red-500">
+                                                توضیحات
+                                            </span>
+                                        </label>
+                                        <ckeditor
+                                            id="description"
+                                            class="rounded-lg"
+                                            :class="{'input-error': form.errors.description}"
+                                            :editor="editor"
+                                            v-model="form.description"
+                                            :config="editorConfig"
+                                            :disabled="form.processing"
+                                            tag-name="textarea"/>
+                                        <div v-if="form.errors.description" class="text-red-500 text-sm my-2">{{ form.errors.description }}</div>
+                                    </div>
+                                </section>
+                                </template>
+
+                                <template #footer>
+                                    <button class="btn btn-outline btn-secondary text-primary-500 mx-2"
+                                            @click="wantsToReportAd = null">
+                                        منصرف شدم
+                                    </button>
+
+                                    <button
+                                        @click="submit"
+                                        class="btn btn-primary"
+                                        type="submit"
+                                        :class="{'loading': form.processing}"
+                                        :disabled="form.processing">
+                                            ثبت
+                                    </button>
+                                </template>
+                            </DialogModal>
+                        </span>
+                        <Link :href="route('ad.bookmark', { ad: ad.data.slug })" :title="is_bookmarked ? 'نشانی شده' : 'اضافه کردن به نشانی شده ها'"
+                              v-if="$page.props.user">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" :fill="is_bookmarked ? '#fb5858' : 'none'" viewBox="0 0 24 24"
+                                 :stroke="is_bookmarked ? 'currentColor' : '#fb5858'" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                            </svg>
+                        </Link>
+                    </div>
                 </section>
                 <div class="overflow-x-auto">
                     <table class="table w-full">
@@ -83,7 +154,7 @@
                     </table>
                 </div>
                 <h4 class="text-lg font-bold my-4">توضیحات</h4>
-                <p v-html="ad.data.desc"></p>
+                <p v-html="ad.data.description"></p>
             </div>
             <!-- Carousel -->
             <Swiper :images="ad.data.media" :model-data="ad.data"/>
@@ -93,26 +164,54 @@
 <script setup>
 
 import Swiper from "../Shared/Components/Swiper";
-import {computed} from "vue";
+import {computed, ref} from "vue";
+import Label from "../Jetstream/Label";
+import {useForm} from "@inertiajs/inertia-vue3";
+import Ckeditor from '@ckeditor/ckeditor5-vue';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import "@ckeditor/ckeditor5-build-classic/build/translations/fa";
+import {Inertia} from "@inertiajs/inertia";
+import DialogModal from "../Jetstream/DialogModal";
+import Button from "../Jetstream/Button";
 
 const props = defineProps({
     ad: Object,
     is_bookmarked: Boolean,
+    report_types: Object,
+    can_report: Boolean,
 })
 const price = computed(() => {
     return props.ad.data.price == null ? `<b class="text-bold">توافقی</b>` : `<b>${props.ad.data.price}</b> ${props.ad.data.currency}`;
 })
-// !TODO add ad to bookmarks without login
-// const bookmark = bookmark => {
-//     let bookmarks = new Set()
-//     if (localStorage.getItem('bookmarks'))
-//         bookmarks.add(Array.from((JSON.stringify(localStorage.getItem('bookmarks'))).split(',')))
-//     console.log(bookmarks)
-//     bookmarks.add(bookmark)
-//     localStorage.setItem('bookmarks', JSON.stringify(Array.from(bookmarks.keys())))
-// }
-// props.is_bookmarked = () => {
-//     const bookmark = localStorage.getItem('bookmark')
-//     return bookmark.includes(this.props.ad.slug)
-// }
+
+const wantsToReportAd = ref(null)
+const form = useForm({
+    type: 'انتخاب نوع',
+    description: '',
+})
+const submit = () => {
+    form.post(route('post.report', props.ad.data.slug), {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        onSuccess: response => wantsToReportAd.value = null,
+    })
+};
+
+// CKEditor Initialization
+// !TODO move it to a separate component
+// !Chore: move it to a separate file
+const editor = ClassicEditor;
+const ckeditor = Ckeditor.component;
+const editorConfig = {
+    language: 'fa',
+    toolbar: [
+        "heading", "|",
+        'bold', 'italic', '|',
+        'bulletedList', 'numberedList', '|',
+        'blockQuote', '|',
+        'outdent', 'indent', '|',
+        'undo', 'redo', '|',
+    ],
+};
 </script>

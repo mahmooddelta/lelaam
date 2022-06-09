@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AdReportResource;
 use App\Http\Resources\AdResource;
 use App\Http\Resources\BookmarkResource;
 use App\Models\Ad;
@@ -25,7 +26,13 @@ class AccountController extends Controller
             'states' => State::select(['id', 'name'])->get(),
             'bookmarked' => BookmarkResource::collection(Bookmark::where('user_id', auth()->id())->get()),
             'last_views' => BookmarkResource::collection(Like::where('user_id', auth()->id())->get()),
-            'user' => auth()->user(),
+            'reports' => AdReportResource::collection(auth()
+                                                          ->user()
+                                                          ?->reports()
+                                                          ->active()
+                                                          ->with(['ad:id,title'])
+                                                          ->get()),
+            'user_state' => auth()->user()->state_id,
         ]);
     }
 

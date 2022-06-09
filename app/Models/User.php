@@ -93,6 +93,11 @@ class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
         return $this->belongsTo(State::class);
     }
 
+    public function reports(): HasMany
+    {
+        return $this->hasMany(AdReport::class);
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

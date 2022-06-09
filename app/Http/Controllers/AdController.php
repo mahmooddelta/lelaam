@@ -9,10 +9,12 @@ use App\Models\Ad;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\District;
+use App\Models\ReportType;
 use App\Models\State;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -81,6 +83,14 @@ class AdController extends Controller
             'is_bookmarked' => auth()->check() ? $ad->whereHasBookmark(auth()->user())
                 ->whereSlug($ad->slug)
                 ->exists() : false,
+            'report_types' => ReportType::select(['id', 'name'])->get(),
+            'can_report' => auth()->check() && ! auth()
+                    ->user()
+                    ->reports()
+                    ->whereAdId($ad->id)
+                    ->whereUserId(auth()->id())
+                    ->where('status', 'pending')
+                    ->exists(),
         ]);
     }
 
@@ -88,7 +98,12 @@ class AdController extends Controller
     {
         Bookmark::toggle($ad, auth()->user());
 
-        return back()->with('flash', 'آگهی با موفقیت به لیست بوکمارک ها اضافه شد.');
+        return back()->with([
+                                'type' => 'success',
+                                'body' => $ad->whereHasBookmark(auth()->user())
+                                    ->whereSlug($ad->slug)
+                                    ->exists() ? 'آگهی با موفقیت به لیست علاقه مندی ها اضافه شد.' : 'آگهی از لیست علاقه مندی های شما حذف شد.',
+                            ]);;
     }
 
     public function create(): Response
@@ -151,5 +166,26 @@ class AdController extends Controller
                        'type' => 'error',
                        'body', 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
                    ]);
+    }
+
+    public function report(Ad $ad, Request $request): RedirectResponse
+    {
+        $request->validate(
+            [
+                'type' => 'required|exists:report_types,id',
+                'description' => 'required',
+            ]);
+
+        $ad->reports()->create(
+            [
+                'user_id' => auth()->id(),
+                'report_type_id' => $request->input('type'),
+                'description' => $request->input('description'),
+            ]);
+
+        return back()->with([
+                                'type' => 'success',
+                                'body' => 'گزارش تخلف یا مشکل شما ارسال شد. لطفاً منتظر بررسی مدیر سایت باشید!',
+                            ]);
     }
 }
