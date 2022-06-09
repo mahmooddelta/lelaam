@@ -31,7 +31,7 @@ defineProps({
         :loop="images.length > 0"
         :hashNavigation="{watchState: true,}"
         :lazy="true"
-        class="w-full lg:w-[25rem] max-h-[34rem] order-first lg:order-last"
+        class="w-full lg:w-[25rem] max-h-[34rem] order-first lg:order-last my-4 lg:my-0"
         dir="rtl"
         :modules="modules"
     >
