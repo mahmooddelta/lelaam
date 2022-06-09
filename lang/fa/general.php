@@ -240,4 +240,39 @@ return [
             ],
         ],
     ],
+    'reports' => [
+        'title' => 'گزارش',
+        'title_plural' => 'گزارشات',
+        'fields' => [
+            'ad_id' => 'آگهی',
+            'user_id' => 'کاربر',
+            'report_type_id' => 'نوع گزارش',
+            'description' => 'توضیحات',
+            'status' => 'وضعیت',
+            'is_active' => 'فعال',
+        ],
+        'placeholders' => [
+
+        ],
+        'filters' => [
+            'user' => [
+                'label' => 'کاربر',
+                'label_placeholder' => 'تمام کاربران',
+            ],
+            'ad' => [
+                'label' => 'آگهی',
+                'label_placeholder' => 'همه آگهی ها',
+            ],
+            'report_type' => [
+                'label' => 'نوع گزارش',
+                'label_placeholder' => 'همه انواع گزارش',
+            ],
+            'is_active' => [
+                'label' => 'وضعیت فعال بودن',
+                'label_placeholder' => 'همه وضعیت ها',
+                "is_active" => "فعال",
+                "is_inactive" => "غیرفعال",
+            ],
+        ],
+    ],
 ];
