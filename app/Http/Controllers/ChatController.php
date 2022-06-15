@@ -6,6 +6,7 @@ use App\Http\Resources\AdResource;
 use App\Http\Resources\MessageResource;
 use App\Models\Ad;
 use App\Models\Message;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,18 +18,20 @@ class ChatController extends Controller
     {
         return Inertia::render('Chat', [
             'ads' => AdResource::collection(Ad::whereHas('messages', function ($query) {
-                return $query->where('receiver_id', auth()->id())->orWhere('sender_id', auth()->id());
+                return $query->where('receiver_id', auth()->id())
+                    ->orWhere('sender_id', auth()->id());
             })->with(['messages', 'user', 'media'])->select(['id', 'title', 'slug', 'created_at'])->get()),
         ]);
     }
 
-    public function create(): Response
+    public function create()
     {
-        $ad = Ad::whereSlug(request('ad'))->first();
+        $ad = Ad::whereSlug(request('post'))->first();
         return Inertia::render('Chat/Create', [
             'ad' => new AdResource($ad),
-            'messages' => MessageResource::collection(Message::whereAdId($ad->id)->where(function ($query) {
-                return $query->orWhere('sender_id', auth()->id())->orWhere('receiver_id', auth()->id());
+            'messages' => MessageResource::collection(Message::whereAdId($ad->id)->where(function (Builder $query) {
+                return $query->orWhere('receiver_id', auth()->id())
+                    ->orWhere('sender_id', auth()->id());
             })->get()),
         ]);
     }

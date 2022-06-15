@@ -30,7 +30,7 @@ const props = defineProps({
             <h2 class="my-2 mb-2 ml-2 text-3xl text-gray-600">گفتگو ها</h2>
             <div class="divider"></div>
             <li>
-                <Link v-for="ad in ads.data" :key="ad.id" :href="route('chat.create', {ad: ad.slug})"
+                <Link v-for="ad in ads.data" :key="ad.id" :href="route('chat.create', {post: ad.slug})"
                       class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-base-100 focus:outline-none rounded">
                     <img class="object-cover w-16 h-16"
                          :src="ad.thumb" alt="ad.title"/>

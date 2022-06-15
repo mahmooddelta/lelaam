@@ -22,11 +22,12 @@ const form = useForm({
 const submit = () => {
     Inertia.post(route('chat.store'), {
         message: form.message,
-        ad: usePage().props.value.ad.data?.slug,
+        post: usePage().props.value.ad.data?.slug,
     }, {
         preserveScroll: true,
         preserveState: true,
         replace: true,
+        onFinish: () => form.message = '',
     });
 }
 const title = () => ` گفتگو درباره ${usePage().props.value.ad.data?.title}` ?? 'گفتگو';

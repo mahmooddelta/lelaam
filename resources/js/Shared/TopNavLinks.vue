@@ -13,7 +13,7 @@
             </li>
         </ul>
         <ul class="menu menu-horizontal">
-            <li>
+            <li v-if="$page.props.user">
                 <Link :href="route('chat')">گفتگو ها</Link>
             </li>
             <!-- Account -->
