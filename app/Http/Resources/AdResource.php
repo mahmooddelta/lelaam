@@ -44,6 +44,7 @@ class AdResource extends JsonResource
 
             'bookmarks' => BookmarkResource::collection($this->whenLoaded('bookmarkers')),
             'messages' => MessageResource::collection($this->whenLoaded('messages')),
+            'messages_count' => $this->whenLoaded('messages', $this->messages_count),
         ];
     }
 }

@@ -14,7 +14,11 @@
         </ul>
         <ul class="menu menu-horizontal">
             <li v-if="$page.props.user">
-                <Link :href="route('chat')">گفتگو ها</Link>
+                <Link :href="route('chat')">
+                    <div class="badge badge-primary badge-xs" v-if="$page.props.unread_messages_count > 0"
+                         v-text="$page.props.unread_messages_count"></div>
+                    گفتگو ها
+                </Link>
             </li>
             <!-- Account -->
             <li v-if="$page.props.user">

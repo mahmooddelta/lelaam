@@ -2,6 +2,7 @@
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 import Container from "../../Shared/Components/Container";
+import {onBeforeUnmount, onMounted} from "vue";
 
 const props = defineProps({
     ad: {
@@ -14,11 +15,12 @@ const props = defineProps({
         default: {},
     },
 })
-const messageDirection = message => message.sender.id === usePage().props.value.user.id ? 'justify-start' : 'justify-end';
-const messageStyle = message => message.sender.id === usePage().props.value.user.id ? 'badge badge-primary' : 'badge bg-adaptable';
+const messageDirection = message => (message?.sender?.id ?? message.sender_id) === usePage().props.value.user.id ? 'justify-start' : 'justify-end';
+const messageStyle = message => (message?.sender?.id ?? message.sender_id) === usePage().props.value.user.id ? 'badge badge-primary' : 'badge bg-adaptable';
 const form = useForm({
     message: null,
 })
+const emit = defineEmits(['messagesent',])
 const submit = () => {
     Inertia.post(route('chat.store'), {
         message: form.message,
@@ -27,9 +29,24 @@ const submit = () => {
         preserveScroll: true,
         preserveState: true,
         replace: true,
-        onFinish: () => form.message = '',
+        onFinish: () => {
+            emit('messagesent', {
+                user: usePage().props.value.user,
+                message: form.message,
+            });
+            form.message = ''
+        },
     });
 }
+
+window.Echo.private('chat')
+    .listen('MessageSent', (data) => {
+        usePage().props.value.messages.data.push(data.message)
+    });
+
+onBeforeUnmount(() => {
+    window.Echo.leave('chat');
+})
 const title = () => ` گفتگو درباره ${usePage().props.value.ad.data?.title}` ?? 'گفتگو';
 </script>
 <template>
@@ -69,8 +86,8 @@ const title = () => ` گفتگو درباره ${usePage().props.value.ad.data?.t
                 </div>
                 <div class="divider"></div>
                 <div class="relative w-full p-6 overflow-y-auto max-h-1/3 min-h-1/3">
-                    <ul class="space-y-2" v-if="messages.data.length > 0">
-                        <li v-for="message in messages.data" :key="message.id" class="flex"
+                    <ul class="space-y-2" v-if="$page.props.messages.data.length > 0">
+                        <li v-for="message in $page.props.messages.data" :key="message.id" class="flex"
                             :class="messageDirection(message)">
                             <div class="relative max-w-xl p-4 rounded shadow-lg" :class="messageStyle(message)"
                                  v-text="message.body"></div>

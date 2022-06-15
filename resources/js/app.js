@@ -1,6 +1,6 @@
 import VueSelect from "vue-select";
 import {createApp, h} from 'vue';
-import {createInertiaApp, Head, Link} from '@inertiajs/inertia-vue3';
+import {createInertiaApp, Head, Link, usePage} from '@inertiajs/inertia-vue3';
 import {InertiaProgress} from '@inertiajs/progress';
 import Layout from './Layouts/Layout';
 // Media Library
