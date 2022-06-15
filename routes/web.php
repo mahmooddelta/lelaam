@@ -25,14 +25,13 @@ Route::post('post/create', [AdController::class, 'store'])->name('ad.create.stor
 Route::get('posts/{category:slug?}', [AdController::class, 'index'])->name('ads');
 Route::get('post/{ad:slug}', [AdController::class, 'show'])->name('ad.show');
 Route::get('categories', [CategoryController::class, 'index'])->name('categories');
-Route::get('chat', [ChatController::class, 'index'])->name('chat');
 // Phone Verification
 Route::get('phone/unverified', [WebsiteController::class, 'phoneUnverified'])->name('phone.unverified');
 Route::post('phone/verify', [WebsiteController::class, 'phoneVerify'])
     ->name('phone.verify')
     ->middleware('auth');
 // Protected routes
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'phone.verified'])
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.verified'])
     ->group(function () {
         Route::get('account', [AccountController::class, 'index'])
             ->name('account');
@@ -42,6 +41,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             ->name('ad.bookmark');
         Route::post('post/{ad:slug}/report', [AdController::class, 'report'])
             ->name('post.report');
+        // Chat & Messaging
+        Route::get('chat', [ChatController::class, 'index'])->name('chat');
+        Route::get('chat/create', [ChatController::class, 'create'])->name('chat.create');
+        Route::post('chat/create', [ChatController::class, 'store'])->name('chat.store');
     });
 
 Route::mediaLibrary();

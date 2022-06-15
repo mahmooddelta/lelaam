@@ -12,7 +12,7 @@ use function secure_asset;
 class AdResource extends JsonResource
 {
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return array
      */
     public function toArray($request): array
@@ -25,6 +25,7 @@ class AdResource extends JsonResource
             'phone_number' => $this->when($this->phone_number, $this->phone_number),
             'desc' => $this->when($this->desc, $this->desc),
             'address' => $this->when($this->address, $this->address),
+            'is_chat_enabled' => $this->when($this->is_chat_enabled, $this->is_chat_enabled),
             'thumb' => count($this->media) > 0 ? $this->media?->first()
                 ?->getUrl('thumb') : secure_asset('images/No_image_preview.png'),
 
@@ -42,6 +43,7 @@ class AdResource extends JsonResource
             'state' => $this?->district?->state?->name ?? 'State',
 
             'bookmarks' => BookmarkResource::collection($this->whenLoaded('bookmarkers')),
+            'messages' => MessageResource::collection($this->whenLoaded('messages')),
         ];
     }
 }
