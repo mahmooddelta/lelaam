@@ -40,13 +40,6 @@ class WebsiteController extends Controller
         ]);
     }
 
-    public function states(): Response
-    {
-        return Inertia::render('Auth/Register', [
-            'states' => State::select(['id', 'name'])->get(),
-        ]);
-    }
-
     public function phoneUnverified(): Response
     {
         return Inertia::render('PhoneNotVerified');

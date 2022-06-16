@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [WebsiteController::class, 'index'])->name('home');
-Route::get('states/load', [WebsiteController::class, 'states'])->name('states.load');
 Route::get('post/create', [AdController::class, 'create'])->name('ad.create');
 Route::post('post/create', [AdController::class, 'store'])->name('ad.create.store');
 Route::get('posts/{category:slug?}', [AdController::class, 'index'])->name('ads');

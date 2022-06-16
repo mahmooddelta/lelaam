@@ -10,6 +10,24 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import {getAuth, RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth'
 import {computed, onMounted, ref} from "vue";
 import {Inertia} from "@inertiajs/inertia";
+import {initializeApp} from "firebase/app";
+import {getAnalytics} from "firebase/analytics";
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyBSMj80wutV8V9xN7Kzl_sIgaB11FFYfH8",
+    authDomain: "lelaam-42896.firebaseapp.com",
+    projectId: "lelaam-42896",
+    storageBucket: "lelaam-42896.appspot.com",
+    messagingSenderId: "606275294671",
+    appId: "1:606275294671:web:a2679e3c18de34c23deeba",
+    measurementId: "G-N970EG7BPE"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 const errors = ref('');
 const auth = getAuth();
@@ -62,13 +80,6 @@ const handleOTPExceptions = error => {
         toast.error(errors.value, {timeout: 2000});
 };
 onMounted(() => {
-    // Load states
-    Inertia.visit(route('states.load'), {
-        preserveState: true,
-        preserveScroll: true,
-        replace: true,
-        onSuccess: response => props.states.value = response,
-    })
     // Recaptcha
     auth.languageCode = 'fa';
     setTimeout(() => {
@@ -203,11 +214,16 @@ const verifyOtp = () => {
                 />
                 <div id="recaptcha-container" class="flex justify-center w-full my-2" v-show="!isRecaptchaSolved"></div>
                 <section class="flex mt-2 justify-between pr-2" v-show="isPhoneInputted">
-                    <button id="sign-in-button" class="btn btn-outline btn-primary mx-1" @click="sendOtp" v-show="!otpSent" type="button">ارسال کد</button>
-                    <input v-show="otpSent" @focusout="verifyOtp" class="input input-bordered bg-adaptable" type="text" minlength="6" maxlength="6" min="0"
+                    <button id="sign-in-button" class="btn btn-outline btn-primary mx-1" @click="sendOtp"
+                            v-show="!otpSent" type="button">ارسال کد
+                    </button>
+                    <input v-show="otpSent" @focusout="verifyOtp" class="input input-bordered bg-adaptable" type="text"
+                           minlength="6" maxlength="6" min="0"
                            max="9" v-model="otp" required
                            placeholder="کد یکبار مصرف"/>
-                    <button @click="sendOtp" v-show="otpSent" class="btn btn-outline btn-primary mx-1" type="button">ارسال دوباره</button>
+                    <button @click="sendOtp" v-show="otpSent" class="btn btn-outline btn-primary mx-1" type="button">
+                        ارسال دوباره
+                    </button>
                 </section>
             </div>
 
@@ -217,8 +233,10 @@ const verifyOtp = () => {
                         <JetCheckbox id="terms" v-model:checked="form.terms" name="terms"/>
 
                         <div class="ml-2">
-                            I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of
-                            Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy
+                            I agree to the <a target="_blank" :href="route('terms.show')"
+                                              class="underline text-sm text-gray-600 hover:text-gray-900">Terms of
+                            Service</a> and <a target="_blank" :href="route('policy.show')"
+                                               class="underline text-sm text-gray-600 hover:text-gray-900">Privacy
                             Policy</a>
                         </div>
                     </div>
