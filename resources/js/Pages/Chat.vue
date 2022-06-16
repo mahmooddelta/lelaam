@@ -1,13 +1,20 @@
 <script setup>
 import Container from "../Shared/Components/Container";
+import {onBeforeUnmount} from "vue";
 
 const props = defineProps({
     ads: Object,
-    ad: {
-        type: Object,
-        default: null
-    },
 })
+
+window.Echo.private('chat')
+    .listen('MessageSent', (data) => {
+        const messageIndex = props.ads.data.findIndex((item) => item.slug === data.ad.slug);
+        messageIndex < 0 ? props.ads.data.push(data.ad) : props.ads.data[messageIndex] = data.ad;
+    });
+
+onBeforeUnmount(() => {
+    window.Echo.leave('chat');
+});
 </script>
 
 <template>
@@ -26,25 +33,25 @@ const props = defineProps({
         <!--                </div>-->
         <!--            </div>-->
 
-        <ul class="overflow-auto h-full">
+        <ul>
             <h2 class="my-2 mb-2 ml-2 text-3xl text-gray-600">گفتگو ها</h2>
             <div class="divider"></div>
             <li>
-                <Link v-for="ad in $page.props.ads_messages.data" :key="ad.id"
+                <Link v-for="ad in ads.data" :key="ad.id"
+                      v-if="ads.data.length > 0"
                       :href="route('chat.create', {post: ad.slug})"
                       class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-base-100 focus:outline-none rounded">
                     <img class="object-cover w-16 h-16"
                          :src="ad.thumb" alt="ad.title"/>
                     <div class="w-full pb-2">
-                        <div class="flex justify-between">
-                            <span class="block ml-2 font-semibold text-xl" v-text="ad.title"></span>
-                            <span class="block ml-2 text-sm text-gray-600"
-                                  v-text="ad.messages[ad.messages.length - 1].created_at ?? ''"></span>
-                        </div>
-                        <span class="block ml-2 text-sm text-gray-600"
-                              v-text="ad.messages[ad.messages.length - 1].body.substring(0, 50) + '...' ?? ''"></span>
+                        <span class="block ml-2 font-semibold text-xl" v-text="ad.title"></span>
                     </div>
                 </Link>
+                <div v-else>
+                    <p class="text-center text-3xl">
+                        گفتگویی وجود ندارد!
+                    </p>
+                </div>
             </li>
         </ul>
     </Container>
