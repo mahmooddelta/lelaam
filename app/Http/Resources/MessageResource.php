@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Ad;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MessageResource extends JsonResource
@@ -25,7 +24,7 @@ class MessageResource extends JsonResource
             'created_at' => $this->whenNotNull($this->created_at?->diffForHumans()),
             'updated_at' => $this->whenNotNull($this->updated_at?->diffForHumans()),
 
-            'ad' => $this->whenLoaded('ad', new AdResource($this->ad)),
+            'ad' => new AdResource($this->whenLoaded('ad')),
         ];
     }
 }

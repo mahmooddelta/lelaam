@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AdController;
 use App\Http\Controllers\Api\AppController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ChatController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('categories', [CategoryController::class, 'index']);
@@ -32,6 +33,11 @@ Route::middleware(['api', 'jwt'])->group(function () {
     Route::get('post/{ad:slug}/bookmark', [AdController::class, 'bookmark']);
     // Report Create
     Route::post('post/{ad:slug}/report', [AdController::class, 'report']);
+    // Chat
+    Route::get('chats', [ChatController::class, 'index']);
+    Route::get('chat/{ad:slug}/messages', [ChatController::class, 'create']);
+    Route::post('chat/{ad:slug}/store', [ChatController::class, 'store']);
+    Route::delete('chat/{ad:slug}/destroy', [ChatController::class, 'destroy']);
 });
 // Ads
 Route::get('posts/{category:slug?}', [AdController::class, 'index']);
