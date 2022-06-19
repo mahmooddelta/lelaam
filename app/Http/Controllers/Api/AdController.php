@@ -176,18 +176,13 @@ class AdController extends Controller
                                 ]);
     }
 
-    public function userBookmarkedAds(): JsonResponse
+    public function userBookmarkedAds(): AnonymousResourceCollection
     {
-        $ads = Ad::published()
-            ->isOwner()
-            ->whereHasBookmark(auth()->user())
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id'])
-            ->with('media')
-            ->get();
-
-        return response()->json([
-                                    'ads' => AdResource::collection($ads),
-                                ]);
+        return AdResource::collection(Ad::published()
+                                          ->whereHasBookmark(auth()->user())
+                                          ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id'])
+                                          ->with('media')
+                                          ->get());
     }
 
     public function reports(): JsonResponse
