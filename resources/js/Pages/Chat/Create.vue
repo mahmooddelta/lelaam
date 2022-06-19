@@ -2,7 +2,8 @@
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 import Container from "../../Shared/Components/Container";
-import {onBeforeUnmount} from "vue";
+import {onBeforeUnmount, onMounted} from "vue";
+import {scrollToBottom} from "../../custom";
 
 const props = defineProps({
     ad: {
@@ -42,8 +43,10 @@ const submit = () => {
 
 window.Echo.private('chat')
     .listen('MessageSent', (data) => {
-        if (data.ad.slug === props.ad.slug) {
-            props.messages.data.push(data.message);
+        if (data.ad.slug === props.ad.data.slug) {
+            const messageIndex = props.messages.data.findIndex((item) => item.id === data.message.id);
+            messageIndex < 0 ? props.messages.data.push(data.message) : props.messages.data[messageIndex] = data.message;
+            scrollToBottom('#chatList');
         }
     });
 
@@ -52,6 +55,10 @@ onBeforeUnmount(() => {
 });
 
 const title = () => ` گفتگو درباره ${usePage().props.value.ad.data?.title}` ?? 'گفتگو';
+
+onMounted(() => {
+    scrollToBottom('#chatList');
+});
 </script>
 <template>
     <Head :title="title()"/>
@@ -63,7 +70,7 @@ const title = () => ` گفتگو درباره ${usePage().props.value.ad.data?.t
                 <img class="object-cover w-16 h-16"
                      :src="ad.data?.thumb"
                      :alt="`${ad.data?.slug} thumbnail`"/>
-                <span class="block ml-2 font-bold text-gray-600 text-2xl"
+                <span class="ml-2 font-bold text-gray-600 text-2xl"
                       v-text="ad.data?.title"></span>
             </Link>
             <div class="flex justify-center md:justify-end py-4 md:py-0">
@@ -87,7 +94,7 @@ const title = () => ` گفتگو درباره ${usePage().props.value.ad.data?.t
             </div>
         </div>
         <div class="divider"></div>
-        <div class="w-full p-4 overflow-auto">
+        <div id="chatList" class="w-full p-4 overflow-y-auto max-h-[19rem]">
             <ul class="space-y-2" v-if="messages.data.length > 0">
                 <li v-for="message in messages.data" :key="message.id" class="flex"
                     :class="messageDirection(message)">
@@ -102,7 +109,7 @@ const title = () => ` گفتگو درباره ${usePage().props.value.ad.data?.t
             </div>
         </div>
         <div class="divider"></div>
-        <div class="flex items-center justify-between">
+        <div id="chatForm" class="flex items-center justify-between">
             <form @submit.prevent="submit" class="flex justify-center w-full" autocomplete="off">
                 <input type="text" placeholder="پیام"
                        class="input input-bordered bg-adaptable w-full px-4 mr-4"
