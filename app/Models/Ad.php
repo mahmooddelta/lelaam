@@ -220,10 +220,11 @@ class Ad extends Model implements HasMedia
 
     public function scopeFilter(Builder $query, Request $request): Builder
     {
-        return $query->when($request->has('search') && $request->search !== null, fn(Builder $query) => $query->where('title', 'LIKE', "%" . $request->search . "%"))
-            ->when($request->has('district') && $request->district !== null, fn(Builder $query) => $query->where('district_id', 0))
+        return $query->when($request->has('search') && $request->search !== null, fn(Builder $query) => $query->where('title', 'LIKE', "%".$request->search."%"))
+            ->when($request->has('district') && $request->district !== null, fn(Builder $query) => $query->where('district_id', District::whereName($request->district)
+                ->value('id')))
             ->when($request->has('state') && $request->state !== null, fn(Builder $query) => $query->whereIn('district_id', District::whereStateId(State::whereName($request->state)
-                ->value('id'))
+                                                                                                                                                       ->value('id'))
                 ->pluck('id')
                 ->toArray()))
             ->when(request()->has('hasImages') && request('hasImages') === 'true', fn(Builder $builder) => $builder->whereHas('media'));

@@ -19,14 +19,13 @@ use Illuminate\Validation\Rule;
 use Maize\Markable\Models\Bookmark;
 use Maize\Markable\Models\Like;
 use function auth;
-use function compact;
 use function count;
 use function request;
 use function response;
 
 class AdController extends Controller
 {
-    public function index(Category $category): JsonResponse
+    public function index(Category $category)
     {
         if (request('sortBy')) {
             Validator::make(request()->all(), ['sortBy' => Rule::in(['newest', 'oldest', 'highestPrice', 'lowestPrice'])])
@@ -48,7 +47,8 @@ class AdController extends Controller
             'hasImages' => request()->has('hasImages') ? request('hasImages') : false,
             'sortBy' => request()->has('sortBy') ? request('sortBy') : 'مرتب سازی بر اساس',
         ];
-        $ads = AdResource::collection(Ad::query()
+
+        return AdResource::collection(Ad::query()
                                           ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id'])
                                           ->published()
                                           ->with('media')
@@ -60,8 +60,6 @@ class AdController extends Controller
                                               ->find($ad->district_id) : $sortBy, descending: $order)
                                           ->paginate(24)
                                           ->withQueryString());
-
-        return response()->json(compact('ads', 'filters'));
     }
 
     public function store(StoreRequest $request): JsonResponse
