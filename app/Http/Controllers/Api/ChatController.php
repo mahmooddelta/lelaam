@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
@@ -55,13 +56,15 @@ class ChatController extends Controller
     {
         $ad->load(['media'])->select(['id', 'title', 'slug', 'phone_number', 'user_id']);
         try {
-            $message = Message::create([
-                'ad_id' => $ad->value('id'),
-                'sender_id' => auth()->id(),
-                'receiver_id' => $ad->value('user_id'),
-                'body' => $request->validated('message'),
-            ]);
-            broadcast(new MessageSent(UserResource::make(auth()->user()), MessageResource::make($message), AdResource::make($ad)))->toOthers();
+            DB::transaction(function () use ($request, $ad) {
+                $message = Message::create([
+                    'ad_id' => $ad->value('id'),
+                    'sender_id' => auth()->id(),
+                    'receiver_id' => $ad->value('user_id'),
+                    'body' => $request->validated('message'),
+                ]);
+                broadcast(new MessageSent(UserResource::make(auth()->user()), MessageResource::make($message), AdResource::make($ad)))->toOthers();
+            });
         } catch (Exception $exception) {
             Log::error($exception);
             return \response()->json(['message' => 'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!']);
