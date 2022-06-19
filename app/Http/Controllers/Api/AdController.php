@@ -81,11 +81,6 @@ class AdController extends Controller
                     $ad->addMediaFromRequest($request->input('images'))
                         ->toMediaCollection('ads');
                 }
-
-                return response()->json(
-                    [
-                        'message' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
-                    ]);
             });
         } catch (Exception $exception) {
             return response()->json(
@@ -96,7 +91,7 @@ class AdController extends Controller
 
         return response()->json(
             [
-                'message' => 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
+                'message' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
             ]);
     }
 

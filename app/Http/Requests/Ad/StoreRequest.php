@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\District;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,6 +57,9 @@ class StoreRequest extends FormRequest
             ],
             'category_id' => [
                 'required',
+                'integer',
+                'min:0',
+                'exists:categories,id',
             ],
             'currency_id' => [
                 'sometimes',
@@ -135,7 +139,7 @@ class StoreRequest extends FormRequest
                                              'message' => $errors->messages(),
                                          ], Response::HTTP_UNPROCESSABLE_ENTITY);
 
-            throw new \Illuminate\Http\Exceptions\HttpResponseException($response);
+            throw new HttpResponseException($response);
         }
 
         return parent::failedValidation($validator);
