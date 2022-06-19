@@ -21,6 +21,8 @@ Route::middleware(['api'])->prefix('auth')->group(function () {
     Route::post('me', [AuthController::class, 'me']);
     Route::post('profile/update', [AuthController::class, 'updateProfile']);
     Route::put('profile/password/update', [AuthController::class, 'profilePasswordUpdate']);
+    Route::get('profile/phone/verified', [AuthController::class, 'profilePhoneVerified']);
+    Route::post('profile/phone/verified/update', [AuthController::class, 'profilePhoneVerifiedUpdate']);
 });
 Route::middleware(['api', 'jwt'])->group(function () {
     // Ad Reports

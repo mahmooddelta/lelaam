@@ -16,6 +16,7 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Symfony\Component\HttpFoundation\Response;
 use function auth;
 use function compact;
+use function now;
 use function response;
 
 class AuthController extends Controller
@@ -170,6 +171,19 @@ class AuthController extends Controller
                 'message' => auth()
                     ->user()
                     ?->update(['password' => $request->input('password')]) > 0 ? 'رمزعبور ویرایش شد.' : 'ویرایش رمزعبور ناموفق بود',
+            ]);
+    }
+
+    public function profilePhoneVerified(): bool
+    {
+        return auth()->user()->hasVerifiedPhone();
+    }
+
+    public function profilePhoneVerifiedUpdate(): bool
+    {
+        return (bool) auth()->user()->update(
+            [
+                'phone_verified_at' => now(),
             ]);
     }
 }
