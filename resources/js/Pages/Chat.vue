@@ -42,7 +42,7 @@ onBeforeUnmount(() => {
                       :href="route('chat.create', {post: ad.slug})"
                       class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-base-100 focus:outline-none rounded">
                     <img class="object-cover w-16 h-16"
-                         :src="ad.thumb" alt="ad.title"/>
+                         :src="ad.thumb" :alt="ad.title"/>
                     <div class="w-full pb-2">
                         <span class="block ml-2 font-semibold text-xl" v-text="ad.title"></span>
                     </div>

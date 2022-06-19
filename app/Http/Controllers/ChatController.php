@@ -72,8 +72,8 @@ class ChatController extends Controller
             });
         } catch (Exception $exception) {
             Log::error($exception);
-            return back()->json(['message' => 'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!']);
+            return back()->with(['message' => 'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!']);
         }
-        return back()->json(['message' => 'پیام ارسال شد.']);
+        return back()->with(['message' => 'پیام ارسال شد.']);
     }
 }
