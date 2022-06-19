@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -25,7 +26,7 @@ use function response;
 
 class AdController extends Controller
 {
-    public function index(Category $category)
+    public function index(Category $category): AnonymousResourceCollection
     {
         if (request('sortBy')) {
             Validator::make(request()->all(), ['sortBy' => Rule::in(['newest', 'oldest', 'highestPrice', 'lowestPrice'])])
