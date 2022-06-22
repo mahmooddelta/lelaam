@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Ad\StoreRequest;
+use App\Http\Requests\Ad\Api\StoreRequest;
 use App\Http\Resources\AdReportResource;
 use App\Http\Resources\AdResource;
 use App\Models\Ad;
@@ -63,7 +63,7 @@ class AdController extends Controller
                                           ->withQueryString());
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
         try {
             DB::transaction(function () use ($request) {
@@ -77,9 +77,11 @@ class AdController extends Controller
                     $ad->values()->sync($request->input('values'));
                 }
                 // Sync Media
-                if ($request->input('images') && count($request->input('images')) > 0) {
-                    $ad->addMediaFromRequest($request->input('images'))
-                        ->toMediaCollection('ads');
+                if ($request->has('images') && $request->hasFile('images')) {
+                    $ad->addMultipleMediaFromRequest(['images'])
+                        ->each(function ($fileAdder) {
+                            $fileAdder->toMediaCollection('ads');
+                        });
                 }
             });
         } catch (Exception $exception) {
@@ -110,7 +112,7 @@ class AdController extends Controller
             ]);
     }
 
-    public function update(Request $request, Ad $ad): JsonResponse
+    public function update(StoreRequest $request, Ad $ad): JsonResponse
     {
         try {
             DB::transaction(function () use ($request, $ad) {
@@ -129,8 +131,10 @@ class AdController extends Controller
                         $ad->clearMediaCollection('ads');
                     }
 
-                    $ad->addMediaFromRequest($request->input('images'))
-                        ->toMediaCollection('ads');
+                    $ad->addMultipleMediaFromRequest(['images'])
+                        ->each(function ($fileAdder) {
+                            $fileAdder->toMediaCollection('ads');
+                        });
                 }
 
                 return response()->json(
