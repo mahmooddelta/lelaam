@@ -27,14 +27,14 @@ Route::middleware(['api'])->prefix('auth')->group(function () {
 Route::middleware(['api', 'jwt'])->group(function () {
     // Ad Reports
     Route::get('post/reports', [AdController::class, 'reports']);
+    // Report Create
+    Route::post('post/{ad:slug}/report', [AdController::class, 'report']);
     // User Bookmarked Ads
     Route::get('user/bookmarked/posts', [AdController::class, 'userBookmarkedAds']);
     // User Ads
     Route::get('user/posts', [AdController::class, 'userAds']);
     // Ad Bookmark
     Route::get('post/{ad:slug}/bookmark', [AdController::class, 'bookmark']);
-    // Report Create
-    Route::post('post/{ad:slug}/report', [AdController::class, 'report']);
     // Chat
     Route::get('chats', [ChatController::class, 'index']);
     Route::get('chat/{ad:slug}/messages', [ChatController::class, 'create']);
