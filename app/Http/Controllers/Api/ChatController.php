@@ -23,8 +23,8 @@ class ChatController extends Controller
     {
         return AdResource::collection(Ad::query()
             ->whereHas('messages', function ($query) {
-                return $query->where('receiver_id', auth()->id())
-                    ->orWhere('sender_id', auth()->id());
+                return $query->where('receiver_id', auth('api')->id())
+                    ->orWhere('sender_id', auth('api')->id());
             })
             ->with([
                 'messages',
@@ -38,8 +38,8 @@ class ChatController extends Controller
     public function create(Ad $ad): JsonResponse
     {
         Message::whereAdId(Ad::whereSlug(\request('post'))->value('id'))->where(function (Builder $query) {
-            return $query->orWhere('receiver_id', auth()->id())
-                ->orWhere('sender_id', auth()->id());
+            return $query->orWhere('receiver_id', auth('api')->id())
+                ->orWhere('sender_id', auth('api')->id());
         })->update([
             'has_seen' => true,
         ]);
@@ -47,7 +47,7 @@ class ChatController extends Controller
         return \response()->json([
             'ad' => new AdResource($ad),
             'messages' => MessageResource::collection($ad->messages()
-                ->where(fn(Builder $query) => $query->orWhere('sender_id', auth()->id())->orWhere('receiver_id', $ad->user_id))
+                ->where(fn(Builder $query) => $query->orWhere('sender_id', auth('api')->id())->orWhere('receiver_id', $ad->user_id))
                 ->get()),
         ]);
     }
@@ -59,11 +59,11 @@ class ChatController extends Controller
             DB::transaction(function () use ($request, $ad) {
                 $message = Message::create([
                     'ad_id' => $ad->value('id'),
-                    'sender_id' => auth()->id(),
+                    'sender_id' => auth('api')->id(),
                     'receiver_id' => $ad->value('user_id'),
                     'body' => $request->validated('message'),
                 ]);
-                broadcast(new MessageSent(UserResource::make(auth()->user()), MessageResource::make($message), AdResource::make($ad)))->toOthers();
+                broadcast(new MessageSent(UserResource::make(auth('api')->user()), MessageResource::make($message), AdResource::make($ad)))->toOthers();
             });
         } catch (Exception $exception) {
             Log::error($exception);

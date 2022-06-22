@@ -103,11 +103,11 @@ class AuthController extends Controller
                 return response()->json(['user_not_found'], 404);
             }
         } catch (TokenExpiredException $e) {
-            return response()->json(['token_expired'], $e->getStatusCode());
+            return response()->json(['token_expired'], Response::HTTP_UNAUTHORIZED);
         } catch (TokenInvalidException $e) {
-            return response()->json(['token_invalid'], $e->getStatusCode());
+            return response()->json(['token_invalid'], Response::HTTP_UNAUTHORIZED);
         } catch (JWTException $e) {
-            return response()->json(['token_absent'], $e->getStatusCode());
+            return response()->json(['token_absent'], Response::HTTP_UNAUTHORIZED);
         }
 
         return response()->json(['user' => UserResource::make($user)]);
@@ -121,7 +121,7 @@ class AuthController extends Controller
     public
     function logout(): JsonResponse
     {
-        auth()->logout();
+        auth('api')->logout();
 
         return response()->json(['message' => 'خروج موفق آمیز بود.']);
     }
@@ -158,7 +158,7 @@ class AuthController extends Controller
     {
         return response()->json(
             [
-                'message' => auth()
+                'message' => auth('api')
                     ->user()
                     ?->update($this->validateUserInfo($request)) > 0 ? '.پروفایل ویرایش شد' : '!ویرایش پروفایل ناموفق بود',
             ]);
@@ -168,7 +168,7 @@ class AuthController extends Controller
     {
         return response()->json(
             [
-                'message' => auth()
+                'message' => auth('api')
                     ->user()
                     ?->update(['password' => $request->input('password')]) > 0 ? 'رمزعبور ویرایش شد.' : 'ویرایش رمزعبور ناموفق بود',
             ]);
@@ -176,12 +176,12 @@ class AuthController extends Controller
 
     public function profilePhoneVerified(): bool
     {
-        return auth()->user()->hasVerifiedPhone();
+        return auth('api')->user()->hasVerifiedPhone();
     }
 
     public function profilePhoneVerifiedUpdate(): bool
     {
-        return (bool) auth()->user()->update(
+        return (bool) auth('api')->user()->update(
             [
                 'phone_verified_at' => now(),
             ]);

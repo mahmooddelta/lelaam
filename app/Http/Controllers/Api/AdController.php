@@ -56,14 +56,14 @@ class AdController extends Controller
                                           ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
                                           ->filter(request())
                                           ->get()
-                                          ->sortBy(                                           auth()->check() ? fn(Ad $ad) => District::whereStateId(auth()->user()->state_id)
+                                          ->sortBy(                                           auth('api')->check() ? fn(Ad $ad) => District::whereStateId(auth('api')->user()->state_id)
                                               ->get()
                                               ->find($ad->district_id) : $sortBy, descending: $order)
                                           ->paginate(24)
                                           ->withQueryString());
     }
 
-    public function store(StoreRequest $request): JsonResponse
+    public function store(StoreRequest $request)
     {
         try {
             DB::transaction(function () use ($request) {
@@ -100,8 +100,8 @@ class AdController extends Controller
         $ad->load(['category:name,slug,id', 'user', 'media', 'attributes', 'values.attribute', 'bookmarkers']);
 
         // Add the add to user's viewed ads
-        if (auth()->check()) {
-            Like::add($ad, auth()->user());
+        if (auth('api')->check()) {
+            Like::add($ad, auth('api')->user());
         }
 
         return response()->json(
@@ -153,7 +153,7 @@ class AdController extends Controller
 
     public function bookmark(Ad $ad): JsonResponse
     {
-        Bookmark::toggle($ad, auth()->user());
+        Bookmark::toggle($ad, auth('api')->user());
 
         return response()->json(['message' => 'آگهی با موفقیت به لیست بوکمارک ها اضافه شد.']);
     }
@@ -174,7 +174,7 @@ class AdController extends Controller
     public function userBookmarkedAds(): AnonymousResourceCollection
     {
         return AdResource::collection(Ad::published()
-                                          ->whereHasBookmark(auth()->user())
+                                          ->whereHasBookmark(auth('api')->user())
                                           ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id'])
                                           ->with('media')
                                           ->get());
@@ -203,7 +203,7 @@ class AdController extends Controller
 
         $ad->reports()->create(
             [
-                'user_id' => auth()->id(),
+                'user_id' => auth('api')->id(),
                 'report_type_id' => $request->input('type'),
                 'description' => $request->input('description'),
             ]);

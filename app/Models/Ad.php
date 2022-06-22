@@ -125,7 +125,7 @@ class Ad extends Model implements HasMedia
         parent::boot();
         self::creating(function ($model) {
             // 0 means user has not logged in and added the ad as a guest
-            $model->user_id = auth()->id() ?? 0;
+            $model->user_id = auth('api')->check() ? auth('api')->id() ?? 0 : auth()->id() ?? 0;
         });
     }
 
@@ -232,7 +232,7 @@ class Ad extends Model implements HasMedia
 
     public function scopeSameState(Builder $query): Ad|m|Builder
     {
-        return $query->whereIn('district_id', District::whereStateId(auth()->user()->state_id)
+        return $query->whereIn('district_id', District::whereStateId(auth('api')->check() ? auth('api')->user()->state_id : auth()->user()->state_id)
             ->pluck('id')
             ->toArray());
     }
