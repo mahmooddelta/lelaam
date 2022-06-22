@@ -11,11 +11,11 @@ use App\Models\Currency;
 use App\Models\District;
 use App\Models\ReportType;
 use App\Models\State;
+use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 use Maize\Markable\Models\Bookmark;
@@ -141,8 +141,8 @@ class AdController extends Controller
                     $ad->values()->sync($request->input('values'));
                 }
                 // Sync Media
-                if ($request->input('images') && count($request->input('images')) > 0) {
-                    $ad->addMediaFromRequest($request->input('images'))
+                if ($request->has('images') && count($request->input('images')) > 0) {
+                    $ad->addFromMediaLibraryRequest($request->input('images'))
                         ->toMediaCollection('ads');
                 }
 
@@ -161,10 +161,11 @@ class AdController extends Controller
                        ]);
         }
 
-        return back()
+        return redirect()
+            ->route('home')
             ->with([
-                       'type' => 'error',
-                       'body', 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
+                       'type' => 'success',
+                       'body' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
                    ]);
     }
 

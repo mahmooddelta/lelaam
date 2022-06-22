@@ -1,7 +1,7 @@
 <script setup>
 
 import Container from "../Shared/Components/Container";
-import {useForm} from "@inertiajs/inertia-vue3";
+import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {computed, ref, watch} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import Ckeditor from '@ckeditor/ckeditor5-vue';
@@ -28,8 +28,8 @@ const props = defineProps({
     districts: Object,
     categories: Object,
     attributes: Object,
-    state: Number,
-    category: Number,
+    state: undefined,
+    category: undefined,
 })
 // Form
 const form = useForm({
@@ -42,7 +42,7 @@ const form = useForm({
     currency_id: null,
     district_id: null,
     is_chat_enabled: true,
-    images: null,
+    images: usePage().props.value.errors,
     attributes: [],
     values: [],
 })
@@ -129,6 +129,7 @@ const populateAttributes = (value, index) => {
     };
     form.attributes[index] === 'undefined' ? form.attributes.push(newAttribute) : form.attributes[index] = newAttribute;
 };
+
 </script>
 
 <template>
@@ -139,7 +140,7 @@ const populateAttributes = (value, index) => {
                 <!-- First grid -->
                 <section>
                     <div>
-                        <label for="uploader" class="label block flex justify-between mb-2">
+                        <label class="label block flex justify-between mb-2">
                             <span class="label-text font-bold">عکس آگهی</span>
                             <small class="text-sm text-left">
                             <span class="flex">
@@ -154,19 +155,17 @@ const populateAttributes = (value, index) => {
                             </small>
                         </label>
                         <media-library-attachment
-                            id="uploader"
                             name="ads"
                             @change="onImageChange"
                             :initial-value="form.images"
-                            :validation-errors="form.errors.images"
                             :max-items="5"
-                            :min-items="0"
                             :translations="mlp_translations"
-                            :sortable="true"
+
                             :validation-rules="{accept: ['image/jpeg', 'image/png', 'image/jpg'], maxSizeInKB: 5 * 1024, minSizeInKB: 5}"
+                            :validation-errors="form.errors.images"
                             multiple
                         />
-                        <div v-if="form.errors.images" class="text-red-500 text-sm my-2">{{ form.errors.images }}</div>
+                        <div v-if="form.errors.images">{{ form.errors.images }}</div>
                     </div>
                     <div class="divider"></div>
                     <section class="my-4" :class="{'grid grid-cols-1 lg:grid-cols-2 gap-4' : !isNegotiable}">

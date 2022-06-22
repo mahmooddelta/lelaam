@@ -85,8 +85,6 @@ class StoreRequest extends FormRequest
                 $this->validateMultipleMedia()
                     ->extension(['png', 'jpeg', 'jpg'])
                     ->maxItems(5)
-                    ->heightBetween(120, 1366)
-                    ->widthBetween(120, 1366)
                     ->maxItemSizeInKb(5 * 1024),
             ],
             'attributes' => [
