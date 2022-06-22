@@ -84,7 +84,6 @@ class Handler extends ExceptionHandler
         if ($exception instanceof UnhandledMatchError) {
             return response()->json([
                                         'status' => 'error',
-                                        'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
                                         'message' => $exception->getMessage(),
                                     ], Response::HTTP_UNPROCESSABLE_ENTITY, $exception->getHeaders());
         }
@@ -96,7 +95,6 @@ class Handler extends ExceptionHandler
         if ($exception instanceof ModelNotFoundException) {
             return response()->json([
                                         'status' => 'error',
-                                        'status_code' => Response::HTTP_NOT_FOUND,
                                         'message' => 'Model Not Found',
                                     ], Response::HTTP_NOT_FOUND);
         }
@@ -109,7 +107,6 @@ class Handler extends ExceptionHandler
         if ($exception instanceof NotFoundHttpException) {
             return response()->json([
                                         'status' => 'error',
-                                        'status_code' => Response::HTTP_NOT_FOUND,
                                         'message' => __('Not Found'),
                                     ], Response::HTTP_NOT_FOUND, $exception->getHeaders()); // 404
         }
@@ -122,7 +119,6 @@ class Handler extends ExceptionHandler
             ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_UNAUTHORIZED)) {
             return response()->json([
                                         'status' => 'error',
-                                        'status_code' => Response::HTTP_UNAUTHORIZED,
                                         'message' => __('Unauthorized or Unauthenticated'),
                                     ], Response::HTTP_UNAUTHORIZED); // 401
         }
@@ -135,7 +131,6 @@ class Handler extends ExceptionHandler
         if (($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_FORBIDDEN)) {
             return response()->json([
                                         'status' => 'error',
-                                        'status_code' => Response::HTTP_FORBIDDEN,
                                         'message' => __($exception->getMessage() ?: 'Forbidden'),
                                     ], Response::HTTP_FORBIDDEN, $exception->getHeaders()); // 403
         }
@@ -149,7 +144,6 @@ class Handler extends ExceptionHandler
             ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_METHOD_NOT_ALLOWED)) {
             return response()->json([
                                         'status' => 'error',
-                                        'status_code' => Response::HTTP_METHOD_NOT_ALLOWED,
                                         'message' => __($exception->getMessage() ?: 'Method Not Allowed'),
                                     ], Response::HTTP_METHOD_NOT_ALLOWED, $exception->getHeaders()); // 405
         } /**
@@ -163,14 +157,12 @@ class Handler extends ExceptionHandler
         ) {
             return response()->json([
                                         'status' => 'error',
-                                        'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
                                         'message' => __($exception->getMessage() ?: 'Unprocessable Entity'),
                                     ], Response::HTTP_UNPROCESSABLE_ENTITY); // 422
         } else {
             if ($exception instanceof RelationNotFoundException) {
                 return \response()->json([
                                              'status' => 'error',
-                                             'status_code' => '404',
                                              'message' => 'No Relationship Found',
                                          ], 404);
             }
@@ -179,7 +171,6 @@ class Handler extends ExceptionHandler
                 ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_TOO_MANY_REQUESTS)) {
                 return response()->json([
                                             'status' => 'error',
-                                            'status_code' => Response::HTTP_TOO_MANY_REQUESTS,
                                             'message' => __('Too Many Requests'),
                                         ], Response::HTTP_TOO_MANY_REQUESTS, $exception->getHeaders()); // 429
             } /**
@@ -198,7 +189,6 @@ class Handler extends ExceptionHandler
             ) {
                 return response()->json([
                                             'status' => 'error',
-                                            'status_code' => Response::HTTP_SERVICE_UNAVAILABLE,
                                             'message' => __($exception->getMessage() ?: 'Service Unavailable'),
                                         ], Response::HTTP_SERVICE_UNAVAILABLE, $exception->getHeaders()); // 503
             } /**
@@ -216,7 +206,6 @@ class Handler extends ExceptionHandler
                 if (config('app.debug')) {
                     return response()->json([
                                                 'status' => 'error',
-                                                'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR,
                                                 'message' => $exception->getMessage() ?: 'Server Error',
                                                 'code' => $exception->getCode(),
                                                 'file' => $exception->getFile(),
@@ -227,7 +216,6 @@ class Handler extends ExceptionHandler
 
                 return response()->json([
                                             'status' => 'error',
-                                            'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR,
                                             'message' => 'Server Error',
                                         ], Response::HTTP_INTERNAL_SERVER_ERROR); // 500
             }
