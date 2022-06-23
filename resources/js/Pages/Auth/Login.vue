@@ -31,7 +31,6 @@ const submit = () => {
 
 <template>
     <Head title="ورود به سیستم"/>
-    identity
     <JetAuthenticationCard>
         <template #logo>
             <JetAuthenticationCardLogo/>
