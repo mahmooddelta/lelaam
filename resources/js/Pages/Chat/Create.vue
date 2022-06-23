@@ -2,7 +2,7 @@
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 import Container from "../../Shared/Components/Container";
-import {onBeforeUnmount, onMounted} from "vue";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 import {scrollToBottom} from "../../custom";
 
 const props = defineProps({
@@ -49,6 +49,27 @@ window.Echo.private(`chat.${props.conversation.data.id}`)
         scrollToBottom('#chatList');
     });
 
+// Typing indicator
+const isTyping = ref(false)
+const typing = () => {
+    window.Echo.private(`chat.${props.conversation.data.id}`)
+        .whisper('typing', {
+            user: usePage().props.value.user,
+            typing: true,
+        });
+}
+
+window.Echo.private(`chat.${props.conversation.data.id}`)
+    .listenForWhisper('typing', (data) => {
+        if (data.user.id !== usePage().props.value.user.id) {
+            isTyping.value = true;
+
+            setTimeout(() => {
+                isTyping.value = false;
+            }, 900);
+        }
+    });
+
 onBeforeUnmount(() => {
     window.Echo.leave(`chat.${props.conversation.data.id}`);
 });
@@ -69,8 +90,12 @@ onMounted(() => {
                 <img class="object-cover w-16 h-16"
                      :src="ad.data?.thumb"
                      :alt="`${ad.data?.slug} thumbnail`"/>
-                <span class="ml-2 font-bold text-gray-600 text-2xl"
-                      v-text="ad.data?.title"></span>
+                <span class="ml-2 font-bold text-gray-600 text-2xl">
+                    {{ ad.data?.title }}
+                    <section v-if="isTyping" class="text-sm text-gray-500">
+                        <i>در حال تایپ...</i>
+                    </section>
+                </span>
             </Link>
             <div class="flex justify-center md:justify-end py-4 md:py-0">
                 <a v-if="ad.data?.phone_number" :href="`tel:${ad.data?.phone_number}`"
@@ -113,6 +138,9 @@ onMounted(() => {
                 <input type="text" placeholder="پیام"
                        class="input input-bordered bg-adaptable w-full px-4 mr-4"
                        v-model="form.message"
+                       @keydown="typing"
+                       @keyup="isTyping = false"
+                       @focusin="isTyping"
                        name="message" required/>
                 <div v-if="form.errors.message" class="text-red-500 text-sm my-2">{{ form.errors.message }}</div>
                 <button type="submit">
