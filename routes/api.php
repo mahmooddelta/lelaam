@@ -20,9 +20,11 @@ Route::middleware(['api'])->prefix('auth')->group(function () {
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
     Route::post('profile/update', [AuthController::class, 'updateProfile']);
+
     Route::put('profile/password/update', [AuthController::class, 'profilePasswordUpdate']);
-    Route::get('profile/phone/verified', [AuthController::class, 'profilePhoneVerified']);
-    Route::post('profile/phone/verified/update', [AuthController::class, 'profilePhoneVerifiedUpdate']);
+    // Phone verification
+    Route::get('profile/phone/verified/status', [AuthController::class, 'profilePhoneVerified']);
+    Route::post('profile/phone/verify', [AuthController::class, 'profilePhoneVerifiedUpdate']);
 });
 Route::middleware(['api', 'jwt'])->group(function () {
     // Ad Reports
@@ -36,8 +38,8 @@ Route::middleware(['api', 'jwt'])->group(function () {
     // Ad Bookmark
     Route::get('post/{ad:slug}/bookmark', [AdController::class, 'bookmark']);
     // Chat
-    Route::get('chats', [ChatController::class, 'index']);
-    Route::get('chat/{ad:slug}/messages', [ChatController::class, 'create']);
+    Route::get('conversations', [ChatController::class, 'index']);
+    Route::get('conversation/{ad:slug}/messages', [ChatController::class, 'create']);
     Route::post('chat/{ad:slug}/store', [ChatController::class, 'store']);
     Route::delete('chat/{ad:slug}/destroy', [ChatController::class, 'destroy']);
 });

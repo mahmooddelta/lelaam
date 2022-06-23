@@ -179,11 +179,11 @@ class AuthController extends Controller
         return auth('api')->user()->hasVerifiedPhone();
     }
 
-    public function profilePhoneVerifiedUpdate(): bool
+    public function profilePhoneVerifiedUpdate(): JsonResponse
     {
-        return (bool) auth('api')->user()->update(
+        return auth('api')->user()?->update(
             [
                 'phone_verified_at' => now(),
-            ]);
+            ]) > 0 ? response()->json(['message' => 'شماره تماس شما تایید شد.']) : response()->json(['message' => 'تایید شماره تماس شما ناموفق بود!']);
     }
 }
