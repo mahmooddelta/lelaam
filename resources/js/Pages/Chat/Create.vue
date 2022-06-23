@@ -6,6 +6,10 @@ import {onBeforeUnmount, onMounted} from "vue";
 import {scrollToBottom} from "../../custom";
 
 const props = defineProps({
+    conversation: {
+        type: Object,
+        required: true
+    },
     ad: {
         type: Object,
         required: true
@@ -15,43 +19,38 @@ const props = defineProps({
         required: true,
         default: {},
     },
-})
-const messageDirection = message => (message?.sender?.id ?? message.sender_id) === usePage().props.value.user.id ? 'justify-start' : 'justify-end';
-const messageStyle = message => (message?.sender?.id ?? message.sender_id) === usePage().props.value.user.id ? 'badge badge-primary' : 'badge bg-adaptable';
+});
+
+const messageDirection = message => (message?.sender?.id) === usePage().props.value.user.id ? 'justify-start' : 'justify-end';
+const messageStyle = message => (message?.sender?.id) === usePage().props.value.user.id ? 'badge badge-primary' : 'badge bg-adaptable';
+
 const form = useForm({
     message: null,
 })
-const emit = defineEmits(['MessageSent',])
+
 const submit = () => {
-    Inertia.post(route('chat.store'), {
+    Inertia.post(route('chat.store', {ad: props.ad.data.slug,}), {
         message: form.message,
-        post: usePage().props.value.ad.data?.slug,
+        conversation_id: props.conversation.data.id,
     }, {
         preserveScroll: true,
         preserveState: true,
         replace: true,
         onFinish: () => {
-            emit('MessageSent', {
-                user: usePage().props.value.user,
-                message: form.message,
-                ad: props.ad,
-            });
             form.message = ''
         },
     });
 }
 
-window.Echo.private('chat')
-    .listen('MessageSent', (data) => {
-        if (data.ad.slug === props.ad.data.slug) {
-            const messageIndex = props.messages.data.findIndex((item) => item.id === data.message.id);
-            messageIndex < 0 ? props.messages.data.push(data.message) : props.messages.data[messageIndex] = data.message;
-            scrollToBottom('#chatList');
-        }
+window.Echo.private(`chat.${props.conversation.data.id}`)
+    .listen('MessageSentEvent', (data) => {
+        const messageIndex = props.messages.data.findIndex((item) => item.id === data.message.id);
+        messageIndex < 0 ? props.messages.data.push(data.message) : props.messages.data[messageIndex] = data.message;
+        scrollToBottom('#chatList');
     });
 
 onBeforeUnmount(() => {
-    window.Echo.leave('chat');
+    window.Echo.leave(`chat.${props.conversation.data.id}`);
 });
 
 const title = () => ` گفتگو درباره ${usePage().props.value.ad.data?.title}` ?? 'گفتگو';
@@ -115,6 +114,7 @@ onMounted(() => {
                        class="input input-bordered bg-adaptable w-full px-4 mr-4"
                        v-model="form.message"
                        name="message" required/>
+                <div v-if="form.errors.message" class="text-red-500 text-sm my-2">{{ form.errors.message }}</div>
                 <button type="submit">
                     <svg class="w-8 h-8 text-primary-500 origin-center transform rotate-90"
                          xmlns="http://www.w3.org/2000/svg"

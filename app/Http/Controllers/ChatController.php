@@ -2,78 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\MessageSent;
+use App\Events\ConversationCreatedEvent;
+use App\Events\MessageSentEvent;
 use App\Http\Requests\Chat\StoreRequest;
 use App\Http\Resources\AdResource;
+use App\Http\Resources\ConversationResource;
 use App\Http\Resources\MessageResource;
-use App\Http\Resources\UserResource;
 use App\Models\Ad;
+use App\Models\Conversation;
 use App\Models\Message;
+use DB;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
+use Log;
+use function auth;
+use function back;
+use function broadcast;
+use function now;
 
 class ChatController extends Controller
 {
     public function index(): Response
     {
         return Inertia::render('Chat', [
-            'ads' => AdResource::collection(Ad::query()
-                ->whereHas('messages', function ($query) {
-                    return $query->where('receiver_id', auth()->id())
-                        ->orWhere('sender_id', auth()->id());
-                })
-                ->with([
-                    'messages',
-                    'user',
-                    'media'
-                ])
-                ->select(['id', 'title', 'slug', 'created_at'])
-                ->get())
+            'conversations' => ConversationResource::collection(Conversation::whereReceiverId(auth()->id())
+                                                                    ->orWhere('creator_id', auth()->id())
+                                                                    ->with('ad')
+                                                                    ->latest()
+                                                                    ->get()),
         ]);
     }
 
-    public function create(): Response
+    public function create(Ad $ad): Response
     {
-        Message::whereAdId(Ad::whereSlug(\request('post'))->value('id'))->where(function (Builder $query) {
-            return $query->orWhere('receiver_id', auth()->id())
-                ->orWhere('sender_id', auth()->id());
-        })->update([
-            'has_seen' => true,
-        ]);
+        $ad->load('media');
 
-        $ad = Ad::whereSlug(request('post'))->first();
+        $conversation = Conversation::with(['creator', 'receiver'])->firstOrCreate(
+            [
+                'ad_id' => $ad->id,
+            ],
+            [
+                'creator_id' => auth()->id(),
+                'receiver_id' => $ad->user_id,
+            ]);
+        // Make the unread messages read
+        Message::whereConversationId($conversation->id)
+            ->whereHasSeen(false)
+            ->update(['has_seen' => true, 'has_seen_at' => now()]);
+        // Broadcast the event to channel
+        broadcast(new ConversationCreatedEvent($conversation, $ad));
+
+        $messages = $conversation->messages()->with(['sender', 'receiver'])->get();
 
         return Inertia::render('Chat/Create', [
+            'conversation' => new ConversationResource($conversation),
             'ad' => new AdResource($ad),
-            'messages' => MessageResource::collection($ad->messages()
-                ->where(fn(Builder $query) => $query->orWhere('sender_id', auth()->id())->orWhere('receiver_id', $ad->user_id))
-                ->get()),
+            'messages' => MessageResource::collection($messages),
         ]);
     }
 
-    public function store(StoreRequest $request): RedirectResponse
+    public function store(StoreRequest $request, Ad $ad): RedirectResponse
     {
-        $ad = Ad::whereSlug($request->post)->with(['media'])->select(['id', 'title', 'slug', 'phone_number', 'user_id']);
+        $ad->load('media');
+
         try {
             DB::transaction(function () use ($request, $ad) {
-                $message = Message::create([
-                    'ad_id' => $ad->value('id'),
-                    'sender_id' => auth()->id(),
-                    'receiver_id' => $ad->value('user_id'),
-                    'body' => $request->validated('message'),
-                ]);
-                broadcast(new MessageSent(UserResource::make(auth()->user()), MessageResource::make($message), AdResource::make($ad->first())))->toOthers();
+                $message = Message::create(
+                    [
+                        'conversation_id' => $request->validated('conversation_id'),
+                        'sender_id' => auth()->id(),
+                        'receiver_id' => $ad->user_id,
+                        'body' => $request->validated('message'),
+                    ]);
+                broadcast(new MessageSentEvent($message->conversation, $message))->toOthers();
             });
         } catch (Exception $exception) {
             Log::error($exception);
-            return back()->with(['message' => 'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!']);
+
+            return back()
+                ->with([
+                           'type' => 'error',
+                           'body', 'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!',
+                       ]);
         }
+
         return back()->with(['message' => 'پیام ارسال شد.']);
     }
 }

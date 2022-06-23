@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -39,10 +38,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Message extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'ad_id',
+        'conversation_id',
         'sender_id',
         'receiver_id',
         'body',
@@ -53,11 +50,9 @@ class Message extends Model
         'has_seen' => 'boolean',
     ];
 
-    protected $appends = ['self_message'];
-
-    public function ad(): BelongsTo
+    public function conversation(): BelongsTo
     {
-        return $this->belongsTo(Ad::class);
+        return $this->belongsTo(Conversation::class);
     }
 
     public function sender(): BelongsTo
@@ -68,11 +63,5 @@ class Message extends Model
     public function receiver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'receiver_id');
-    }
-
-
-    public function getSelfMessageAttribute(): bool
-    {
-        return $this->user_id === auth()->id();
     }
 }

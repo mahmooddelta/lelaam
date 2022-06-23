@@ -165,7 +165,7 @@ const populateAttributes = (value, index) => {
                             :validation-errors="form.errors.images"
                             multiple
                         />
-                        <div v-if="form.errors.images">{{ form.errors.images }}</div>
+                        <div v-if="form.errors.images" class="text-red-500 text-sm my-2">{{ form.errors.images }}</div>
                     </div>
                     <div class="divider"></div>
                     <section class="my-4" :class="{'grid grid-cols-1 lg:grid-cols-2 gap-4' : !isNegotiable}">

@@ -2,14 +2,7 @@
 import Nav from "../Shared/Nav";
 import TopNavLinks from "../Shared/TopNavLinks";
 import Footer from "../Shared/Footer";
-import Alert from "../Shared/Components/Alert";
-import {usePage} from "@inertiajs/inertia-vue3";
-
-window.Echo.private('chat')
-    .listen('MessageSent', (data) => {
-        usePage().props.value.unread_messages_count++;
-    });
-</script>
+import Alert from "../Shared/Components/Alert";</script>
 
 <template>
     <div class="max-w-full mx-auto">

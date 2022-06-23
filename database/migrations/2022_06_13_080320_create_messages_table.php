@@ -1,12 +1,11 @@
 <?php
 
-use App\Models\Ad;
-use App\Models\User;
+use App\Models\Conversation;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration{
     /**
      * Run the migrations.
      *
@@ -17,7 +16,7 @@ return new class extends Migration {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(Ad::class)
+            $table->foreignIdFor(Conversation::class)
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
@@ -29,7 +28,7 @@ return new class extends Migration {
                 ->cascadeOnUpdate();
 
             $table->foreignId('receiver_id')
-                ->comment('The user who message was sent for')
+                ->comment('The user whom the message if for')
                 ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
@@ -37,6 +36,7 @@ return new class extends Migration {
             $table->text('body');
 
             $table->boolean('has_seen')->default(false);
+            $table->timestamp('has_seen_at')->nullable();
 
             $table->timestamps();
         });

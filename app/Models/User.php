@@ -159,6 +159,11 @@ class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
         return $this->hasMany(AdReport::class);
     }
 
+    public function conversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class);
+    }
+
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
@@ -186,6 +191,6 @@ class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
 
     public function hasVerifiedPhone(): bool
     {
-        return !is_null($this->phone_verified_at);
+        return ! is_null($this->phone_verified_at);
     }
 }

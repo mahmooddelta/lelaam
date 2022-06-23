@@ -3,17 +3,17 @@ import Container from "../Shared/Components/Container";
 import {onBeforeUnmount} from "vue";
 
 const props = defineProps({
-    ads: Object,
+    conversations: Object,
 })
 
-window.Echo.private('chat')
-    .listen('MessageSent', (data) => {
-        const messageIndex = props.ads.data.findIndex((item) => item.slug === data.ad.slug);
-        messageIndex < 0 ? props.ads.data.push(data.ad) : props.ads.data[messageIndex] = data.ad;
+window.Echo.private('conversation')
+    .listen('ConversationCreatedEvent', (data) => {
+        const messageIndex = props.conversations.data.findIndex((item) => item.id === data.conversation.id);
+        messageIndex < 0 ? props.conversations.data.push(data.conversation) : props.conversations.data[messageIndex] = data.conversation;
     });
 
 onBeforeUnmount(() => {
-    window.Echo.leave('chat');
+    window.Echo.leave('conversation');
 });
 </script>
 
@@ -36,19 +36,23 @@ onBeforeUnmount(() => {
         <ul>
             <h2 class="my-2 mb-2 ml-2 text-3xl text-gray-600">گفتگو ها</h2>
             <div class="divider"></div>
-            <li>
-                <Link v-for="ad in ads.data" :key="ad.id"
-                      v-if="ads.data.length > 0"
-                      :href="route('chat.create', {post: ad.slug})"
+            <li class="overflow-y-auto max-h-[19rem]">
+                <Link v-for="conversation in conversations.data" :key="conversation.id"
+                      v-if="conversations.data.length > 0"
+                      :href="route('chat.create', {ad: conversation.ad.slug})"
                       class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-base-100 focus:outline-none rounded">
                     <img class="object-cover w-16 h-16"
-                         :src="ad.thumb" :alt="ad.title"/>
+                         :src="conversation.ad.thumb" :alt="conversation.ad.title"/>
                     <div class="w-full pb-2">
-                        <span class="block ml-2 font-semibold text-xl" v-text="ad.title"></span>
+                        <span class="block ml-2 font-semibold text-xl" v-text="conversation.ad.title"></span>
+                        <div class="text-sm ml-2 mt-1 text-gray-500">
+                            <p v-text="conversation.last_message_text"></p>
+                            <p v-text="conversation.last_message_time"></p>
+                        </div>
                     </div>
                 </Link>
                 <div v-else>
-                    <p class="text-center text-3xl">
+                    <p class="text-center text-2xl">
                         گفتگویی وجود ندارد!
                     </p>
                 </div>

@@ -23,10 +23,11 @@ class StoreRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'message' => ['required', 'filled'],
+            'conversation_id' => ['required', 'integer', 'min:0', 'exists:conversations,id'],
         ];
     }
 
@@ -36,10 +37,9 @@ class StoreRequest extends FormRequest
             $errors = $validator->errors();
 
             $response = response()->json([
-                'status' => 'error',
-                'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                'message' => $errors->messages(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                                             'status' => 'error',
+                                             'message' => $errors->messages(),
+                                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
 
             throw new \Illuminate\Http\Exceptions\HttpResponseException($response);
         }

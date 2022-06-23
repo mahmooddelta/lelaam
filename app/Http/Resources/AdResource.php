@@ -12,7 +12,7 @@ use function secure_asset;
 class AdResource extends JsonResource
 {
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request): array
@@ -43,8 +43,8 @@ class AdResource extends JsonResource
             'state' => $this?->district?->state?->name ?? 'State',
 
             'bookmarks' => BookmarkResource::collection($this->whenLoaded('bookmarkers')),
-            'messages' => MessageResource::collection($this->whenLoaded('messages')),
-            'messages_count' => $this->whenLoaded('messages', $this->messages_count),
+
+            'conversations' => ConversationResource::collection($this->whenLoaded('conversations')),
         ];
     }
 }

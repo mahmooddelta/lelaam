@@ -168,9 +168,9 @@ class Ad extends Model implements HasMedia
         return $this->hasMany(AdReport::class);
     }
 
-    public function messages(): HasMany
+    public function conversations(): HasMany
     {
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Conversation::class);
     }
 
     public function registerMediaConversions(Media $media = null): void

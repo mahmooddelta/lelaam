@@ -42,8 +42,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.veri
             ->name('post.report');
         // Chat & Messaging
         Route::get('chat', [ChatController::class, 'index'])->name('chat');
-        Route::get('chat/create', [ChatController::class, 'create'])->name('chat.create');
-        Route::post('chat/create', [ChatController::class, 'store'])->name('chat.store');
+        Route::get('chat/{ad:slug}/create', [ChatController::class, 'create'])->name('chat.create');
+        Route::post('chat/{ad:slug}/create', [ChatController::class, 'store'])->name('chat.store');
     });
 
 Route::mediaLibrary();
