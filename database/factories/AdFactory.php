@@ -25,6 +25,7 @@ class AdFactory extends Factory
             'desc' => $this->faker->persianText(),
             'address' => $this->faker->address(),
             'is_published' => $this->faker->boolean(),
+            'is_chat_enabled' => $this->faker->boolean(),
             'created_at' => now(),
             'updated_at' => now(),
         ];
