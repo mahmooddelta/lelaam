@@ -7,7 +7,6 @@ use App\Filament\Resources\AdResource\RelationManagers;
 use App\Models\Ad;
 use App\Models\Attribute;
 use App\Models\Category;
-use Filament\Forms\Components\BelongsToSelect;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -98,7 +97,7 @@ class AdResource extends Resource
                                  ->schema([
                                               Grid::make()
                                                   ->schema([
-                                                               BelongsToSelect::make('category_id')
+                                                               Select::make('category_id')
                                                                    ->label(__('general.ads.fields.category_id'))
                                                                    ->required()
                                                                    ->relationship('category', 'name')
@@ -135,7 +134,7 @@ class AdResource extends Resource
                                                                    ->required()
                                                                    ->maxLength(255),
 
-                                                               BelongsToSelect::make('district_id')
+                                                               Select::make('district_id')
                                                                    ->label(__('general.ads.fields.district_id'))
                                                                    ->relationship('district', 'name')
                                                                    ->exists('districts', 'id')
@@ -178,7 +177,7 @@ class AdResource extends Resource
                                                   ->label(__('general.ads.fields.price'))
                                                   ->numeric()
                                                   ->required(),
-                                              BelongsToSelect::make('currency_id')
+                                              Select::make('currency_id')
                                                   ->label(__('general.ads.fields.currency_id'))
                                                   ->relationship('currency', 'name')
                                                   ->exists('currencies', 'id')
