@@ -16,9 +16,11 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use function auth;
 use function broadcast;
 use function now;
+use function response;
 
 class ChatController extends Controller
 {
@@ -34,30 +36,46 @@ class ChatController extends Controller
 
     public function create(Ad $ad): JsonResponse
     {
-        $ad->load('media');
+        if ($ad->user_id !== 0) {
+            if ($ad->user_id !== auth('api')->id()) {
+                $ad->load('media');
 
-        $conversation = Conversation::with(['creator', 'receiver'])->firstOrCreate(
-            [
-                'ad_id' => $ad->id,
-            ],
-            [
-                'creator_id' => auth('api')->id(),
-                'receiver_id' => $ad->user_id,
-            ]);
-        // Make the unread messages read
-        Message::whereConversationId($conversation->id)
-            ->whereHasSeen(false)
-            ->update(['has_seen' => true, 'has_seen_at' => now()]);
-        // Broadcast the event to channel
-        broadcast(new ConversationCreatedEvent($conversation, $ad));
+                $conversation = Conversation::query()
+                    ->whereReceiverId(auth('api')->id())
+                    ->orWhere('creator_id', auth('api')->id())
+                    ->with(['creator', 'receiver'])
+                    ->firstOrCreate(
+                        [
+                            'ad_id' => $ad->id,
+                        ],
+                        [
+                            'creator_id' => auth('api')->id(),
+                            'receiver_id' => $ad->user_id,
+                        ]);
+                // Make the unread messages read
+                Message::whereConversationId($conversation->id)
+                    ->whereHasSeen(false)
+                    ->update(['has_seen' => true, 'has_seen_at' => now()]);
+                // Broadcast the event to channel
+                broadcast(new ConversationCreatedEvent($conversation, $ad));
 
-        $messages = $conversation->messages()->with(['sender', 'receiver'])->get();
+                $messages = $conversation->messages()->with(['sender', 'receiver'])->get();
 
-        return \response()->json([
-                                     'conversation' => new ConversationResource($conversation),
-                                     'ad' => new AdResource($ad),
-                                     'messages' => MessageResource::collection($messages),
-                                 ]);
+                return \response()->json([
+                                             'conversation' => new ConversationResource($conversation),
+                                             'ad' => new AdResource($ad),
+                                             'messages' => MessageResource::collection($messages),
+                                         ]);
+            }
+
+            return response()->json([
+                                        'message' => '!چت با خودتان غیرمنطقی است و ممکن نیست',
+                                    ], ResponseAlias::HTTP_UNAUTHORIZED);
+        }
+
+        return response()->json([
+                                    'message' => '!چت با آگهی که به صورت مهمان ثبت شده ممکن نیست',
+                                ], ResponseAlias::HTTP_UNAUTHORIZED);
     }
 
     public function store(Ad $ad, StoreRequest $request): JsonResponse

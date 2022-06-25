@@ -39,14 +39,19 @@ class ChatController extends Controller
     {
         $ad->load('media');
 
-        $conversation = Conversation::with(['creator', 'receiver'])->firstOrCreate(
-            [
-                'ad_id' => $ad->id,
-            ],
-            [
-                'creator_id' => auth()->id(),
-                'receiver_id' => $ad->user_id,
-            ]);
+        $conversation = Conversation::query()
+            ->whereReceiverId(auth('api')->id())
+            ->orWhere('creator_id', auth('api')->id())
+            ->with(['creator', 'receiver'])
+            ->firstOrCreate(
+                [
+                    'ad_id' => $ad->id,
+                ],
+                [
+                    'creator_id' => auth('api')->id(),
+                    'receiver_id' => $ad->user_id,
+                ]);
+
         // Make the unread messages read
         Message::whereConversationId($conversation->id)
             ->whereHasSeen(false)
