@@ -20,14 +20,14 @@ class JWT extends BaseMiddleware
             JWTAuth::parseToken()->authenticate();
         } catch (Exception $e) {
             if ($e instanceof TokenInvalidException) {
-                return response()->json(['status' => '!توکن ورود درست نیست', ResponseAlias::HTTP_UNAUTHORIZED]);
+                return response()->json(['status' => '!توکن ورود درست نیست'], ResponseAlias::HTTP_UNAUTHORIZED);
             }
 
             if ($e instanceof TokenExpiredException) {
-                return response()->json(['status' => 'توکن منقضی شده است!', ResponseAlias::HTTP_UNAUTHORIZED]);
+                return response()->json(['status' => 'توکن منقضی شده است!'], ResponseAlias::HTTP_UNAUTHORIZED);
             }
 
-            return response()->json(['status' => '!توکن ورود درست نیست', ResponseAlias::HTTP_UNAUTHORIZED]);
+            return response()->json(['status' => '!توکن ورود درست نیست'], ResponseAlias::HTTP_UNAUTHORIZED);
         }
 
         return $next($request);
