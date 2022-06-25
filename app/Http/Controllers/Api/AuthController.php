@@ -10,8 +10,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
-use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenExpiredException;
-use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenInvalidException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Symfony\Component\HttpFoundation\Response;
 use function auth;
@@ -98,16 +96,8 @@ class AuthController extends Controller
      */
     public function me(): JsonResponse
     {
-        try {
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['user_not_found'], 404);
-            }
-        } catch (TokenExpiredException $e) {
-            return response()->json(['token_expired'], Response::HTTP_UNAUTHORIZED);
-        } catch (TokenInvalidException $e) {
-            return response()->json(['token_invalid'], Response::HTTP_UNAUTHORIZED);
-        } catch (JWTException $e) {
-            return response()->json(['token_absent'], Response::HTTP_UNAUTHORIZED);
+        if (! $user = JWTAuth::parseToken()->authenticate()) {
+            return response()->json(['!مشخصات وارد شده، درست نیست'], Response::HTTP_NOT_FOUND);
         }
 
         return response()->json(['user' => UserResource::make($user)]);
@@ -123,7 +113,7 @@ class AuthController extends Controller
     {
         auth('api')->logout();
 
-        return response()->json(['message' => 'خروج موفق آمیز بود.']);
+        return response()->json(['message' => '.خروج موفق آمیز بود']);
     }
 
     /**
@@ -179,11 +169,23 @@ class AuthController extends Controller
         return auth('api')->user()->hasVerifiedPhone();
     }
 
-    public function profilePhoneVerifiedUpdate(): JsonResponse
+    public function profilePhoneVerifiedUpdate(Request $request): JsonResponse
     {
+        $validated = $request->validate(
+            [
+                'phone' => 'required|filled|min:9|max:14|exists:users,phone',
+            ]);
+        if (auth('api')->user()->hasVerifiedPhone()) {
+            return response()->json(['message' => '!شماره تماس کاربر از قبل تایید شده است'], Response::HTTP_FORBIDDEN);
+        }
+
+        if (auth('api')->user()->phone !== $validated['phone']) {
+            return response()->json(['message' => '!شماره تماس وارد شده، اشتباه است'], Response::HTTP_UNAUTHORIZED);
+        }
+
         return auth('api')->user()?->update(
             [
                 'phone_verified_at' => now(),
-            ]) > 0 ? response()->json(['message' => 'شماره تماس شما تایید شد.']) : response()->json(['message' => 'تایید شماره تماس شما ناموفق بود!']);
+            ]) > 0 ? response()->json(['message' => '.شماره تماس شما تایید شد']) : response()->json(['message' => '!تایید شماره تماس شما ناموفق بود']);
     }
 }
