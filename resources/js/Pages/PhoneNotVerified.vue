@@ -3,13 +3,13 @@ import {Head, useForm} from '@inertiajs/inertia-vue3';
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
 import JetButton from '@/Jetstream/Button.vue';
-import JetInput from '@/Jetstream/Input.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import {getAuth, RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth'
 import {computed, onMounted, ref} from "vue";
 import {initializeApp} from "firebase/app";
 import {getAnalytics} from "firebase/analytics";
+import VOtpInput from 'vue3-otp-input';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -26,24 +26,41 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const auth = getAuth();
 
 const errors = ref('');
-const auth = getAuth();
 const isRecaptchaSolved = ref(false);
+
 const otpSent = ref(false);
+const otpInput = ref(null);
 const otp = ref(null);
 const otpVerified = ref(false);
+
 const form = useForm({
     phone: '',
     phoneVerified: otpVerified.value,
 });
+
 const isPhoneInputted = computed(() => form.phone.length === 10);
+const phoneNumberInput = ref(null);
+
+const updatePhoneNumber = () => {
+    if (phoneNumberInput.value.otp.length > 0 && phoneNumberInput.value.otp.length <= 10) {
+        form.phone = phoneNumberInput.value.otp.join('');
+    }
+};
+
+const updateOtp = () => {
+    if (otpInput.value.otp.length > 0 && otpInput.value.otp.length <= 10) {
+        otp.value = otpInput.value.otp.join('');
+    }
+};
 
 const submit = () => {
     form.transform(data => ({
         ...data,
         phoneVerified: otpVerified.value,
-    })).post(route('phone.verify'));
+    })).post(route('phone.verify.store'));
 };
 const handleOTPExceptions = error => {
     if (error.message === 'TOO_MANY_ATTEMPTS_TRY_LATER')
@@ -79,45 +96,36 @@ onMounted(() => {
 });
 const sendOtp = () => {
     if (isRecaptchaSolved.value) {
-        if (form.phone.length !== 10) {
-            toast.error('شماره تلفن باید حداقل 10 رقم باشد!', {timeout: 2000});
-        } else {
-            //
-            let countryCode = '+93' // Afghanistan
-            let phoneNumber = countryCode + form.phone
-            //
-            signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
-                .then(function (confirmationResult) {
-                    // SMS sent. Prompt user to type the code from the message, then sign the
-                    // user in with confirmationResult.confirm(code).
-                    window.confirmationResult = confirmationResult;
-                    //
-                    toast.success('کد تاییدی ارسال شد.', {timeout: 3000});
-                    otpSent.value = true;
-                })
-                .catch(function (error) {
-                    grecaptcha.reset(window.recaptchaWidgetId);
-                    isRecaptchaSolved.value = false;
-                    otpSent.value = false;
-                    handleOTPExceptions(error);
-                });
-        }
+
+        const countryCode = '+93' // Afghanistan
+        const phoneNumberFormatted = form.phone.charAt(0) === '0' ? form.phone.substring(1) : form.phone;
+        const phoneNumber = countryCode + phoneNumberFormatted;
+        // !TODO Problem is here and thus it should be traced and sent
+        signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+            .then(function (confirmationResult) {
+                // SMS sent. Prompt user to type the code from the message, then sign the
+                // user in with confirmationResult.confirm(code).
+                window.confirmationResult = confirmationResult;
+
+                toast.success('کد تاییدی ارسال شد.', {timeout: 3000});
+                otpSent.value = true;
+            })
+            .catch(function (error) {
+                grecaptcha.reset(window.recaptchaWidgetId);
+                otpSent.value = false;
+                handleOTPExceptions(error);
+            });
     } else {
         toast.error('لطفا پازل را حل کنید!', {timeout: 2000});
     }
 };
 const verifyOtp = () => {
-    if (form.phone.length !== 10 || otp.value.length !== 6) {
-        toast.error('شماره تلفن یا کد وارد شده درست نیست!', {timeout: 2000});
-    } else {
-        window.confirmationResult.confirm(otp.value).then(function (result) {
-            otpVerified.value = true;
-            console.log(otp.value, result)
-        }).catch(function (error) {
-            otpVerified.value = false;
-            handleOTPExceptions(error);
-        });
-    }
+    window.confirmationResult.confirm(otp.value).then(function (result) {
+        otpVerified.value = true;
+    }).catch(function (error) {
+        otpVerified.value = false;
+        handleOTPExceptions(error);
+    });
 };
 </script>
 
@@ -134,32 +142,64 @@ const verifyOtp = () => {
         <form @submit.prevent="submit">
             <div class="mt-4">
                 <JetLabel for="phone" value="شماره تماس"/>
-                <JetInput
-                    id="phone"
-                    v-model="form.phone"
-                    type="phone"
-                    class="mt-1 block w-full"
-                    required
-                />
-                <div id="recaptcha-container" class="flex justify-center w-full my-2" v-show="!isRecaptchaSolved"></div>
-                <section class="flex mt-2 justify-between pr-2" v-show="isPhoneInputted">
+                <div dir="ltr" class="mt-2">
+                    <v-otp-input
+                        ref="phoneNumberInput"
+                        input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1"
+                        separator=" "
+                        :num-inputs="10"
+                        :should-auto-focus="true"
+                        :is-input-num="true"
+                        :placeholder="['0', '7', '*', '*', '*', '*', '*', '*', '*', '*']"
+                        @on-change="updatePhoneNumber()"
+                    />
+                </div>
+
+                <div class="flex items-center justify-end mt-4" v-if="isPhoneInputted && isRecaptchaSolved && !otpSent">
                     <button id="sign-in-button" class="btn btn-outline btn-primary mx-1" @click="sendOtp"
-                            v-show="!otpSent" type="button">ارسال کد
+                            v-if="!otpSent" type="button">
+                        ارسال کد
                     </button>
-                    <input v-show="otpSent" @focusout="verifyOtp" class="input input-bordered bg-adaptable" type="text"
-                           minlength="6" maxlength="6" min="0"
-                           max="9" v-model="otp"
-                           placeholder="کد یکبار مصرف"/>
-                    <button @click="sendOtp" v-show="otpSent" class="btn btn-outline btn-primary mx-1" type="button">
-                        ارسال دوباره
+                </div>
+
+                <div class="divider"></div>
+
+                <div id="recaptcha-container" class="flex flex-grow justify-center w-full my-2" v-show="!isRecaptchaSolved"></div>
+
+                <section class="w-full text-center" v-if="isPhoneInputted && isRecaptchaSolved && otpSent">
+                    <b class="text-sm text-gray-400 flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                             stroke="#fb5858" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        یک کد 6 رقمی برای بررسی درست بودن شماره تماس وارد شده به شماره تان فرستاده شد. لطفاً آنرا در ورودی زیر وارد نمائید.
+                    </b>
+                    <section class="flex justify-center my-4">
+                        <div dir="ltr">
+                            <v-otp-input
+                                ref="otpInput"
+                                input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1"
+                                separator=" "
+                                :num-inputs="6"
+                                :should-auto-focus="true"
+                                :is-input-num="true"
+                                :placeholder="['*', '*', '*', '*', '*', '*']"
+                                @on-change="updateOtp()"
+                                @on-complete="verifyOtp"
+                            />
+                        </div>
+                    </section>
+                    <button @click="sendOtp" class="btn btn-outline btn-primary mx-1" type="button">
+                        کدی دریافت نکرده اید! ارسال دوباره
                     </button>
                 </section>
             </div>
 
             <div class="flex items-center justify-end mt-4">
                 <JetButton class="ml-4 disabled:opacity-75"
-                           :disabled="form.processing || !isRecaptchaSolved">
-                    تایید شماره تماس
+                           :disabled="form.processing || !isRecaptchaSolved || !otpSent">
+                    تایید شماره تماس و ادامه
                 </JetButton>
             </div>
         </form>

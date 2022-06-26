@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AdResource;
 use App\Models\Ad;
 use App\Models\Category;
-use App\Models\State;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
 use function auth;
+use function back;
 use function now;
-use function to_route;
+use function redirect;
 
 class WebsiteController extends Controller
 {
@@ -47,13 +46,36 @@ class WebsiteController extends Controller
 
     public function phoneVerify(Request $request): RedirectResponse
     {
-        Validator::make($request->all(), [
-            'phone' => 'required|string|min:10|max:14|exists:users,phone',
-            'phoneVerified' => ['nullable', 'boolean'],
-        ])->validate();
+        $validated = $request->validate(
+            [
+                'phone' => 'required|string|min:10|max:14|unique:users,phone',
+                'phoneVerified' => ['nullable', 'boolean'],
+            ]);
 
-        auth()->user()->update(['phone_verified_at' => $request->phoneVerified === true ? now() : null,]);
+        if (! isset(auth()->user()->phone)) {
+            if (auth()->user()->hasVerifiedPhone()) {
+                return back()->with([
+                                        'type' => 'error',
+                                        'body', 'شماره تماس کاربر از قبل تایید شده است!',
+                                    ]);
+            }
 
-        return to_route('account');
+            if (auth()->user()->phone !== $validated['phone']) {
+                return back()->with([
+                                        'type' => 'error',
+                                        'body', 'شماره تماس وارد شده، اشتباه است!',
+                                    ]);
+            }
+
+            auth()
+                ->user()
+                ?->update(['phone_verified_at' => $validated['phoneVerified'] === true ? now() : null]);
+        } else {
+            auth()
+                ->user()
+                ?->update(['phone' => $validated['phone'], 'phone_verified_at' => $validated['phoneVerified'] === true ? now() : null]);
+        }
+
+        return redirect()->intended('account');
     }
 }
