@@ -11,7 +11,7 @@ class EnsurePhoneVerifiedMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (! $request->user() || ! $request->user()->hasVerifiedPhone()) {
-            return to_route('phone.unverified');
+            return to_route('phone.verify');
         }
 
         return $next($request);
