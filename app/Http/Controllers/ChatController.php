@@ -40,15 +40,15 @@ class ChatController extends Controller
         $ad->load('media');
 
         $conversation = Conversation::query()
-            ->whereReceiverId(auth('api')->id())
-            ->orWhere('creator_id', auth('api')->id())
+            ->whereReceiverId(auth()->id())
+            ->orWhere('creator_id', auth()->id())
             ->with(['creator', 'receiver'])
             ->firstOrCreate(
                 [
                     'ad_id' => $ad->id,
                 ],
                 [
-                    'creator_id' => auth('api')->id(),
+                    'creator_id' => auth()->id(),
                     'receiver_id' => $ad->user_id,
                 ]);
 
