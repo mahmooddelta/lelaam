@@ -31,4 +31,9 @@ class ConversationCreatedEvent implements ShouldBroadcast
             'conversation' => ConversationResource::make($this->conversation->load('ad')),
         ];
     }
+
+    public function broadcastAs()
+    {
+        return 'ConversationCreatedEvent';
+    }
 }

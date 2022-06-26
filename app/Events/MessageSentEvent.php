@@ -33,4 +33,9 @@ class MessageSentEvent implements ShouldBroadcast
             'message' => MessageResource::make($this->message->load(['sender', 'receiver'])),
         ];
     }
+
+    public function broadcastAs()
+    {
+        return 'MessageSentEvent';
+    }
 }
