@@ -173,7 +173,7 @@ class AuthController extends Controller
     {
         $validated = $request->validate(
             [
-                'phone' => 'required|filled|min:9|max:14|exists:users,phone',
+                'phone' => 'required|filled|min:9|max:14|exists:users,phone|unique:users,phone',
             ]);
         if (auth('api')->user()->hasVerifiedPhone()) {
             return response()->json(['message' => '!شماره تماس کاربر از قبل تایید شده است'], Response::HTTP_FORBIDDEN);
