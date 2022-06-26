@@ -25,9 +25,11 @@ class AdFactory extends Factory
             'desc' => $this->faker->persianText(),
             'address' => $this->faker->address(),
             'is_published' => $this->faker->boolean(),
+            'published_at' => now(),
             'is_chat_enabled' => $this->faker->boolean(),
             'created_at' => now(),
             'updated_at' => now(),
+            'expires_at' => now()->addMonth(),
         ];
     }
 

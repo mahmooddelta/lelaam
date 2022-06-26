@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\AdNotExpiredScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -112,7 +113,9 @@ class Ad extends Model implements HasMedia
         'address',
         'district_id',
         'is_published',
+        'published_at',
         'is_chat_enabled',
+        'expires_at',
     ];
 
     protected static $marks = [
@@ -126,11 +129,20 @@ class Ad extends Model implements HasMedia
         self::creating(function ($model) {
             // 0 means user has not logged in and added the ad as a guest
             $model->user_id = auth('api')->check() ? auth('api')->id() ?? 0 : auth()->id() ?? 0;
+            // Add one month to current month for expires_at field of newly created ads
+            $model->expires_at = now()->addMonth()->toDateTimeString();
         });
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new AdNotExpiredScope);
     }
 
     protected $casts = [
         'is_published' => 'boolean',
+        'published_at' => 'datetime',
+        'expires_at' => 'datetime',
     ];
 
     public function category(): BelongsTo
@@ -196,6 +208,16 @@ class Ad extends Model implements HasMedia
     public function scopePublished(Builder $query): Builder
     {
         return $query->whereIsPublished(true);
+    }
+
+    public function scopeExpired(Builder $query): Builder
+    {
+        return $query->whereDate('expires_at', '>', now()->addMonth());
+    }
+
+    public function scopeNotExpired(Builder $query): Builder
+    {
+        return $query->whereDate('expires_at', '<', now()->addMonth());
     }
 
     public function scopeNotPublished(Builder $query): Builder

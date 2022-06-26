@@ -5,6 +5,7 @@ import Collapse from "../Shared/Components/Collapse";
 import Ad from "../Shared/Ad"
 import {ref, watch} from "vue";
 import {Inertia} from "@inertiajs/inertia";
+import {usePage} from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
     ads: Object,
@@ -37,6 +38,7 @@ const badgeType = type => {
             return 'badge-secondary';
     }
 };
+const pageTitle = usePage().props.value.user ? `${usePage().props.value.user.name} عزیز، حالت چطوره؟ ` : 'حساب من';
 </script>
 
 <template>
@@ -44,7 +46,7 @@ const badgeType = type => {
 
     <Container>
         <section class="w-full flex justify-between items-center pb-4">
-            <h1 class="text-4xl">حساب من</h1>
+            <h1 class="text-4xl" v-text="pageTitle"></h1>
             <Link :href="route('logout')" as="form" method="post" class="text-lg flex cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor" stroke-width="2">

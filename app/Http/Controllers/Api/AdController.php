@@ -32,25 +32,18 @@ class AdController extends Controller
             Validator::make(request()->all(), ['sortBy' => Rule::in(['newest', 'oldest', 'highestPrice', 'lowestPrice'])])
                 ->validate();
         }
+
         $sortBy = request()->has('sortBy') ? match (request()->sortBy) {
-            'newest', 'oldest', 'default' => 'id',
             'highestPrice', 'lowestPrice' => 'price',
-        } : 'id';
-        $order = request()->has('sortBy') ? match (request()->sortBy) {
-            'newest', 'highestPrice', 'default' => 'desc',
-            'oldest', 'lowestPrice' => 'asc',
-        } : 'desc';
-        $filters = [
-            'category' => request()->has('category') ? request('category') : null,
-            'district' => request()->has('district') ? request('district') : null,
-            'state' => request()->has('state') ? request('state') : null,
-            'search' => request()->has('search') ? request('search') : null,
-            'hasImages' => request()->has('hasImages') ? request('hasImages') : false,
-            'sortBy' => request()->has('sortBy') ? request('sortBy') : 'مرتب سازی بر اساس',
-        ];
+            default => 'id',
+        } : 'published_at';
+        $order = match (request()->sortBy) {
+            'oldest', 'lowestPrice' => false,
+            default => true,
+        };
 
         return AdResource::collection(Ad::query()
-                                          ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id'])
+                                          ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at'])
                                           ->published()
                                           ->with('media')
                                           ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
@@ -166,7 +159,7 @@ class AdController extends Controller
     {
         $ads = Ad::published()
             ->isOwner()
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id'])
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at'])
             ->with('media')
             ->get();
 
@@ -179,7 +172,7 @@ class AdController extends Controller
     {
         return AdResource::collection(Ad::published()
                                           ->whereHasBookmark(auth('api')->user())
-                                          ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id'])
+                                          ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at'])
                                           ->with('media')
                                           ->get());
     }

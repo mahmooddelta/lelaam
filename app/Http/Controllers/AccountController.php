@@ -6,6 +6,7 @@ use App\Http\Resources\AdReportResource;
 use App\Http\Resources\AdResource;
 use App\Http\Resources\BookmarkResource;
 use App\Models\Ad;
+use App\Models\Scopes\AdNotExpiredScope;
 use App\Models\State;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -20,7 +21,8 @@ class AccountController extends Controller
         return Inertia::render('Account', [
             'ads' => AdResource::collection(Ad::isOwner()
                                                 ->with('media')
-                                                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id'])
+                                                ->withoutGlobalScope(AdNotExpiredScope::class)
+                                                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'expires_at', 'published_at'])
                                                 ->latest()
                                                 ->get()),
             'states' => State::select(['id', 'name'])->get(),

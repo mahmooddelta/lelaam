@@ -31,6 +31,8 @@ class AdResource extends JsonResource
 
             'created_at' => $this->whenNotNull($this->created_at?->diffForHumans()),
             'updated_at' => $this->whenNotNull($this->updated_at?->diffForHumans()),
+            'published_at' => $this->whenNotNull($this->published_at?->diffForHumans()),
+            'is_expired' => $this->when($this->expires_at, $this->expires_at?->isPast()),
 
             'attributes' => AttributeResource::collection($this->whenLoaded('attributes')),
             'values' => AttributeValueResource::collection($this->whenLoaded('values')),

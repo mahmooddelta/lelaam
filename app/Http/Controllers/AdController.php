@@ -33,13 +33,13 @@ class AdController extends Controller
         $sortBy = request()->has('sortBy') ? match (request()->sortBy) {
             'highestPrice', 'lowestPrice' => 'price',
             default => 'id',
-        } : 'id';
+        } : 'published_at';
         $order = match (request()->sortBy) {
             'oldest', 'lowestPrice' => false,
             default => true,
         };
         $ads = Ad::query()
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id'])
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at'])
             ->published()
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
             ->filter(request())

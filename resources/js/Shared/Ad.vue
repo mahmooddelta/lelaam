@@ -18,11 +18,14 @@ const price = computed(() => {
             <h2 class="font-bold text-primary text-xl" v-html="ad.title"></h2>
             <p v-html="price"></p>
             <p>
-                {{ ad.updated_at }}
+                {{ ad.published_at }}
                 در
                 {{ ad.district }}
                 ولایت
                 {{ ad.state }}
+            </p>
+            <p v-if="ad.is_expired" class="badge badge-error text-xs">
+                آگهی منقضی شده است!
             </p>
         </div>
     </Link>
