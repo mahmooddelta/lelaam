@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AdResource\Pages;
 
+use App\Events\AdPublishStatusChangedEvent;
 use App\Filament\Resources\AdResource;
 use App\Models\Ad;
 use Filament\Resources\Pages\ListRecords;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use function __;
 use function auth;
+use function broadcast;
 
 class ListAds extends ListRecords
 {
@@ -24,7 +26,11 @@ class ListAds extends ListRecords
                 ->icon('heroicon-o-refresh')
                 ->color('primary')
                 ->visible(fn(Ad $record): bool => auth()->user()->can('update', $record))
-                ->action(fn(Ad $record) => $record->update(['is_published' => ! $record->is_published])),
+                ->action(function (Ad $record) {
+                    broadcast(new AdPublishStatusChangedEvent($record));
+
+                    return $record->update(['is_published' => ! $record->is_published]);
+                }),
             ...parent::getTableActions(),
         ];
     }
@@ -37,7 +43,11 @@ class ListAds extends ListRecords
                 ->icon('heroicon-o-refresh')
                 ->color('primary')
                 ->visible(fn(Ad $record): bool => auth()->user()->can('update', $record))
-                ->action(fn(Collection $records) => $records->each(fn($record) => $record->update(['is_published' => ! $record->is_published])))
+                ->action(fn(Collection $records) => $records->each(function ($record) {
+                    broadcast(new AdPublishStatusChangedEvent($record));
+
+                    return $record->update(['is_published' => ! $record->is_published]);
+                }))
                 ->deselectRecordsAfterCompletion()
                 ->requiresConfirmation(),
             ...parent::getTableBulkActions(),
