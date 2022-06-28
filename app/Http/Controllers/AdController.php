@@ -38,15 +38,22 @@ class AdController extends Controller
             'oldest', 'lowestPrice' => false,
             default => true,
         };
+        $filters = [
+            'category' => request()->has('category') ? request('category') : null,
+            'district' => request()->has('district') ? request('district') : null,
+            'state' => request()->has('state') ? request('state') : null,
+            'search' => request()->has('search') ? request('search') : null,
+            'hasImages' => request()->has('hasImages') ? request('hasImages') : false,
+            'sortBy' => request()->has('sortBy') ? request('sortBy') : 'مرتب سازی بر اساس',
+        ];
+
         $ads = Ad::query()
             ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at'])
             ->published()
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
             ->filter(request())
             ->get()
-            ->sortBy(                                           auth()->check() ? fn(Ad $ad) => District::whereStateId(auth()->user()->state_id)
-                ->get()
-                ->find($ad->district_id) : $sortBy, descending: $order)
+            ->sortBy(auth()->check() ? fn(Ad $ad) => District::whereStateId(auth()->user()->state_id)->get()->find($ad->district_id) : $sortBy, descending: $order)
             ->paginate(24)
             ->withQueryString();
 
@@ -57,14 +64,7 @@ class AdController extends Controller
             'districts' => District::select(['id', 'name', 'state_id'])
                 ->when(request()->has('state'), fn($query) => $query->where('state_id', request('state')))
                 ->get(),
-            'filters' => [
-                'category' => request()->has('category') ? request('category') : null,
-                'district' => request()->has('district') ? request('district') : null,
-                'state' => request()->has('state') ? request('state') : null,
-                'search' => request()->has('search') ? request('search') : null,
-                'hasImages' => request()->has('hasImages') ? request('hasImages') : false,
-                'sortBy' => request()->has('sortBy') ? request('sortBy') : 'مرتب سازی بر اساس',
-            ],
+            'filters' => $filters,
             'routeResourceName' => request()->route()->getName(),
         ]);
     }
@@ -99,11 +99,11 @@ class AdController extends Controller
         Bookmark::toggle($ad, auth()->user());
 
         return back()->with([
-                                'type' => 'success',
-                                'body' => $ad->whereHasBookmark(auth()->user())
-                                    ->whereSlug($ad->slug)
-                                    ->exists() ? 'آگهی با موفقیت به لیست علاقه مندی ها اضافه شد.' : 'آگهی از لیست علاقه مندی های شما حذف شد.',
-                            ]);;
+            'type' => 'success',
+            'body' => $ad->whereHasBookmark(auth()->user())
+                ->whereSlug($ad->slug)
+                ->exists() ? 'آگهی با موفقیت به لیست علاقه مندی ها اضافه شد.' : 'آگهی از لیست علاقه مندی های شما حذف شد.',
+        ]);;
     }
 
     public function create(): Response
@@ -116,12 +116,12 @@ class AdController extends Controller
                 ->get(),
             'categories' => Category::select(['slug', 'name', 'id'])->get(),
             'attributes' => request()->has('category') ? AttributeResource::collection(Category::whereSlug(request('category'))
-                                                                                           ->orWhere('name', request('category'))
-                                                                                           ->orWhere('id', request('category'))
-                                                                                           ->first()
-                                                                                           ?->attributes()
-                                                                                           ->with('values')
-                                                                                           ->get()) : [],
+                ->orWhere('name', request('category'))
+                ->orWhere('id', request('category'))
+                ->first()
+                ?->attributes()
+                ->with('values')
+                ->get()) : [],
             'category' => request()->has('category') ? request('category') : null,
             'state' => request()->has('state') ? request('state') : null,
         ]);
@@ -130,7 +130,7 @@ class AdController extends Controller
     public function store(StoreRequest $request): RedirectResponse
     {
         try {
-            DB::transaction(function () use ($request) {
+            DB::transaction(function() use ($request) {
                 $ad = Ad::create($request->validated());
                 // Sync Attributes
                 if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
@@ -149,24 +149,24 @@ class AdController extends Controller
                 return redirect()
                     ->route('home')
                     ->with([
-                               'type' => 'success',
-                               'body' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
-                           ]);
+                        'type' => 'success',
+                        'body' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
+                    ]);
             });
         } catch (Exception $exception) {
             return back()
                 ->with([
-                           'type' => 'error',
-                           'body', 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
-                       ]);
+                    'type' => 'error',
+                    'body', 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
+                ]);
         }
 
         return redirect()
             ->route('home')
             ->with([
-                       'type' => 'success',
-                       'body' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
-                   ]);
+                'type' => 'success',
+                'body' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
+            ]);
     }
 
     public function report(Ad $ad, Request $request): RedirectResponse
@@ -185,8 +185,8 @@ class AdController extends Controller
             ]);
 
         return back()->with([
-                                'type' => 'success',
-                                'body' => 'گزارش تخلف یا مشکل شما ارسال شد. لطفاً منتظر بررسی مدیر سایت باشید!',
-                            ]);
+            'type' => 'success',
+            'body' => 'گزارش تخلف یا مشکل شما ارسال شد. لطفاً منتظر بررسی مدیر سایت باشید!',
+        ]);
     }
 }

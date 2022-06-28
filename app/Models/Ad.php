@@ -24,7 +24,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\SlugOptions;
 use function auth;
 use function now;
-use function request;
 
 /**
  * App\Models\Ad
@@ -126,7 +125,7 @@ class Ad extends Model implements HasMedia
     protected static function boot()
     {
         parent::boot();
-        self::creating(function ($model) {
+        self::creating(function($model) {
             // 0 means user has not logged in and added the ad as a guest
             $model->user_id = auth('api')->check() ? auth('api')->id() ?? 0 : auth()->id() ?? 0;
             // Add one month to current month for expires_at field of newly created ads
@@ -242,14 +241,10 @@ class Ad extends Model implements HasMedia
 
     public function scopeFilter(Builder $query, Request $request): Builder
     {
-        return $query->when($request->has('search') && $request->search !== null, fn(Builder $query) => $query->where('title', 'LIKE', "%".$request->search."%"))
-            ->when($request->has('district') && $request->district !== null, fn(Builder $query) => $query->where('district_id', District::whereName($request->district)
-                ->value('id')))
-            ->when($request->has('state') && $request->state !== null, fn(Builder $query) => $query->whereIn('district_id', District::whereStateId(State::whereName($request->state)
-                                                                                                                                                       ->value('id'))
-                ->pluck('id')
-                ->toArray()))
-            ->when(request()->has('hasImages') && request('hasImages') === 'true', fn(Builder $builder) => $builder->whereHas('media'));
+        return $query->when($request->has('search') && isset($request->search), fn(Builder $query) => $query->where('title', 'LIKE', "%".$request->search."%"))
+            ->when($request->has('district') && isset($request->district), fn(Builder $query) => $query->where('district_id', District::whereName($request->district)->value('id')))
+            ->when($request->has('state') && isset($request->state), fn(Builder $query) => $query->whereIn('district_id', District::whereStateId(State::whereName($request->state)->value('id'))->pluck('id')->toArray()))
+            ->when($request->has('hasImages') && $request->hasImages === 'true', fn(Builder $builder) => $builder->whereHas('media'));
     }
 
     public function scopeSameState(Builder $query): Ad|m|Builder

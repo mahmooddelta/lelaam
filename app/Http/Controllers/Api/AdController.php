@@ -43,23 +43,23 @@ class AdController extends Controller
         };
 
         return AdResource::collection(Ad::query()
-                                          ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at'])
-                                          ->published()
-                                          ->with('media')
-                                          ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
-                                          ->filter(request())
-                                          ->get()
-                                          ->sortBy(                                           auth('api')->check() ? fn(Ad $ad) => District::whereStateId(auth('api')->user()->state_id)
-                                              ->get()
-                                              ->find($ad->district_id) : $sortBy, descending: $order)
-                                          ->paginate(24)
-                                          ->withQueryString());
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at'])
+            ->published()
+            ->with('media')
+            ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
+            ->filter(request())
+            ->get()
+            ->sortBy(auth('api')->check() ? fn(Ad $ad) => District::whereStateId(auth('api')->user()->state_id)
+                ->get()
+                ->find($ad->district_id) : $sortBy, descending: $order)
+            ->paginate(24)
+            ->withQueryString());
     }
 
     public function store(StoreRequest $request): JsonResponse
     {
         try {
-            DB::transaction(function () use ($request) {
+            DB::transaction(function() use ($request) {
                 $ad = Ad::create($request->validated());
                 // Sync Attributes
                 if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
@@ -72,7 +72,7 @@ class AdController extends Controller
                 // Sync Media
                 if ($request->has('images') && $request->hasFile('images')) {
                     $ad->addMultipleMediaFromRequest(['images'])
-                        ->each(function ($fileAdder) {
+                        ->each(function($fileAdder) {
                             $fileAdder->toMediaCollection('ads');
                         });
                 }
@@ -108,7 +108,7 @@ class AdController extends Controller
     public function update(StoreRequest $request, Ad $ad): JsonResponse
     {
         try {
-            DB::transaction(function () use ($request, $ad) {
+            DB::transaction(function() use ($request, $ad) {
                 $ad->update()($request->validated());
                 // Sync Attributes
                 if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
@@ -125,7 +125,7 @@ class AdController extends Controller
                     }
 
                     $ad->addMultipleMediaFromRequest(['images'])
-                        ->each(function ($fileAdder) {
+                        ->each(function($fileAdder) {
                             $fileAdder->toMediaCollection('ads');
                         });
                 }
@@ -164,17 +164,17 @@ class AdController extends Controller
             ->get();
 
         return response()->json([
-                                    'ads' => AdResource::collection($ads),
-                                ]);
+            'ads' => AdResource::collection($ads),
+        ]);
     }
 
     public function userBookmarkedAds(): AnonymousResourceCollection
     {
         return AdResource::collection(Ad::published()
-                                          ->whereHasBookmark(auth('api')->user())
-                                          ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at'])
-                                          ->with('media')
-                                          ->get());
+            ->whereHasBookmark(auth('api')->user())
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at'])
+            ->with('media')
+            ->get());
     }
 
     public function reports(): JsonResponse
@@ -182,11 +182,11 @@ class AdController extends Controller
         return response()->json(
             [
                 'reports' => AdReportResource::collection(auth('api')
-                                                              ->user()
-                                                              ?->reports()
-                                                              ->active()
-                                                              ->with(['ad:id,title'])
-                                                              ->get()),
+                    ->user()
+                    ?->reports()
+                    ->active()
+                    ->with(['ad:id,title'])
+                    ->get()),
             ]);
     }
 
@@ -206,7 +206,7 @@ class AdController extends Controller
             ]);
 
         return response()->json([
-                                    'message' => 'گزارش تخلف یا مشکل شما ارسال شد. لطفاً منتظر بررسی مدیر سایت باشید!',
-                                ]);
+            'message' => 'گزارش تخلف یا مشکل شما ارسال شد. لطفاً منتظر بررسی مدیر سایت باشید!',
+        ]);
     }
 }
