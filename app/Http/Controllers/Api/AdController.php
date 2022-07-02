@@ -123,7 +123,7 @@ class AdController extends Controller
                             $ad->values()->sync($request->input('values'));
                         }
                         // Sync Media
-                        if ($request->input('images') && count($request->input('images')) > 0) {
+                        if ($request->has('images') && $request->hasFile('images')) {
                             if (count($ad->media) > 0) {
                                 $ad->clearMediaCollection('ads');
                             }
@@ -154,7 +154,7 @@ class AdController extends Controller
         } else {
             return response()->json(
                 [
-                    'message' => '!ویرایش آگهی شما در انتظار تایید مدیر سایت است. تا تایید آن شکیبا باشید',
+                    'message' => '!ویرایش آگهی شما در انتظار تایید مدیر سایت است. تا تایید آن شکیبا باشید یا آگهی شما تا هنوز منتشر نشده است',
                 ], ResponseAlias::HTTP_BAD_REQUEST);
         }
 
