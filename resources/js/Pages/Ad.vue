@@ -62,9 +62,10 @@
                             </svg>
                             تماس
                         </a>
-                        <Link v-if="$page.props.user && ad.data.user !== 'مهمان' && ad.data.is_chat_enabled && ad.data.user !== $page.props.user.name"
-                              :href="route('chat.create', {ad: ad.data.slug})"
-                              class="btn btn-primary btn-sm">
+                        <Link
+                            v-if="$page.props.user && ad.data.user !== 'مهمان' && ad.data.is_chat_enabled && ad.data.user !== $page.props.user.name"
+                            :href="route('chat.create', {ad: ad.data.slug})"
+                            class="btn btn-primary btn-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -209,9 +210,8 @@ const props = defineProps({
     report_types: Object,
     can_report: Boolean,
 })
-const price = computed(() => {
-    return props.ad.data.price == null ? `<b class="text-bold">توافقی</b>` : `<b>${props.ad.data.price}</b> ${props.ad.data.currency}`;
-})
+const isEmpty = value => (value == null || value === 0);
+const price = computed(() => isEmpty(props.ad.data.price) ? `<b class="text-bold">توافقی</b>` : `<b>${props.ad.price}</b> ${props.ad.currency}`)
 
 const wantsToReportAd = ref(null)
 const form = useForm({

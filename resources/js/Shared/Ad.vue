@@ -4,9 +4,8 @@ import {computed} from "vue";
 const props = defineProps({
     ad: Object,
 })
-const price = computed(() => {
-    return props.ad.price == null ? `<b class="text-bold">توافقی</b>` : `<b>${props.ad.price}</b> ${props.ad.currency}`;
-})
+const isEmpty = value => (value == null || value === 0);
+const price = computed(() => isEmpty(props.ad.price) ? `<b class="text-bold">توافقی</b>` : `<b>${props.ad.price}</b> ${props.ad.currency}`)
 </script>
 
 <template>
