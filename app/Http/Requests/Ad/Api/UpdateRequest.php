@@ -40,12 +40,6 @@ class UpdateRequest extends FormRequest
                 'filled',
                 'string',
             ],
-            'slug' => [
-                'required',
-                'filled',
-                'string',
-                Rule::unique('ads', 'slug')->ignoreModel($this->ad),
-            ],
             'phone_number' => [
                 'required',
                 'filled',
