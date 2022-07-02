@@ -11,10 +11,11 @@ Route::get('categories', [CategoryController::class, 'index']);
 Route::get('category/{category:slug}/attributes', [CategoryController::class, 'attributes']);
 Route::get('states', [AppController::class, 'states']);
 Route::get('report_types', [AppController::class, 'reportTypes']);
+Route::get('currencies', [AppController::class, 'currencies']);
 Route::get('districts/{state:name?}', [AppController::class, 'districts']);
 // Auth Endpoints
 Route::post('register', [AuthController::class, 'register']);
-Route::middleware(['api'])->prefix('auth')->group(function () {
+Route::middleware(['api'])->prefix('auth')->group(function() {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
@@ -26,7 +27,7 @@ Route::middleware(['api'])->prefix('auth')->group(function () {
     Route::get('profile/phone/verified/status', [AuthController::class, 'profilePhoneVerified']);
     Route::post('profile/phone/verify', [AuthController::class, 'profilePhoneVerifiedUpdate']);
 });
-Route::middleware(['api', 'jwt'])->group(function () {
+Route::middleware(['api', 'jwt'])->group(function() {
     // Ad Reports
     Route::get('post/reports', [AdController::class, 'reports']);
     // Report Create
