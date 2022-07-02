@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maize\Markable\Models\Bookmark;
 use Maize\Markable\Models\Like;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use function auth;
 use function count;
 use function request;
@@ -81,13 +82,13 @@ class AdController extends Controller
             return response()->json(
                 [
                     'message' => 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
-                ]);
+                ], ResponseAlias::HTTP_BAD_REQUEST);
         }
 
         return response()->json(
             [
                 'message' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
-            ]);
+            ], ResponseAlias::HTTP_CREATED);
     }
 
     public function show(Ad $ad): JsonResponse
@@ -133,32 +134,37 @@ class AdController extends Controller
                 return response()->json(
                     [
                         'message' => 'آگهی شما ویرایش شد.',
-                    ]);
+                    ], ResponseAlias::HTTP_CREATED);
             });
         } catch (Exception $exception) {
             return response()->json(
                 [
                     'message' => 'ویرایش آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
-                ]);
+                ], ResponseAlias::HTTP_BAD_REQUEST);
         }
 
         return response()->json(
             [
                 'message' => 'ویرایش آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
-            ]);
+            ], ResponseAlias::HTTP_BAD_REQUEST);
     }
 
     public function bookmark(Ad $ad): JsonResponse
     {
-        Bookmark::toggle($ad, auth('api')->user());
+        if (Bookmark::has($ad, auth('api')->user())) {
+            Bookmark::remove($ad, auth('api')->user());
 
-        return response()->json(['message' => 'آگهی با موفقیت به لیست بوکمارک ها اضافه شد.']);
+            return response()->json(['message' => 'آگهی با موفقیت از لیست بوکمارک ها حذف شد.'], ResponseAlias::HTTP_CREATED);
+        }
+
+        Bookmark::add($ad, auth('api')->user());
+
+        return response()->json(['message' => 'آگهی با موفقیت به لیست بوکمارک ها اضافه شد.'], ResponseAlias::HTTP_CREATED);
     }
 
     public function userAds(): JsonResponse
     {
-        $ads = Ad::published()
-            ->isOwner()
+        $ads = Ad::isOwner()
             ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at'])
             ->with('media')
             ->get();
@@ -207,6 +213,6 @@ class AdController extends Controller
 
         return response()->json([
             'message' => 'گزارش تخلف یا مشکل شما ارسال شد. لطفاً منتظر بررسی مدیر سایت باشید!',
-        ]);
+        ], ResponseAlias::HTTP_CREATED);
     }
 }
