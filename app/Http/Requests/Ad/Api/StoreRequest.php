@@ -121,9 +121,9 @@ class StoreRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-                         'category_id' => Category::whereSlug($this->category_id)
-                             ->value('id'),
-                     ]);
+            'category_id' => Category::whereSlug($this->category_id)
+                ->value('id'),
+        ]);
     }
 
     protected function failedValidation(Validator $validator)
@@ -132,10 +132,9 @@ class StoreRequest extends FormRequest
             $errors = $validator->errors();
 
             $response = response()->json([
-                                             'status' => 'error',
-                                             'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                                             'message' => $errors->messages(),
-                                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                'status' => 'validation_failed',
+                'message' => $errors->messages(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
 
             throw new HttpResponseException($response);
         }

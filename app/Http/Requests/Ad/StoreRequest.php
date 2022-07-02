@@ -132,8 +132,7 @@ class StoreRequest extends FormRequest
             $errors = $validator->errors();
 
             $response = response()->json([
-                                             'status' => 'error',
-                                             'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                                             'status' => 'validation_failed',
                                              'message' => $errors->messages(),
                                          ], Response::HTTP_UNPROCESSABLE_ENTITY);
 
