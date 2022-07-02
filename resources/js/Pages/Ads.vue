@@ -1,8 +1,8 @@
 <script setup>
 
-import Filters from "../Shared/Filters";
-import Ad from "../Shared/Ad";
-import Pagination from "../Shared/Components/Pagination";
+import Filters from "../Shared/Filters.vue";
+import Ad from "../Shared/Ad.vue";
+import Pagination from "../Shared/Components/Pagination.vue";
 import useFilters from "../Composables/useFilters";
 
 const props = defineProps({

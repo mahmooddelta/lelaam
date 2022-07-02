@@ -1,6 +1,6 @@
 <script setup>
-import LatestAds from "./Ad/LatestAds";
-import TopCategories from "./Categories/TopCategories";
+import LatestAds from "./Ad/LatestAds.vue";
+import TopCategories from "./Categories/TopCategories.vue";
 
 defineProps({
     categories: Object,

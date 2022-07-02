@@ -1,6 +1,6 @@
 <script setup>
 
-import Container from "../Shared/Components/Container";
+import Container from "../Shared/Components/Container.vue";
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {computed, ref, watch} from "vue";
 import {Inertia} from "@inertiajs/inertia";

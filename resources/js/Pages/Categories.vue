@@ -1,6 +1,6 @@
 <script setup>
-import Category from "../Shared/Category";
-import Pagination from "../Shared/Components/Pagination";
+import Category from "../Shared/Category.vue";
+import Pagination from "../Shared/Components/Pagination.vue";
 
 defineProps({
     categories: Object,

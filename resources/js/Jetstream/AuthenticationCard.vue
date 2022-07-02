@@ -10,7 +10,7 @@
     </div>
 </template>
 <script>
-import Alert from "../Shared/Components/Alert";
+import Alert from "../Shared/Components/Alert.vue";
 
 export default {
     components: {Alert}

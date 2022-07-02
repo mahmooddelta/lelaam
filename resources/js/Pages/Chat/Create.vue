@@ -1,7 +1,7 @@
 <script setup>
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
-import Container from "../../Shared/Components/Container";
+import Container from "../../Shared/Components/Container.vue";
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import {scrollToBottom} from "../../custom";
 
