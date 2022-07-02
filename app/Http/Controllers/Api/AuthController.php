@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use function auth;
 use function compact;
 use function now;
@@ -34,15 +35,15 @@ class AuthController extends Controller
         $validated = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'sometimes|filled|string|email|max:255|unique:users',
-            'phone' => 'sometimes|filled|string|email|max:255|unique:users',
+            'phone' => 'sometimes|filled|string|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
         if ($validated->fails()) {
             $response = response()->json([
-                                             'status' => 'error',
-                                             'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                                             'message' => $validated->errors()->messages(),
-                                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                'status' => 'error',
+                'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                'message' => $validated->errors()->messages(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
 
             throw new HttpResponseException($response);
         }
@@ -74,6 +75,7 @@ class AuthController extends Controller
      * Register a User via given credentials.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request): JsonResponse
@@ -86,7 +88,7 @@ class AuthController extends Controller
             [
                 'user' => UserResource::make($user),
                 'token' => $token,
-            ], 201);
+            ], ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -138,10 +140,10 @@ class AuthController extends Controller
     function respondWithToken(string $token): JsonResponse
     {
         return response()->json([
-                                    'access_token' => $token,
-                                    'token_type' => 'bearer',
-                                    'expires_in' => auth('api')->factory()->getTTL() * 60,
-                                ]);
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+        ]);
     }
 
     public function updateProfile(Request $request): JsonResponse
@@ -151,7 +153,7 @@ class AuthController extends Controller
                 'message' => auth('api')
                     ->user()
                     ?->update($this->validateUserInfo($request)) > 0 ? '.پروفایل ویرایش شد' : '!ویرایش پروفایل ناموفق بود',
-            ]);
+            ], ResponseAlias::HTTP_CREATED);
     }
 
     public function profilePasswordUpdate(Request $request): JsonResponse
@@ -161,7 +163,7 @@ class AuthController extends Controller
                 'message' => auth('api')
                     ->user()
                     ?->update(['password' => $request->input('password')]) > 0 ? 'رمزعبور ویرایش شد.' : 'ویرایش رمزعبور ناموفق بود',
-            ]);
+            ], ResponseAlias::HTTP_CREATED);
     }
 
     public function profilePhoneVerified(): bool
