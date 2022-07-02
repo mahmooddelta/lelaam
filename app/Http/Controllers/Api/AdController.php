@@ -43,7 +43,7 @@ class AdController extends Controller
         };
 
         return AdResource::collection(Ad::query()
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at'])
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at', 'currency_id'])
             ->published()
             ->with('media')
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))

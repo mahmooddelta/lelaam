@@ -211,7 +211,7 @@ const props = defineProps({
     can_report: Boolean,
 })
 const isEmpty = value => (value == null || value === 0);
-const price = computed(() => isEmpty(props.ad.data.price) ? `<b class="text-bold">توافقی</b>` : `<b>${props.ad.price}</b> ${props.ad.currency}`)
+const price = computed(() => isEmpty(props.ad.data.price) ? `<b class="text-bold">توافقی</b>` : `<b>${props.ad.data.price}</b> ${props.ad.data.currency}`)
 
 const wantsToReportAd = ref(null)
 const form = useForm({

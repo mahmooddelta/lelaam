@@ -6,6 +6,7 @@ const props = defineProps({
 })
 const isEmpty = value => (value == null || value === 0);
 const price = computed(() => isEmpty(props.ad.price) ? `<b class="text-bold">توافقی</b>` : `<b>${props.ad.price}</b> ${props.ad.currency}`)
+console.log(props.ad.currency)
 </script>
 
 <template>
