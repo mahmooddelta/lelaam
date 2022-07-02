@@ -9,7 +9,7 @@ import {MediaLibraryAttachment} from '@spatie/media-library-pro-vue3-attachment'
 // Toast
 import Toast, {POSITION, useToast} from 'vue-toastification'
 
-require('./bootstrap');
+import './bootstrap';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
