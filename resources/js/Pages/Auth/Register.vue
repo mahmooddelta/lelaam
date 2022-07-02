@@ -107,10 +107,10 @@ const submit = () => {
             </div>
             <div class="mt-4">
                 <JetLabel for="phone" value="شماره تماس"/>
-                <div dir="ltr" class="mt-2">
+                <div dir="ltr" class="mt-2 overflow-x-auto flex justify-center">
                     <v-otp-input
                         ref="phoneNumberInput"
-                        input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1"
+                        input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1 my-1"
                         separator=" "
                         :num-inputs="10"
                         :should-auto-focus="true"

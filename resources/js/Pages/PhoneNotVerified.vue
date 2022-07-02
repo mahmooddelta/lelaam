@@ -142,10 +142,10 @@ const verifyOtp = () => {
         <form @submit.prevent="submit">
             <div class="mt-4">
                 <JetLabel for="phone" value="شماره تماس"/>
-                <div dir="ltr" class="mt-2">
+                <div dir="ltr" class="mt-2 overflow-x-auto flex justify-center">
                     <v-otp-input
                         ref="phoneNumberInput"
-                        input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1"
+                        input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1 my-1"
                         separator=" "
                         :num-inputs="10"
                         :should-auto-focus="true"
@@ -164,7 +164,8 @@ const verifyOtp = () => {
 
                 <div class="divider"></div>
 
-                <div id="recaptcha-container" class="flex flex-grow justify-center w-full my-2" v-show="!isRecaptchaSolved"></div>
+                <div id="recaptcha-container" class="flex flex-grow justify-center w-full my-2"
+                     v-show="!isRecaptchaSolved"></div>
 
                 <section class="w-full text-center" v-if="isPhoneInputted && isRecaptchaSolved && otpSent">
                     <b class="text-sm text-gray-400 flex">
@@ -173,7 +174,8 @@ const verifyOtp = () => {
                             <path stroke-linecap="round" stroke-linejoin="round"
                                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
-                        یک کد 6 رقمی برای بررسی درست بودن شماره تماس وارد شده به شماره تان فرستاده شد. لطفاً آنرا در ورودی زیر وارد نمائید.
+                        یک کد 6 رقمی برای بررسی درست بودن شماره تماس وارد شده به شماره تان فرستاده شد. لطفاً آنرا در
+                        ورودی زیر وارد نمائید.
                     </b>
                     <section class="flex justify-center my-4">
                         <div dir="ltr">
