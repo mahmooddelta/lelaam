@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Ad\Api\StoreRequest;
+use App\Http\Requests\Ad\Api\UpdateRequest;
 use App\Http\Resources\AdReportResource;
 use App\Http\Resources\AdResource;
 use App\Models\Ad;
@@ -106,46 +107,48 @@ class AdController extends Controller
             ]);
     }
 
-    public function update(StoreRequest $request, Ad $ad): JsonResponse
+    public function update(UpdateRequest $request, Ad $ad): JsonResponse
     {
-        try {
-            DB::transaction(function() use ($request, $ad) {
-                $ad->update()($request->validated());
-                // Sync Attributes
-                if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
-                    $ad->attributes()->sync($request->input('attributes'));
-                }
-                // Sync Values
-                if ($request->input('values') && count(request()->input('values')) > 0) {
-                    $ad->values()->sync($request->input('values'));
-                }
-                // Sync Media
-                if ($request->input('images') && count($request->input('images')) > 0) {
-                    if (count($ad->media) > 0) {
-                        $ad->clearMediaCollection('ads');
+        if ($ad->user_id === auth('api')->id()) {
+            try {
+                DB::transaction(function() use ($request, $ad) {
+                    $ad->update()($request->validated());
+                    // Sync Attributes
+                    if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
+                        $ad->attributes()->sync($request->input('attributes'));
+                    }
+                    // Sync Values
+                    if ($request->input('values') && count(request()->input('values')) > 0) {
+                        $ad->values()->sync($request->input('values'));
+                    }
+                    // Sync Media
+                    if ($request->input('images') && count($request->input('images')) > 0) {
+                        if (count($ad->media) > 0) {
+                            $ad->clearMediaCollection('ads');
+                        }
+
+                        $ad->addMultipleMediaFromRequest(['images'])
+                            ->each(function($fileAdder) {
+                                $fileAdder->toMediaCollection('ads');
+                            });
                     }
 
-                    $ad->addMultipleMediaFromRequest(['images'])
-                        ->each(function($fileAdder) {
-                            $fileAdder->toMediaCollection('ads');
-                        });
-                }
-
+                    return response()->json(
+                        [
+                            'message' => 'آگهی شما ویرایش شد.',
+                        ], ResponseAlias::HTTP_CREATED);
+                });
+            } catch (Exception $exception) {
                 return response()->json(
                     [
-                        'message' => 'آگهی شما ویرایش شد.',
-                    ], ResponseAlias::HTTP_CREATED);
-            });
-        } catch (Exception $exception) {
-            return response()->json(
-                [
-                    'message' => 'ویرایش آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
-                ], ResponseAlias::HTTP_BAD_REQUEST);
+                        'message' => 'ویرایش آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
+                    ], ResponseAlias::HTTP_BAD_REQUEST);
+            }
         }
 
         return response()->json(
             [
-                'message' => 'ویرایش آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
+                'message' => 'شما سازنده آگهی نیستید! پس امکان ویرایش وجود ندارد.',
             ], ResponseAlias::HTTP_BAD_REQUEST);
     }
 
