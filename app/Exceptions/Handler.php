@@ -7,6 +7,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\RelationNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
@@ -58,7 +59,7 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->renderable(function (Throwable $e, $request) {
+        $this->renderable(function(Throwable $e, $request) {
             if ($request->is('api/*')) {
                 return $this->handleExceptions($e);
             }
@@ -68,6 +69,7 @@ class Handler extends ExceptionHandler
     /**
      * @param  \Illuminate\Http\Request  $request
      * @param  Throwable  $e
+     *
      * @throws \Throwable
      */
     public function render($request, Throwable $e)
@@ -81,11 +83,16 @@ class Handler extends ExceptionHandler
 
     private function handleExceptions(Throwable $exception)
     {
+        /**
+         * Name: Route Binding Model Not Found
+         * Code: 404
+         * Res: Response::HTTP_NOT_FOUND
+         */
         if ($exception instanceof UnhandledMatchError) {
             return response()->json([
-                                        'status' => 'error',
-                                        'message' => $exception->getMessage(),
-                                    ], Response::HTTP_UNPROCESSABLE_ENTITY, $exception->getHeaders());
+                'status' => 'error',
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY, $exception->getHeaders());
         }
         /**
          * Name: Model Not Found
@@ -94,9 +101,9 @@ class Handler extends ExceptionHandler
          */
         if ($exception instanceof ModelNotFoundException) {
             return response()->json([
-                                        'status' => 'error',
-                                        'message' => 'Model Not Found',
-                                    ], Response::HTTP_NOT_FOUND);
+                'status' => 'error',
+                'message' => 'Model Not Found',
+            ], Response::HTTP_NOT_FOUND);
         }
 
         /**
@@ -106,9 +113,9 @@ class Handler extends ExceptionHandler
          */
         if ($exception instanceof NotFoundHttpException) {
             return response()->json([
-                                        'status' => 'error',
-                                        'message' => __('Not Found'),
-                                    ], Response::HTTP_NOT_FOUND, $exception->getHeaders()); // 404
+                'status' => 'error',
+                'message' => __('Not Found'),
+            ], Response::HTTP_NOT_FOUND, $exception->getHeaders()); // 404
         }
         /**
          * Name: Unauthorized
@@ -118,9 +125,9 @@ class Handler extends ExceptionHandler
         if ($exception instanceof AuthenticationException ||
             ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_UNAUTHORIZED)) {
             return response()->json([
-                                        'status' => 'error',
-                                        'message' => __('Unauthorized or Unauthenticated'),
-                                    ], Response::HTTP_UNAUTHORIZED); // 401
+                'status' => 'error',
+                'message' => __('Unauthorized or Unauthenticated'),
+            ], Response::HTTP_UNAUTHORIZED); // 401
         }
 
         /**
@@ -130,9 +137,9 @@ class Handler extends ExceptionHandler
          */
         if (($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_FORBIDDEN)) {
             return response()->json([
-                                        'status' => 'error',
-                                        'message' => __($exception->getMessage() ?: 'Forbidden'),
-                                    ], Response::HTTP_FORBIDDEN, $exception->getHeaders()); // 403
+                'status' => 'error',
+                'message' => __($exception->getMessage() ?: 'Forbidden'),
+            ], Response::HTTP_FORBIDDEN, $exception->getHeaders()); // 403
         }
 
         /**
@@ -143,82 +150,84 @@ class Handler extends ExceptionHandler
         if ($exception instanceof MethodNotAllowedHttpException ||
             ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_METHOD_NOT_ALLOWED)) {
             return response()->json([
-                                        'status' => 'error',
-                                        'message' => __($exception->getMessage() ?: 'Method Not Allowed'),
-                                    ], Response::HTTP_METHOD_NOT_ALLOWED, $exception->getHeaders()); // 405
-        } /**
+                'status' => 'error',
+                'message' => __($exception->getMessage() ?: 'Method Not Allowed'),
+            ], Response::HTTP_METHOD_NOT_ALLOWED, $exception->getHeaders()); // 405
+        }
+        /**
+         * Name: Validation Exception
+         * Code: 422
+         * Res: Response::HTTP_UNPROCESSABLE_ENTITY
+         */
+        if ($exception instanceof ValidationException ||
+            ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_UNPROCESSABLE_ENTITY)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => __($exception->getMessage() ?: 'Unprocessable Entity'),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY); // 422
+        }
+
+        /**
          * Name: Unprocessable Entity
          * Code: 422
          * Res: Response::HTTP_UNPROCESSABLE_ENTITY
          */
-        elseif (
-            $exception instanceof ValidationException ||
-            ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_UNPROCESSABLE_ENTITY)
-        ) {
+        if ($exception instanceof RelationNotFoundException) {
+            return \response()->json([
+                'status' => 'error',
+                'message' => 'No Relationship Found',
+            ], 404);
+        }
+        /**
+         * Name: Too Many Requests
+         * Code: 429
+         * Res: Response::HTTP_TOO_MANY_REQUESTS
+         */
+        if ($exception instanceof ThrottleRequestsException ||
+            ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_TOO_MANY_REQUESTS)) {
             return response()->json([
-                                        'status' => 'error',
-                                        'message' => __($exception->getMessage() ?: 'Unprocessable Entity'),
-                                    ], Response::HTTP_UNPROCESSABLE_ENTITY); // 422
-        } else {
-            if ($exception instanceof RelationNotFoundException) {
-                return \response()->json([
-                                             'status' => 'error',
-                                             'message' => 'No Relationship Found',
-                                         ], 404);
+                'status' => 'error',
+                'message' => __('Too Many Requests'),
+            ], Response::HTTP_TOO_MANY_REQUESTS, $exception->getHeaders()); // 429
+        }
+        /**
+         * Name: Service Unavailable
+         * Code: 503
+         * Res: Response::HTTP_SERVICE_UNAVAILABLE
+         */
+        if ($exception instanceof MaintenanceModeException ||
+            ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => __($exception->getMessage() ?: 'Service Unavailable'),
+            ], Response::HTTP_SERVICE_UNAVAILABLE, $exception->getHeaders()); // 503
+        }
+        /**
+         * Name: Internal Server Error
+         * Code: 500
+         * Res: Differs
+         */
+        if ($exception instanceof RouteNotFoundException ||
+            $exception instanceof BadMethodCallException ||
+            $exception instanceof BindingResolutionException ||
+            $exception instanceof QueryException ||
+            ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR)) {
+            // If debug enabled
+            if (config('app.debug')) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $exception->getMessage() ?: 'Server Error',
+                    'code' => $exception->getCode(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'trace' => $exception->getTrace(),
+                ], Response::HTTP_INTERNAL_SERVER_ERROR); // 500
             }
 
-            if ($exception instanceof ThrottleRequestsException ||
-                ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_TOO_MANY_REQUESTS)) {
-                return response()->json([
-                                            'status' => 'error',
-                                            'message' => __('Too Many Requests'),
-                                        ], Response::HTTP_TOO_MANY_REQUESTS, $exception->getHeaders()); // 429
-            } /**
-             * Name: Too Many Requests
-             * Code: 429
-             * Res: Response::HTTP_TOO_MANY_REQUESTS
-             */
-            /**
-             * Name: Service Unavailable
-             * Code: 503
-             * Res: Response::HTTP_SERVICE_UNAVAILABLE
-             */
-            elseif (
-                $exception instanceof MaintenanceModeException ||
-                ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_SERVICE_UNAVAILABLE)
-            ) {
-                return response()->json([
-                                            'status' => 'error',
-                                            'message' => __($exception->getMessage() ?: 'Service Unavailable'),
-                                        ], Response::HTTP_SERVICE_UNAVAILABLE, $exception->getHeaders()); // 503
-            } /**
-             * Name: Internal Server Error
-             * Code: 500
-             * Res:
-             */
-            elseif (
-                $exception instanceof RouteNotFoundException ||
-                $exception instanceof BadMethodCallException ||
-                $exception instanceof BindingResolutionException ||
-                ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR)
-            ) {
-                // If debug enabled
-                if (config('app.debug')) {
-                    return response()->json([
-                                                'status' => 'error',
-                                                'message' => $exception->getMessage() ?: 'Server Error',
-                                                'code' => $exception->getCode(),
-                                                'file' => $exception->getFile(),
-                                                'line' => $exception->getLine(),
-                                                'trace' => $exception->getTrace(),
-                                            ], Response::HTTP_INTERNAL_SERVER_ERROR); // 500
-                }
-
-                return response()->json([
-                                            'status' => 'error',
-                                            'message' => 'Server Error',
-                                        ], Response::HTTP_INTERNAL_SERVER_ERROR); // 500
-            }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Server Error',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR); // 500
         }
     }
 }
