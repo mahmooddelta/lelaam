@@ -184,7 +184,7 @@
                     </table>
                 </div>
                 <h4 class="text-lg font-bold my-4">توضیحات</h4>
-                <p v-html="ad.data.description"></p>
+                <p v-html="ad.data.desc"></p>
             </div>
             <!-- Carousel -->
             <Swiper :images="ad.data.media" :model-data="ad.data"/>
