@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use BadMethodCallException;
+use ErrorException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -211,6 +212,7 @@ class Handler extends ExceptionHandler
             $exception instanceof BadMethodCallException ||
             $exception instanceof BindingResolutionException ||
             $exception instanceof QueryException ||
+            $exception instanceof ErrorException ||
             ($exception instanceof HttpException && $exception->getStatusCode() === Response::HTTP_INTERNAL_SERVER_ERROR)) {
             // If debug enabled
             if (config('app.debug')) {
