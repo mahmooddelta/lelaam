@@ -16,12 +16,12 @@ class AppController extends Controller
     {
         return $state->exists ? District::select(['id', 'name'])
             ->where('state_id', $state->id)
-            ->get() : [];
+            ->get() : District::select(['id', 'name'])->get();
     }
 
     public function states(): array|\Illuminate\Database\Eloquent\Collection|Collection|\LaravelIdea\Helper\App\Models\_IH_State_C
     {
-        return State::select(['id', 'name'])->get();
+        return State::select(['id', 'name'])->orderBy('id')->get();
     }
 
     public function reportTypes(): \Illuminate\Database\Eloquent\Collection|\LaravelIdea\Helper\App\Models\_IH_ReportType_C|array
