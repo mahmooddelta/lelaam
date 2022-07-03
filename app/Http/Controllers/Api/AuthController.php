@@ -10,6 +10,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Symfony\Component\HttpFoundation\Response;
@@ -157,11 +158,48 @@ class AuthController extends Controller
 
     public function updateProfile(Request $request): JsonResponse
     {
+        $validated = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => [
+                'sometimes',
+                'filled',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignoreModel(auth()->user()),
+            ],
+            'phone' => [
+                'sometimes',
+                'filled',
+                'string',
+                'max:255',
+                Rule::unique('users')->ignoreModel(auth()->user()),
+            ],
+            'password' => 'required|string|min:8|confirmed',
+            'state_id' => 'sometimes|filled|integer|min:0|exists:states,id',
+        ]);
+        if ($validated->fails()) {
+            $response = response()->json([
+                'status' => 'error',
+                'message' => $validated->errors()->messages(),
+            ], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
+
+            throw new HttpResponseException($response);
+        }
+
+        $validated = $validated->validated();
+
         return response()->json(
             [
                 'message' => auth('api')
                     ->user()
-                    ?->update($this->validateUserInfo($request)) > 0 ? '.پروفایل ویرایش شد' : '!ویرایش پروفایل ناموفق بود',
+                    ?->update([
+                        'name' => $validated['name'],
+                        'email' => $validated['email'] ?? null,
+                        'phone' => $validated['phone'],
+                        'password' => Hash::make($validated['password']),
+                        'state_id' => $validated['state_id'] ?? null,
+                    ]) > 0 ? '.پروفایل ویرایش شد' : '!ویرایش پروفایل ناموفق بود',
             ], ResponseAlias::HTTP_CREATED);
     }
 
@@ -171,7 +209,7 @@ class AuthController extends Controller
             [
                 'message' => auth('api')
                     ->user()
-                    ?->update(['password' => $request->input('password')]) > 0 ? 'رمزعبور ویرایش شد.' : 'ویرایش رمزعبور ناموفق بود',
+                    ?->update(['password' => Hash::make($request->input('password'))]) > 0 ? 'رمزعبور ویرایش شد.' : 'ویرایش رمزعبور ناموفق بود',
             ], ResponseAlias::HTTP_CREATED);
     }
 
