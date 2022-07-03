@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Hash;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -37,6 +38,7 @@ class AuthController extends Controller
             'email' => 'sometimes|filled|string|email|max:255|unique:users',
             'phone' => 'sometimes|filled|string|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'state_id' => 'sometimes|filled|integer|min:0|exists:states,id',
         ]);
         if ($validated->fails()) {
             $response = response()->json([
@@ -80,7 +82,14 @@ class AuthController extends Controller
      */
     public function register(Request $request): JsonResponse
     {
-        $user = User::create($this->validateUserInfo($request));
+        $user = User::create(
+            [
+                'name' => $this->validateUserInfo($request)['name'],
+                'email' => $this->validateUserInfo($request)['email'] ?? null,
+                'phone' => $this->validateUserInfo($request)['phone'],
+                'password' => Hash::make($this->validateUserInfo($request)['password']),
+                'state_id' => $this->validateUserInfo($request)['state_id'] ?? null,
+            ]);
 
         $token = JWTAuth::fromUser($user);
 
