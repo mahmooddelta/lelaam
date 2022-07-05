@@ -8,12 +8,12 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ secure_asset('favicon-16x16.png') }}">
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    @vite('resources/css/app.css')
     <!-- Scripts -->
     @routes
-    <script src="{{ mix('js/manifest.js') }}" defer></script>
-    <script src="{{ mix('js/vendor.js') }}" defer></script>
-    <script src="{{ mix('js/app.js') }}" defer></script>
+    @vite('resources/js/manifest.js')
+    @vite('resources/js/vendor.js')
+    @vite('resources/js/app.js')
     @inertiaHead
 </head>
 <body class="font-sans antialiased">

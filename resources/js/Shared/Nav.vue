@@ -1,6 +1,6 @@
 <script setup>
-import ThemeChanger from "./ThemeChanger";
-import Logo from "./Logo";</script>
+import ThemeChanger from "./ThemeChanger.vue";
+import Logo from "./Logo.vue";</script>
 <template>
     <div class="navbar bg-base-300 w-full px-4">
         <div class="navbar-start">

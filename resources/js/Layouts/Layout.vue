@@ -1,8 +1,8 @@
 <script setup>
-import Nav from "../Shared/Nav";
-import TopNavLinks from "../Shared/TopNavLinks";
-import Footer from "../Shared/Footer";
-import Alert from "../Shared/Components/Alert";</script>
+import Nav from "../Shared/Nav.vue";
+import TopNavLinks from "../Shared/TopNavLinks.vue";
+import Footer from "../Shared/Footer.vue";
+import Alert from "../Shared/Components/Alert.vue";</script>
 
 <template>
     <div class="max-w-full mx-auto">

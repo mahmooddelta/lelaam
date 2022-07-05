@@ -1,5 +1,5 @@
 <script setup>
-import Ad from "../../Shared/Ad";
+import Ad from "../../Shared/Ad.vue";
 
 defineProps({
     ads: Object,

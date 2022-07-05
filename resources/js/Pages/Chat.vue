@@ -1,5 +1,5 @@
 <script setup>
-import Container from "../Shared/Components/Container";
+import Container from "../Shared/Components/Container.vue";
 import {onBeforeUnmount} from "vue";
 
 const props = defineProps({

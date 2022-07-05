@@ -1,8 +1,8 @@
 <script setup>
 
-import Container from "../Shared/Components/Container";
-import Collapse from "../Shared/Components/Collapse";
-import Ad from "../Shared/Ad"
+import Container from "../Shared/Components/Container.vue";
+import Collapse from "../Shared/Components/Collapse.vue";
+import Ad from "../Shared/Ad.vue"
 import {ref, watch} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {usePage} from "@inertiajs/inertia-vue3";

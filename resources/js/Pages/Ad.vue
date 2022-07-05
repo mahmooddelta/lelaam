@@ -193,16 +193,16 @@
 </template>
 <script setup>
 
-import Swiper from "../Shared/Components/Swiper";
+import Swiper from "../Shared/Components/Swiper.vue";
 import {computed, ref} from "vue";
-import Label from "../Jetstream/Label";
+import Label from "../Jetstream/Label.vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 import Ckeditor from '@ckeditor/ckeditor5-vue';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import "@ckeditor/ckeditor5-build-classic/build/translations/fa";
 import {Inertia} from "@inertiajs/inertia";
-import DialogModal from "../Jetstream/DialogModal";
-import Button from "../Jetstream/Button";
+import DialogModal from "../Jetstream/DialogModal.vue";
+import Button from "../Jetstream/Button.vue";
 
 const props = defineProps({
     ad: Object,
