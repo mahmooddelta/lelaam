@@ -11,6 +11,7 @@ class ConversationResource extends JsonResource
 {
     /**
      * @param  Request  $request
+     *
      * @return array
      */
     public function toArray($request): array
@@ -23,8 +24,8 @@ class ConversationResource extends JsonResource
             'messages_count' => $this->when($this->messages_count, $this->messages_count),
 
             'ad' => new AdResource($this->whenLoaded('ad')),
-            'creator' => new UserResource($this->whenLoaded('creator')),
-            'receiver' => new UserResource($this->whenLoaded('receiver')),
+            'creator' => new UserResource($this->creator),
+            'receiver' => new UserResource($this->receiver),
 
             'last_message_text' => str($this->messages()->latest()?->first()?->body)->limit(60),
             'last_message_time' => $this->messages()->latest()?->first()?->created_at?->diffForHumans(),
