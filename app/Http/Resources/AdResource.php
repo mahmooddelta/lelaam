@@ -2,17 +2,20 @@
 
 namespace App\Http\Resources;
 
+use AshAllenDesign\ShortURL\Models\ShortURL;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 use function count;
 use function secure_asset;
+use function url;
 
 /** @mixin \App\Models\Ad */
 class AdResource extends JsonResource
 {
     /**
      * @param  Request  $request
+     *
      * @return array
      */
     public function toArray($request): array
@@ -47,6 +50,7 @@ class AdResource extends JsonResource
             'bookmarks' => BookmarkResource::collection($this->whenLoaded('bookmarkers')),
 
             'conversations' => ConversationResource::collection($this->whenLoaded('conversations')),
+            'short_link' => ShortURL::findByDestinationURL(url('post/'.$this->slug))?->first()?->default_short_url ?? '',
         ];
     }
 }

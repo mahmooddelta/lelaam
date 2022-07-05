@@ -24,6 +24,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\SlugOptions;
 use function auth;
 use function now;
+use function url;
 
 /**
  * App\Models\Ad
@@ -130,6 +131,11 @@ class Ad extends Model implements HasMedia
             $model->user_id = auth('api')->check() ? auth('api')->id() ?? 0 : auth()->id() ?? 0;
             // Add one month to current month for expires_at field of newly created ads
             $model->expires_at = now()->addMonth()->toDateTimeString();
+        });
+
+        static::created(function($item) {
+            $builder = new \AshAllenDesign\ShortURL\Classes\Builder();
+            $builder->destinationUrl(url('post/'.$item->slug))->make();
         });
     }
 
