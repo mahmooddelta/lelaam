@@ -45,7 +45,7 @@ class AdController extends Controller
         };
 
         return AdResource::collection(Ad::query()
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at', 'currency_id'])
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at', 'currency_id', 'is_chat_enabled'])
             ->published()
             ->with('media')
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
@@ -180,7 +180,7 @@ class AdController extends Controller
     public function userAds(): JsonResponse
     {
         $ads = Ad::isOwner()
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at'])
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at', 'is_chat_enabled'])
             ->with('media')
             ->get();
 
@@ -193,7 +193,7 @@ class AdController extends Controller
     {
         return AdResource::collection(Ad::published()
             ->whereHasBookmark(auth('api')->user())
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at'])
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at', 'is_chat_enabled'])
             ->with('media')
             ->get());
     }
