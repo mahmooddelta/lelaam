@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Filament\Facades\Filament;
+use Illuminate\Foundation\Vite;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
@@ -29,11 +31,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Filament::serving(function () {
-            Filament::registerTheme(mix('css/app.css'));
+        Filament::serving(function() {
+            Filament::registerTheme('');
+            Filament::pushMeta([
+                new HtmlString((new Vite)(['resources/css/app.css'])),
+            ]);
         });
 
-        Str::macro('persian_slug', function ($string, $separator = '-') {
+        Str::macro('persian_slug', function($string, $separator = '-') {
             $string = trim($string);
             $string = mb_strtolower($string, 'UTF-8');
             $string = preg_replace("/[^a-z0-9_\-\sءاآؤئبپتثجچحخدذرزژسشصضطظعغفقكکگلمنوهی]/u", '', $string);
@@ -42,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
             return preg_replace("/[\s_]/", $separator, $string);
         });
 
-        TemporaryUpload::previewManipulation(function (Conversion $conversion) {
+        TemporaryUpload::previewManipulation(function(Conversion $conversion) {
             $conversion->fit(Manipulations::FIT_CROP, 300, 300);
         });
     }
