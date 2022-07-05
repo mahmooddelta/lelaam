@@ -22,8 +22,6 @@ Route::middleware(['api'])->prefix('auth')->group(function() {
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::get('me', [AuthController::class, 'me']);
     Route::post('profile/update', [AuthController::class, 'updateProfile']);
-
-    Route::put('profile/password/update', [AuthController::class, 'profilePasswordUpdate']);
     // Phone verification
     Route::get('profile/phone/verified/status', [AuthController::class, 'profilePhoneVerified']);
     Route::post('profile/phone/verify', [AuthController::class, 'profilePhoneVerifiedUpdate']);
@@ -39,13 +37,16 @@ Route::middleware(['api', 'jwt'])->group(function() {
     Route::get('user/posts', [AdController::class, 'userAds']);
     // Ad Bookmark
     Route::get('post/{ad:slug}/bookmark', [AdController::class, 'bookmark']);
-    // Conversations
-    Route::get('conversations', [ChatController::class, 'index']);
-    Route::get('conversation/{ad:slug}/messages', [ChatController::class, 'create']);
-    Route::delete('conversation/{conversation}/destroy', [ConversationsController::class, 'destroy']);
-    // Chat
-    Route::post('chat/{ad:slug}/store', [ChatController::class, 'store']);
-    Route::delete('chat/{ad:slug}/destroy', [ChatController::class, 'destroy']);
+    // Protected routes with phone verification
+    Route::middleware(['api.phone.verified'])->group(function() {
+        // Conversations
+        Route::get('conversations', [ChatController::class, 'index']);
+        Route::get('conversation/{ad:slug}/messages', [ChatController::class, 'create']);
+        Route::delete('conversation/{conversation}/destroy', [ConversationsController::class, 'destroy']);
+        // Chat
+        Route::post('chat/{ad:slug}/store', [ChatController::class, 'store']);
+        Route::delete('chat/{ad:slug}/destroy', [ChatController::class, 'destroy']);
+    });
     // Post Update
     Route::post('post/{ad:slug}/update', [AdController::class, 'update']);
 });
