@@ -161,23 +161,23 @@ class AuthController extends Controller
     public function updateProfile(Request $request): JsonResponse
     {
         $validated = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'sometimes|required|string|max:255',
             'email' => [
                 'sometimes',
                 'filled',
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignoreModel(auth()->user()),
+                Rule::unique('users')->ignoreModel(auth('api')->user()),
             ],
             'phone' => [
                 'sometimes',
                 'filled',
                 'string',
                 'max:255',
-                Rule::unique('users')->ignoreModel(auth()->user()),
+                Rule::unique('users')->ignoreModel(auth('api')->user()),
             ],
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'sometimes|filled|string|min:8|confirmed',
             'state_id' => 'sometimes|filled|integer|min:0|exists:states,id',
         ]);
         if ($validated->fails()) {
@@ -191,17 +191,15 @@ class AuthController extends Controller
 
         $validated = $validated->validated();
 
+        if (isset($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        }
+
         return response()->json(
             [
                 'message' => auth('api')
                     ->user()
-                    ?->update([
-                        'name' => $validated['name'],
-                        'email' => $validated['email'] ?? null,
-                        'phone' => $validated['phone'],
-                        'password' => Hash::make($validated['password']),
-                        'state_id' => $validated['state_id'] ?? null,
-                    ]) > 0 ? '.پروفایل ویرایش شد' : '!ویرایش پروفایل ناموفق بود',
+                    ?->update($validated) > 0 ? '.پروفایل ویرایش شد' : '!ویرایش پروفایل ناموفق بود',
             ], ResponseAlias::HTTP_CREATED);
     }
 
