@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use function auth;
 use function response;
 use function route;
@@ -18,7 +19,7 @@ class EnsureAPIUserVerifiedPhoneMiddleware
                 'status' => 'phone_not_verified',
                 'message' => '.کاربر گرامی! شماره تماس شما در سیستم تایید نشده است',
                 'web_route' => route('phone.verify'),
-            ]);
+            ], ResponseAlias::HTTP_UNAUTHORIZED);
         }
 
         return $next($request);
