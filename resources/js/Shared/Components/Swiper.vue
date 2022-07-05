@@ -2,6 +2,12 @@
 import {Swiper, SwiperSlide} from 'swiper/vue';
 import {Keyboard, Lazy, Navigation, Pagination, Zoom} from 'swiper';
 
+import '../../../../node_modules/swiper/swiper.min.css';
+import '../../../../node_modules/swiper/modules/pagination/pagination.min.css';
+import '../../../../node_modules/swiper/modules/navigation/navigation.min.css';
+import '../../../../node_modules/swiper/modules/lazy/lazy.min.css';
+import '../../../../node_modules/swiper/modules/zoom/zoom.min.css';
+
 const modules = [
     Navigation,
     Pagination,
@@ -42,7 +48,8 @@ defineProps({
             :data-hash="image.uuid"
             :id="image.uuid">
             <div class="swiper-zoom-container">
-                <img :data-src="image.url" :alt="modelData.title + '_image_' + image.uuid" class="rounded-lg w-full swiper-lazy" loading="lazy"/>
+                <img :data-src="image.url" :alt="modelData.title + '_image_' + image.uuid"
+                     class="rounded-lg w-full swiper-lazy" loading="lazy"/>
                 <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
             </div>
         </swiper-slide>
