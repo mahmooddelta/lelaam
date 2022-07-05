@@ -123,7 +123,9 @@ class AuthController extends Controller
     public
     function logout(): JsonResponse
     {
-        auth('api')->logout();
+        auth('api')->invalidate(true);
+
+        auth('api')->logout(true);
 
         return response()->json(['message' => '.خروج موفق آمیز بود']);
     }
