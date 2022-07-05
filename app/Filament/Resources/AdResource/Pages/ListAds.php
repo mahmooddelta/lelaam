@@ -28,8 +28,8 @@ class ListAds extends ListRecords
                 ->icon('heroicon-o-refresh')
                 ->color('primary')
                 ->visible(fn(Ad $record): bool => auth()->user()->can('update', $record))
-                ->action(function (Ad $record) {
-                    broadcast(new AdPublishStatusChangedEvent($record));
+                ->action(function(Ad $record) {
+                    broadcast(new AdPublishStatusChangedEvent($record))->toOthers();
 
                     return $record->update(
                         [
@@ -49,7 +49,7 @@ class ListAds extends ListRecords
                 ->icon('heroicon-o-refresh')
                 ->color('primary')
                 ->visible(fn(Ad $record): bool => auth()->user()->can('update', $record))
-                ->action(fn(Collection $records) => $records->each(function ($record) {
+                ->action(fn(Collection $records) => $records->each(function($record) {
                     broadcast(new AdPublishStatusChangedEvent($record));
 
                     return $record->update(
