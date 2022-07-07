@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
-import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
-import JetButton from '@/Jetstream/Button.vue';
-import JetInput from '@/Jetstream/Input.vue';
-import JetLabel from '@/Jetstream/Label.vue';
-import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import JetAuthenticationCard from '../../Jetstream/AuthenticationCard.vue';
+import JetAuthenticationCardLogo from '../../Jetstream/AuthenticationCardLogo.vue';
+import JetButton from '../../Jetstream/Button.vue';
+import JetInput from '../../Jetstream/Input.vue';
+import JetLabel from '../../Jetstream/Label.vue';
+import JetValidationErrors from '../../Jetstream/ValidationErrors.vue';
 
 const form = useForm({
     password: '',

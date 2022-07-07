@@ -5,16 +5,17 @@ import {onBeforeUnmount} from "vue";
 const props = defineProps({
     conversations: Object,
 })
+if (typeof window !== 'undefined') {
+    window.Echo.private('conversation')
+        .listen('ConversationCreatedEvent', (data) => {
+            const messageIndex = props.conversations.data.findIndex((item) => item.id === data.conversation.id);
+            messageIndex < 0 ? props.conversations.data.push(data.conversation) : props.conversations.data[messageIndex] = data.conversation;
+        });
 
-window.Echo.private('conversation')
-    .listen('ConversationCreatedEvent', (data) => {
-        const messageIndex = props.conversations.data.findIndex((item) => item.id === data.conversation.id);
-        messageIndex < 0 ? props.conversations.data.push(data.conversation) : props.conversations.data[messageIndex] = data.conversation;
+    onBeforeUnmount(() => {
+        window.Echo.leave('conversation');
     });
-
-onBeforeUnmount(() => {
-    window.Echo.leave('conversation');
-});
+}
 </script>
 
 <template>

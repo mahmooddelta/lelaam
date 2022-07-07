@@ -42,37 +42,39 @@ const submit = () => {
     });
 }
 
-window.Echo.private(`chat.${props.conversation.data.id}`)
-    .listen('MessageSentEvent', (data) => {
-        const messageIndex = props.messages.data.findIndex((item) => item.id === data.message.id);
-        messageIndex < 0 ? props.messages.data.push(data.message) : props.messages.data[messageIndex] = data.message;
-        scrollToBottom('#chatList');
-    });
-
-// Typing indicator
-const isTyping = ref(false)
-const typing = () => {
+if (typeof window !== 'undefined') {
     window.Echo.private(`chat.${props.conversation.data.id}`)
-        .whisper('typing', {
-            user: usePage().props.value.user,
-            typing: true,
+        .listen('MessageSentEvent', (data) => {
+            const messageIndex = props.messages.data.findIndex((item) => item.id === data.message.id);
+            messageIndex < 0 ? props.messages.data.push(data.message) : props.messages.data[messageIndex] = data.message;
+            scrollToBottom('#chatList');
         });
-}
 
-window.Echo.private(`chat.${props.conversation.data.id}`)
-    .listenForWhisper('typing', (data) => {
-        if (data.user.id !== usePage().props.value.user.id) {
-            isTyping.value = true;
+    // Typing indicator
+    const isTyping = ref(false)
+    const typing = () => {
+        window.Echo.private(`chat.${props.conversation.data.id}`)
+            .whisper('typing', {
+                user: usePage().props.value.user,
+                typing: true,
+            });
+    }
 
-            setTimeout(() => {
-                isTyping.value = false;
-            }, 900);
-        }
+    window.Echo.private(`chat.${props.conversation.data.id}`)
+        .listenForWhisper('typing', (data) => {
+            if (data.user.id !== usePage().props.value.user.id) {
+                isTyping.value = true;
+
+                setTimeout(() => {
+                    isTyping.value = false;
+                }, 900);
+            }
+        });
+
+    onBeforeUnmount(() => {
+        window.Echo.leave(`chat.${props.conversation.data.id}`);
     });
-
-onBeforeUnmount(() => {
-    window.Echo.leave(`chat.${props.conversation.data.id}`);
-});
+}
 
 const title = () => ` گفتگو درباره ${usePage().props.value.ad.data?.title}` ?? 'گفتگو';
 

@@ -1,15 +1,14 @@
 <script setup>
 import {Head, useForm} from '@inertiajs/inertia-vue3';
-import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
-import JetButton from '@/Jetstream/Button.vue';
-import JetLabel from '@/Jetstream/Label.vue';
-import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import JetAuthenticationCard from '../Jetstream/AuthenticationCard.vue';
+import JetAuthenticationCardLogo from '../Jetstream/AuthenticationCardLogo.vue';
+import JetButton from '../Jetstream/Button.vue';
+import JetLabel from '../Jetstream/Label.vue';
+import JetValidationErrors from '../Jetstream/ValidationErrors.vue';
 import {getAuth, RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth'
 import {computed, onMounted, ref} from "vue";
 import {initializeApp} from "firebase/app";
 import {getAnalytics} from "firebase/analytics";
-import VOtpInput from 'vue3-otp-input';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -62,71 +61,73 @@ const submit = () => {
         phoneVerified: otpVerified.value,
     })).post(route('phone.verify.store'));
 };
-const handleOTPExceptions = error => {
-    if (error.message === 'TOO_MANY_ATTEMPTS_TRY_LATER')
-        errors.value = 'تعداد ارسال کد از مقدار مجاز عبور نموده است. لطفاً بعداً کوشش کنید!';
-    else if (error.message === 'ERROR_SESSION_EXPIRED')
-        errors.value = 'کد وارد شده منقضی شده است. لطفاً روی ارسال دوباره کلیک کنید!';
-    else if (error.message === 'ERROR_QUOTA_EXCEEDED')
-        errors.value = 'مشکلی رخ داده است. لطفاً بعداً دوباره کوشش نمایید!';
-    else if (error.message === 'ERROR_INVALID_VERIFICATION_CODE')
-        errors.value = 'کد وارد شده درست نیست!';
-    else if (error.message === 'SESSION_EXPIRED') {
-        errors.value = 'کد وارد شده منقضی شده است. لطفاً روی ارسال دوباره کلیک کنید!';
-        window.location.reload();
-    } else
-        errors.value = 'مشکلی در ارسال کد تایید رخ داده است. لطفاً بعداً دوباره کوشش نمایید.';
+if (typeof window !== 'undefined') {
+    const handleOTPExceptions = error => {
+        if (error.message === 'TOO_MANY_ATTEMPTS_TRY_LATER')
+            errors.value = 'تعداد ارسال کد از مقدار مجاز عبور نموده است. لطفاً بعداً کوشش کنید!';
+        else if (error.message === 'ERROR_SESSION_EXPIRED')
+            errors.value = 'کد وارد شده منقضی شده است. لطفاً روی ارسال دوباره کلیک کنید!';
+        else if (error.message === 'ERROR_QUOTA_EXCEEDED')
+            errors.value = 'مشکلی رخ داده است. لطفاً بعداً دوباره کوشش نمایید!';
+        else if (error.message === 'ERROR_INVALID_VERIFICATION_CODE')
+            errors.value = 'کد وارد شده درست نیست!';
+        else if (error.message === 'SESSION_EXPIRED') {
+            errors.value = 'کد وارد شده منقضی شده است. لطفاً روی ارسال دوباره کلیک کنید!';
+            window.location.reload();
+        } else
+            errors.value = 'مشکلی در ارسال کد تایید رخ داده است. لطفاً بعداً دوباره کوشش نمایید.';
 
-    if (errors.value !== '')
-        toast.error(errors.value, {timeout: 2000});
-};
-onMounted(() => {
-    // Recaptcha
-    auth.languageCode = 'fa';
-    setTimeout(() => {
-        window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-            // 'size': 'invisible',
-            'callback': (response) => isRecaptchaSolved.value = true,
-            'expired-callback': () => isRecaptchaSolved.value = false,
-        }, auth);
-        recaptchaVerifier.render().then((widgetId) => {
-            window.recaptchaWidgetId = widgetId;
-        });
-    }, 1000)
-});
-const sendOtp = () => {
-    if (isRecaptchaSolved.value) {
-
-        const countryCode = '+93' // Afghanistan
-        const phoneNumberFormatted = form.phone.charAt(0) === '0' ? form.phone.substring(1) : form.phone;
-        const phoneNumber = countryCode + phoneNumberFormatted;
-        // !TODO Problem is here and thus it should be traced and sent
-        signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
-            .then(function (confirmationResult) {
-                // SMS sent. Prompt user to type the code from the message, then sign the
-                // user in with confirmationResult.confirm(code).
-                window.confirmationResult = confirmationResult;
-
-                toast.success('کد تاییدی ارسال شد.', {timeout: 3000});
-                otpSent.value = true;
-            })
-            .catch(function (error) {
-                grecaptcha.reset(window.recaptchaWidgetId);
-                otpSent.value = false;
-                handleOTPExceptions(error);
+        if (errors.value !== '')
+            toast.error(errors.value, {timeout: 2000});
+    };
+    onMounted(() => {
+        // Recaptcha
+        auth.languageCode = 'fa';
+        setTimeout(() => {
+            window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+                // 'size': 'invisible',
+                'callback': (response) => isRecaptchaSolved.value = true,
+                'expired-callback': () => isRecaptchaSolved.value = false,
+            }, auth);
+            recaptchaVerifier.render().then((widgetId) => {
+                window.recaptchaWidgetId = widgetId;
             });
-    } else {
-        toast.error('لطفا پازل را حل کنید!', {timeout: 2000});
-    }
-};
-const verifyOtp = () => {
-    window.confirmationResult.confirm(otp.value).then(function (result) {
-        otpVerified.value = true;
-    }).catch(function (error) {
-        otpVerified.value = false;
-        handleOTPExceptions(error);
+        }, 1000)
     });
-};
+    const sendOtp = () => {
+        if (isRecaptchaSolved.value) {
+
+            const countryCode = '+93' // Afghanistan
+            const phoneNumberFormatted = form.phone.charAt(0) === '0' ? form.phone.substring(1) : form.phone;
+            const phoneNumber = countryCode + phoneNumberFormatted;
+            // !TODO Problem is here and thus it should be traced and sent
+            signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+                .then(function (confirmationResult) {
+                    // SMS sent. Prompt user to type the code from the message, then sign the
+                    // user in with confirmationResult.confirm(code).
+                    window.confirmationResult = confirmationResult;
+
+                    toast.success('کد تاییدی ارسال شد.', {timeout: 3000});
+                    otpSent.value = true;
+                })
+                .catch(function (error) {
+                    grecaptcha.reset(window.recaptchaWidgetId);
+                    otpSent.value = false;
+                    handleOTPExceptions(error);
+                });
+        } else {
+            toast.error('لطفا پازل را حل کنید!', {timeout: 2000});
+        }
+    };
+    const verifyOtp = () => {
+        window.confirmationResult.confirm(otp.value).then(function (result) {
+            otpVerified.value = true;
+        }).catch(function (error) {
+            otpVerified.value = false;
+            handleOTPExceptions(error);
+        });
+    };
+}
 </script>
 
 <template>
@@ -143,16 +144,20 @@ const verifyOtp = () => {
             <div class="mt-4">
                 <JetLabel for="phone" value="شماره تماس"/>
                 <div dir="ltr" class="mt-2 overflow-x-auto flex justify-center">
-                    <v-otp-input
-                        ref="phoneNumberInput"
-                        input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1 my-1"
-                        separator=" "
-                        :num-inputs="10"
-                        :should-auto-focus="true"
-                        :is-input-num="true"
-                        :placeholder="['0', '7', '*', '*', '*', '*', '*', '*', '*', '*']"
-                        @on-change="updatePhoneNumber()"
-                    />
+                    <client-only>
+                        <div>
+                            <v-otp-input
+                                ref="phoneNumberInput"
+                                input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1 my-1"
+                                separator=" "
+                                :num-inputs="10"
+                                :should-auto-focus="true"
+                                :is-input-num="true"
+                                :placeholder="['0', '7', '*', '*', '*', '*', '*', '*', '*', '*']"
+                                @on-change="updatePhoneNumber()"
+                            />
+                        </div>
+                    </client-only>
                 </div>
 
                 <div class="flex items-center justify-end mt-4" v-if="isPhoneInputted && isRecaptchaSolved && !otpSent">
@@ -207,3 +212,18 @@ const verifyOtp = () => {
         </form>
     </JetAuthenticationCard>
 </template>
+<script>
+import {defineAsyncComponent} from "vue";
+
+export default {
+    name: "PhoneNotVerified",
+    components: {
+        VOtpInput: defineAsyncComponent(() => {
+            if (typeof window !== 'undefined') {
+                return import('vue3-otp-input')
+                    .then(module => module.default)
+            }
+        })
+    },
+}
+</script>

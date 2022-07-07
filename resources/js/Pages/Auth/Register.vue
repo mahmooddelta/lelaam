@@ -1,14 +1,13 @@
 <script setup>
 import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
-import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
-import JetButton from '@/Jetstream/Button.vue';
-import JetInput from '@/Jetstream/Input.vue';
-import JetCheckbox from '@/Jetstream/Checkbox.vue';
-import JetLabel from '@/Jetstream/Label.vue';
-import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import JetAuthenticationCard from '../../Jetstream/AuthenticationCard.vue';
+import JetAuthenticationCardLogo from '../../Jetstream/AuthenticationCardLogo.vue';
+import JetButton from '../../Jetstream/Button.vue';
+import JetInput from '../../Jetstream/Input.vue';
+import JetCheckbox from '../../Jetstream/Checkbox.vue';
+import JetLabel from '../../Jetstream/Label.vue';
+import JetValidationErrors from '../../Jetstream/ValidationErrors.vue';
 import {ref} from "vue";
-import VOtpInput from 'vue3-otp-input';
 
 const form = useForm({
     name: '',
@@ -108,16 +107,20 @@ const submit = () => {
             <div class="mt-4">
                 <JetLabel for="phone" value="شماره تماس"/>
                 <div dir="ltr" class="mt-2 overflow-x-auto flex justify-center">
-                    <v-otp-input
-                        ref="phoneNumberInput"
-                        input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1 my-1"
-                        separator=" "
-                        :num-inputs="10"
-                        :should-auto-focus="true"
-                        :is-input-num="true"
-                        :placeholder="['0', '7', '*', '*', '*', '*', '*', '*', '*', '*']"
-                        @on-change="updatePhoneNumber()"
-                    />
+                    <client-only>
+                        <div>
+                            <v-otp-input
+                                ref="phoneNumberInput"
+                                input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1 my-1"
+                                separator=" "
+                                :num-inputs="10"
+                                :should-auto-focus="true"
+                                :is-input-num="true"
+                                :placeholder="['0', '7', '*', '*', '*', '*', '*', '*', '*', '*']"
+                                @on-change="updatePhoneNumber()"
+                            />
+                        </div>
+                    </client-only>
                 </div>
             </div>
 
@@ -150,3 +153,18 @@ const submit = () => {
         </form>
     </JetAuthenticationCard>
 </template>
+<script>
+import {defineAsyncComponent} from "vue";
+
+export default {
+    name: "Register",
+    components: {
+        VOtpInput: defineAsyncComponent(() => {
+            if (typeof window !== 'undefined') {
+                return import('vue3-otp-input')
+                    .then(module => module.default)
+            }
+        })
+    },
+}
+</script>
