@@ -9,6 +9,7 @@ import {getAuth, RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth'
 import {computed, onMounted, ref} from "vue";
 import {initializeApp} from "firebase/app";
 import {getAnalytics} from "firebase/analytics";
+import ClientOnly from '@duannx/vue-client-only';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -23,9 +24,14 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth();
+let app;
+let analytics
+let auth
+if (typeof window !== 'undefined') {
+    app = initializeApp(firebaseConfig);
+    analytics = getAnalytics(app);
+    auth = getAuth();
+}
 
 const errors = ref('');
 const isRecaptchaSolved = ref(false);
@@ -145,18 +151,16 @@ if (typeof window !== 'undefined') {
                 <JetLabel for="phone" value="شماره تماس"/>
                 <div dir="ltr" class="mt-2 overflow-x-auto flex justify-center">
                     <client-only>
-                        <div>
-                            <v-otp-input
-                                ref="phoneNumberInput"
-                                input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1 my-1"
-                                separator=" "
-                                :num-inputs="10"
-                                :should-auto-focus="true"
-                                :is-input-num="true"
-                                :placeholder="['0', '7', '*', '*', '*', '*', '*', '*', '*', '*']"
-                                @on-change="updatePhoneNumber()"
-                            />
-                        </div>
+                        <v-otp-input
+                            ref="phoneNumberInput"
+                            input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1 my-1"
+                            separator=" "
+                            :num-inputs="10"
+                            :should-auto-focus="true"
+                            :is-input-num="true"
+                            :placeholder="['0', '7', '*', '*', '*', '*', '*', '*', '*', '*']"
+                            @on-change="updatePhoneNumber()"
+                        />
                     </client-only>
                 </div>
 
@@ -184,17 +188,19 @@ if (typeof window !== 'undefined') {
                     </b>
                     <section class="flex justify-center my-4">
                         <div dir="ltr">
-                            <v-otp-input
-                                ref="otpInput"
-                                input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1"
-                                separator=" "
-                                :num-inputs="6"
-                                :should-auto-focus="true"
-                                :is-input-num="true"
-                                :placeholder="['*', '*', '*', '*', '*', '*']"
-                                @on-change="updateOtp()"
-                                @on-complete="verifyOtp"
-                            />
+                            <client-only>
+                                <v-otp-input
+                                    ref="otpInput"
+                                    input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1"
+                                    separator=" "
+                                    :num-inputs="6"
+                                    :should-auto-focus="true"
+                                    :is-input-num="true"
+                                    :placeholder="['*', '*', '*', '*', '*', '*']"
+                                    @on-change="updateOtp()"
+                                    @on-complete="verifyOtp"
+                                />
+                            </client-only>
                         </div>
                     </section>
                     <button @click="sendOtp" class="btn btn-outline btn-primary mx-1" type="button">

@@ -1,6 +1,6 @@
 <template>
     <Head :title="ad.data.title"/>
-    <div class="max-w-lg mx-auto overflow-hidden md:max-w-6xl p-6 m-6">
+    <div class="max-w-lg mx-auto overflow-hidden md:max-w-6xl p-6">
         <nav class="w-full" aria-label="Breadcrumb">
             <ol role="list" class="flex items-center space-x-4">
                 <li>
@@ -36,8 +36,9 @@
                 </li>
             </ol>
         </nav>
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2xx`">
-            <div class="text-right p-4">
+        <section class="grid grid-cols-1 px-4 py-8"
+                 :class="{'md:grid-cols-2' : ad.data.media && ad.data.media.length > 0}">
+            <div class="text-right px-4">
                 <h1 class="text-3xl lg:text-4xl font-bold" v-text="ad.data.title"></h1>
                 <h2 class="text-base-600 py-6 flex">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
@@ -121,13 +122,11 @@
                                             </span>
                                         </label>
                                         <client-only>
-                                            <div>
-                                                <RichEditor
-                                                    v-model="form.description"
-                                                    :errors="form.errors.description"
-                                                    :disabled="form.processing"
-                                                />
-                                            </div>
+                                            <RichEditor
+                                                v-model="form.description"
+                                                :errors="form.errors.description"
+                                                :disabled="form.processing"
+                                            />
                                         </client-only>
                                         <div v-if="form.errors.description"
                                              class="text-red-500 text-sm my-2">{{ form.errors.description }}</div>
@@ -188,9 +187,8 @@
             </div>
             <!-- Carousel -->
             <client-only>
-                <div>
-                    <SplideSlider :images="ad.data.media" :model-data="ad.data"/>
-                </div>
+                <SplideSlider :images="ad.data.media" :model-data="ad.data"
+                              v-if="ad.data.media && ad.data.media.length > 0"/>
             </client-only>
         </section>
     </div>
@@ -203,6 +201,7 @@ import DialogModal from "../Jetstream/DialogModal.vue";
 import Button from "../Jetstream/Button.vue";
 import SplideSlider from "../Shared/Components/SplideSlider.vue";
 import RichEditor from "../Shared/Components/CKEditor.vue";
+import ClientOnly from '@duannx/vue-client-only';
 
 const props = defineProps({
     ad: Object,

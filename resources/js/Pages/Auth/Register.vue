@@ -8,6 +8,7 @@ import JetCheckbox from '../../Jetstream/Checkbox.vue';
 import JetLabel from '../../Jetstream/Label.vue';
 import JetValidationErrors from '../../Jetstream/ValidationErrors.vue';
 import {ref} from "vue";
+import ClientOnly from '@duannx/vue-client-only';
 
 const form = useForm({
     name: '',
@@ -108,18 +109,16 @@ const submit = () => {
                 <JetLabel for="phone" value="شماره تماس"/>
                 <div dir="ltr" class="mt-2 overflow-x-auto flex justify-center">
                     <client-only>
-                        <div>
-                            <v-otp-input
-                                ref="phoneNumberInput"
-                                input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1 my-1"
-                                separator=" "
-                                :num-inputs="10"
-                                :should-auto-focus="true"
-                                :is-input-num="true"
-                                :placeholder="['0', '7', '*', '*', '*', '*', '*', '*', '*', '*']"
-                                @on-change="updatePhoneNumber()"
-                            />
-                        </div>
+                        <v-otp-input
+                            ref="phoneNumberInput"
+                            input-classes="input input-bordered bg-adaptable w-[2.6rem] mr-1 my-1"
+                            separator=" "
+                            :num-inputs="10"
+                            :should-auto-focus="true"
+                            :is-input-num="true"
+                            :placeholder="['0', '7', '*', '*', '*', '*', '*', '*', '*', '*']"
+                            @on-change="updatePhoneNumber()"
+                        />
                     </client-only>
                 </div>
             </div>

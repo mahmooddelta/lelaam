@@ -4,7 +4,7 @@ import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {computed, ref, watch} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import RichEditor from "../Shared/Components/CKEditor.vue";
-
+import ClientOnly from '@duannx/vue-client-only';
 // Functions
 const isNumber = (str) => {
     const pattern = /^\d+\.?\d*$/;
@@ -134,19 +134,17 @@ const populateAttributes = (value, index) => {
                             </small>
                         </label>
                         <client-only>
-                            <div>
-                                <media-library-attachment
-                                    name="ads"
-                                    @change="onImageChange"
-                                    :initial-value="form.images"
-                                    :max-items="5"
-                                    :translations="mlp_translations"
+                            <media-library-attachment
+                                name="ads"
+                                @change="onImageChange"
+                                :initial-value="form.images"
+                                :max-items="5"
+                                :translations="mlp_translations"
 
-                                    :validation-rules="{accept: ['image/jpeg', 'image/png', 'image/jpg'], maxSizeInKB: 5 * 1024, minSizeInKB: 5}"
-                                    :validation-errors="form.errors.images"
-                                    multiple
-                                />
-                            </div>
+                                :validation-rules="{accept: ['image/jpeg', 'image/png', 'image/jpg'], maxSizeInKB: 5 * 1024, minSizeInKB: 5}"
+                                :validation-errors="form.errors.images"
+                                multiple
+                            />
                         </client-only>
                         <div v-if="form.errors.images" class="text-red-500 text-sm my-2">{{ form.errors.images }}</div>
                     </div>

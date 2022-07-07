@@ -1,7 +1,7 @@
 <script setup>
 import {Splide, SplideSlide} from '@splidejs/vue-splide';
 
-defineProps({
+const props = defineProps({
     images: {
         type: Object,
         default: {},
@@ -10,22 +10,23 @@ defineProps({
 })
 
 const options = {
-    rewind: true,
     gap: '1rem',
-    autoplay: true,
-    type: 'loop',
     paginationDirection: 'rtl',
-    drag: true,
-    lazyLoad: 'nearby',
-    keyboard: true,
-    paginationKeyboard: true,
     direction: 'rtl',
+    rewind: props.images.length > 0,
+    autoplay: props.images.length > 0,
+    type: props.images.length > 0 ? 'loop' : 'slide',
+    drag: props.images.length > 0,
+    keyboard: props.images.length > 0,
+    paginationKeyboard: props.images.length > 0,
+    arrows: props.images.length > 0,
+    lazyLoad: 'nearby',
 }
 </script>
 
 <template>
     <Splide :options="options" :has-track="true" aria-label="تصاویر آگهی"
-            class="w-full max-h-[34rem] order-first lg:order-last my-4 lg:my-4">
+            class="w-full max-h-[34rem] order-first lg:order-last pt-4 lg:py-0 mb-12 md:mb-0">
         <SplideSlide v-if="images.length > 0"
                      v-for="image in images"
                      :key="image.uuid"
@@ -36,7 +37,7 @@ const options = {
         <SplideSlide v-else>
             <img :src="modelData.thumb" :data-splide-lazy="modelData.thumb" alt="No Image Placeholder"
                  loading="lazy"
-                 class="rounded-lg object-cover"/>
+                 class="rounded-lg object-cover w-full"/>
         </SplideSlide>
     </Splide>
 </template>
