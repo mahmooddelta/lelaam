@@ -2,7 +2,7 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build && vite build --ssr",
+        "build": "vite build --config vite.production.config.js && vite build --config vite.production.config.js --ssr",
         "ssr:serve": "node storage/ssr/ssr.js"
     },
     "devDependencies": {
@@ -28,6 +28,7 @@
         "tailwindcss-flip": "^1.0.0",
         "tippy.js": "^6.3.7",
         "vite": "^2.9.12",
+        "vite-plugin-externals": "^0.5.0",
         "vue": "^3.2.31",
         "vue-loader": "^17.0.0",
         "webpack-node-externals": "^3.0.0"
@@ -38,6 +39,7 @@
         "@ckeditor/ckeditor5-vue": "^4.0.1",
         "@spatie/media-library-pro-styles": "^1.2.2",
         "@spatie/media-library-pro-vue3-attachment": "^1.2.3",
+        "@splidejs/vue-splide": "^0.6.7",
         "@tailwindcss/forms": "^0.5.1",
         "@tailwindcss/typography": "^0.5.2",
         "autoprefixer": "10.4.5",
@@ -45,9 +47,9 @@
         "firebase": "^9.8.2",
         "laravel-echo": "^1.12.0",
         "pusher-js": "^7.1.1-beta",
-        "swiper": "^8.1.5",
         "tailwindcss": "^3.0.24",
         "theme-change": "^2.0.2",
+        "vue-client-only": "^2.1.0",
         "vue-select": "^4.0.0-beta.3",
         "vue-toastification": "^2.0.0-rc.5",
         "vue3-otp-input": "^0.3.6"

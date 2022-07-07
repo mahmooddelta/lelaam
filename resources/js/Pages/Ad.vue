@@ -1,6 +1,6 @@
 <template>
     <Head :title="ad.data.title"/>
-    <div class="max-w-lg mx-auto overflow-hidden md:max-w-6xl p-6">
+    <div class="max-w-lg mx-auto overflow-hidden md:max-w-6xl p-6 m-6">
         <nav class="w-full" aria-label="Breadcrumb">
             <ol role="list" class="flex items-center space-x-4">
                 <li>
@@ -36,7 +36,7 @@
                 </li>
             </ol>
         </nav>
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 py-3">
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2xx`">
             <div class="text-right p-4">
                 <h1 class="text-3xl lg:text-4xl font-bold" v-text="ad.data.title"></h1>
                 <h2 class="text-base-600 py-6 flex">
@@ -120,15 +120,15 @@
                                                 توضیحات
                                             </span>
                                         </label>
-                                        <ckeditor
-                                            id="description"
-                                            class="rounded-lg"
-                                            :class="{'input-error': form.errors.description}"
-                                            :editor="editor"
-                                            v-model="form.description"
-                                            :config="editorConfig"
-                                            :disabled="form.processing"
-                                            tag-name="textarea"/>
+                                        <client-only>
+                                            <div>
+                                                <RichEditor
+                                                    v-model="form.description"
+                                                    :errors="form.errors.description"
+                                                    :disabled="form.processing"
+                                                />
+                                            </div>
+                                        </client-only>
                                         <div v-if="form.errors.description"
                                              class="text-red-500 text-sm my-2">{{ form.errors.description }}</div>
                                     </div>
@@ -187,22 +187,22 @@
                 <p v-html="ad.data.desc"></p>
             </div>
             <!-- Carousel -->
-            <Swiper :images="ad.data.media" :model-data="ad.data"/>
+            <client-only>
+                <div>
+                    <SplideSlider :images="ad.data.media" :model-data="ad.data"/>
+                </div>
+            </client-only>
         </section>
     </div>
 </template>
 <script setup>
-
-import Swiper from "../Shared/Components/Swiper.vue";
 import {computed, ref} from "vue";
 import Label from "../Jetstream/Label.vue";
 import {useForm} from "@inertiajs/inertia-vue3";
-import Ckeditor from '@ckeditor/ckeditor5-vue';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import "@ckeditor/ckeditor5-build-classic/build/translations/fa";
-import {Inertia} from "@inertiajs/inertia";
 import DialogModal from "../Jetstream/DialogModal.vue";
 import Button from "../Jetstream/Button.vue";
+import SplideSlider from "../Shared/Components/SplideSlider.vue";
+import RichEditor from "../Shared/Components/CKEditor.vue";
 
 const props = defineProps({
     ad: Object,
@@ -225,22 +225,5 @@ const submit = () => {
         replace: true,
         onSuccess: response => wantsToReportAd.value = null,
     })
-};
-
-// CKEditor Initialization
-// !TODO move it to a separate component
-// !Chore: move it to a separate file
-const editor = ClassicEditor;
-const ckeditor = Ckeditor.component;
-const editorConfig = {
-    language: 'fa',
-    toolbar: [
-        "heading", "|",
-        'bold', 'italic', '|',
-        'bulletedList', 'numberedList', '|',
-        'blockQuote', '|',
-        'outdent', 'indent', '|',
-        'undo', 'redo', '|',
-    ],
 };
 </script>

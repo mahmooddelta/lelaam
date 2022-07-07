@@ -2,11 +2,19 @@
 import {Swiper, SwiperSlide} from 'swiper/vue';
 import {Keyboard, Lazy, Navigation, Pagination, Zoom} from 'swiper';
 
-import '../../../../node_modules/swiper/swiper.min.css';
-import '../../../../node_modules/swiper/modules/pagination/pagination.min.css';
-import '../../../../node_modules/swiper/modules/navigation/navigation.min.css';
-import '../../../../node_modules/swiper/modules/lazy/lazy.min.css';
-import '../../../../node_modules/swiper/modules/zoom/zoom.min.css';
+// import '../../../../node_modules/swiper/swiper.min.css';
+// import '../../../../node_modules/swiper/modules/pagination/pagination.min.css';
+// import '../../../../node_modules/swiper/modules/navigation/navigation.min.css';
+// import '../../../../node_modules/swiper/modules/lazy/lazy.min.css';
+// import '../../../../node_modules/swiper/modules/zoom/zoom.min.css';
+
+// swiper core styles
+import 'swiper/css'
+// modules styles
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/lazy'
+import 'swiper/css/zoom'
 
 const modules = [
     Navigation,
