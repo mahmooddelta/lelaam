@@ -66,6 +66,7 @@ class Category extends Model implements HasMedia
         'description',
         'position',
         'is_visible',
+        'parent_id',
     ];
 
     /**
