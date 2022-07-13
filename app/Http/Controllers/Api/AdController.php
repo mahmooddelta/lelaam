@@ -110,7 +110,7 @@ class AdController extends Controller
 
     public function edit(Ad $ad): AdEditResource
     {
-        return AdEditResource::make($ad->load(['category', 'currency', 'district', 'attributes.values', 'values', 'media']));
+        return AdEditResource::make($ad->load(['category', 'currency', 'district.state', 'attributes.values', 'values', 'media']));
     }
 
     public function update(UpdateRequest $request, Ad $ad): JsonResponse

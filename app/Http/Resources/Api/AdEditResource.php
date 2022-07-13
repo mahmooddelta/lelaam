@@ -9,6 +9,7 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CurrencyResource;
 use App\Http\Resources\DistrictResource;
 use App\Http\Resources\MediaResource;
+use App\Http\Resources\StateResource;
 use App\Http\Resources\UserResource;
 use AshAllenDesign\ShortURL\Models\ShortURL;
 use Illuminate\Http\Request;
@@ -44,6 +45,7 @@ class AdEditResource extends JsonResource
 
             'currency' => new CurrencyResource($this->whenLoaded('currency')),
             'district' => new DistrictResource($this->whenLoaded('district')),
+            'state' => new StateResource($this->whenLoaded('district.state')),
 
             'attributes' => AttributeResource::collection($this->whenLoaded('attributes')),
             'values' => AttributeValueResource::collection($this->whenLoaded('values')),
