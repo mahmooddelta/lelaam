@@ -48,6 +48,7 @@ Route::middleware(['api', 'jwt'])->group(function() {
         Route::delete('chat/{ad:slug}/destroy', [ChatController::class, 'destroy']);
     });
     // Post Update
+    Route::get('post/{ad:slug}/edit', [AdController::class, 'edit']);
     Route::post('post/{ad:slug}/update', [AdController::class, 'update']);
 });
 // Ads

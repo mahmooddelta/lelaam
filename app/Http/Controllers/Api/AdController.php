@@ -7,6 +7,7 @@ use App\Http\Requests\Ad\Api\StoreRequest;
 use App\Http\Requests\Ad\Api\UpdateRequest;
 use App\Http\Resources\AdReportResource;
 use App\Http\Resources\AdResource;
+use App\Http\Resources\Api\AdEditResource;
 use App\Models\Ad;
 use App\Models\Category;
 use App\Models\District;
@@ -105,6 +106,11 @@ class AdController extends Controller
             [
                 'ad' => new AdResource($ad),
             ]);
+    }
+
+    public function edit(Ad $ad): AdEditResource
+    {
+        return AdEditResource::make($ad->load(['category', 'currency', 'district', 'attributes.values', 'values', 'media']));
     }
 
     public function update(UpdateRequest $request, Ad $ad): JsonResponse
