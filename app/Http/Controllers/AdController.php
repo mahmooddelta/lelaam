@@ -20,6 +20,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Maize\Markable\Models\Bookmark;
 use Maize\Markable\Models\Like;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use function abort_if;
 use function auth;
 use function back;
 use function count;
@@ -71,6 +73,7 @@ class AdController extends Controller
 
     public function show(Ad $ad): Response
     {
+        abort_if($ad->is_published === false, ResponseAlias::HTTP_NOT_FOUND, 'آگهی منقضی شده است!');
         $ad->load(['category:name,slug,id', 'user', 'media', 'attributes', 'values.attribute', 'bookmarkers']);
 
         // Add the add to user's viewed ads

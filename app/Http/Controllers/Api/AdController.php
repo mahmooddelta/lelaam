@@ -22,6 +22,7 @@ use Illuminate\Validation\Rule;
 use Maize\Markable\Models\Bookmark;
 use Maize\Markable\Models\Like;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use function abort_if;
 use function auth;
 use function count;
 use function request;
@@ -95,6 +96,8 @@ class AdController extends Controller
 
     public function show(Ad $ad): JsonResponse
     {
+        abort_if($ad->is_published === false, ResponseAlias::HTTP_NOT_FOUND, 'آگهی منقضی شده است!');
+
         $ad->load(['category:name,slug,id', 'user', 'media', 'attributes', 'values.attribute', 'bookmarkers']);
 
         // Add the add to user's viewed ads
