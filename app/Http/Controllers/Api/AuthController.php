@@ -213,16 +213,25 @@ class AuthController extends Controller
             ], ResponseAlias::HTTP_CREATED);
     }
 
-    public function profilePhoneVerified(): bool
+    public function profilePhoneVerified(): JsonResponse
     {
-        return auth('api')->user()->hasVerifiedPhone();
+        return response()->json([
+            'phone_verification_status' => auth('api')->user()->hasVerifiedPhone(),
+        ]);
     }
 
     public function profilePhoneVerifiedUpdate(Request $request): JsonResponse
     {
         $validated = $request->validate(
             [
-                'phone' => 'required|filled|min:9|max:14|exists:users,phone|unique:users,phone',
+                'phone' => [
+                    'required',
+                    'filled',
+                    'min:9',
+                    'max:14',
+                    Rule::exists('users')->where(fn($query) => $query->where('phone', $request->input('phone'))),
+                    Rule::unique('users', 'phone')->ignoreModel(auth('api')->user()),
+                ],
             ]);
         if (auth('api')->user()->hasVerifiedPhone()) {
             return response()->json(['message' => '!شماره تماس کاربر از قبل تایید شده است'], Response::HTTP_FORBIDDEN);
