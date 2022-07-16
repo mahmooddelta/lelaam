@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Filament\Facades\Filament;
-use Illuminate\Support\Facades\Blade;
+use Illuminate\Foundation\Vite;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
@@ -31,10 +31,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Filament::serving(function() {
-            Filament::registerRenderHook(
-                'body.start',
-                fn(): string => Blade::render('@vite(["resources/js/app.js"])'),
-            );
+            Filament::registerTheme('');
+            Filament::pushMeta([
+                (new Vite())(['resources/js/app.js']),
+            ]);
         });
 
         Str::macro('persian_slug', function($string, $separator = '-') {
