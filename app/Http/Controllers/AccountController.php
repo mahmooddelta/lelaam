@@ -20,20 +20,20 @@ class AccountController extends Controller
     {
         return Inertia::render('Account', [
             'ads' => AdResource::collection(Ad::isOwner()
-                                                ->with('media')
-                                                ->withoutGlobalScope(AdNotExpiredScope::class)
-                                                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'expires_at', 'published_at'])
-                                                ->latest()
-                                                ->get()),
+                ->with('media')
+                ->withoutGlobalScope(AdNotExpiredScope::class)
+                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'expires_at', 'published_at'])
+                ->latest()
+                ->get()),
             'states' => State::select(['id', 'name'])->get(),
             'bookmarked' => BookmarkResource::collection(Bookmark::where('user_id', auth()->id())->get()),
             'last_views' => BookmarkResource::collection(Like::where('user_id', auth()->id())->get()),
             'reports' => AdReportResource::collection(auth()
-                                                          ->user()
-                                                          ?->reports()
-                                                          ->active()
-                                                          ->with(['ad:id,title'])
-                                                          ->get()),
+                ->user()
+                ?->reports()
+                ->active()
+                ->with(['ad:id,title,slug'])
+                ->get()),
             'user_state' => auth()->user()->state_id,
         ]);
     }
@@ -44,8 +44,8 @@ class AccountController extends Controller
 
         return back()
             ->with([
-                       'type' => 'success',
-                       'body' => 'ولایت شما تغییر یافت.',
-                   ]);
+                'type' => 'success',
+                'body' => 'ولایت شما تغییر یافت.',
+            ]);
     }
 }

@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/inertia-vue3';
-import JetActionMessage from '@/Jetstream/ActionMessage.vue';
-import JetButton from '@/Jetstream/Button.vue';
-import JetFormSection from '@/Jetstream/FormSection.vue';
-import JetInput from '@/Jetstream/Input.vue';
-import JetInputError from '@/Jetstream/InputError.vue';
-import JetLabel from '@/Jetstream/Label.vue';
+import JetActionMessage from '../../../Jetstream/ActionMessage.vue';
+import JetButton from '../../../Jetstream/Button.vue';
+import JetFormSection from '../../../Jetstream/FormSection.vue';
+import JetInput from '../../../Jetstream/Input.vue';
+import JetInputError from '../../../Jetstream/InputError.vue';
+import JetLabel from '../../../Jetstream/Label.vue';
 
 const passwordInput = ref(null);
 const currentPasswordInput = ref(null);
@@ -40,16 +40,16 @@ const updatePassword = () => {
 <template>
     <JetFormSection @submitted="updatePassword">
         <template #title>
-            Update Password
+            ویرایش رمز عبور
         </template>
 
         <template #description>
-            Ensure your account is using a long, random password to stay secure.
+            با استفاده از یک رمزعبور طولانی، تصادفی و قوی از امنیت حساب کاربری خود مطمئن شوید.
         </template>
 
         <template #form>
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="current_password" value="Current Password" />
+                <JetLabel for="current_password" value="رمزعبور فعلی" />
                 <JetInput
                     id="current_password"
                     ref="currentPasswordInput"
@@ -62,7 +62,7 @@ const updatePassword = () => {
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="password" value="New Password" />
+                <JetLabel for="password" value="رمزعبور جدید" />
                 <JetInput
                     id="password"
                     ref="passwordInput"
@@ -75,7 +75,7 @@ const updatePassword = () => {
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="password_confirmation" value="Confirm Password" />
+                <JetLabel for="password_confirmation" value="تایید رمزعبور جدید" />
                 <JetInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
@@ -89,11 +89,11 @@ const updatePassword = () => {
 
         <template #actions>
             <JetActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
+                ویرایش شد.
             </JetActionMessage>
 
             <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Save
+                ویرایش
             </JetButton>
         </template>
     </JetFormSection>

@@ -1,12 +1,12 @@
 <script setup>
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/inertia-vue3';
-import JetActionSection from '@/Jetstream/ActionSection.vue';
-import JetDialogModal from '@/Jetstream/DialogModal.vue';
-import JetDangerButton from '@/Jetstream/DangerButton.vue';
-import JetInput from '@/Jetstream/Input.vue';
-import JetInputError from '@/Jetstream/InputError.vue';
-import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
+import {ref} from 'vue';
+import {useForm} from '@inertiajs/inertia-vue3';
+import JetActionSection from '../../../Jetstream/ActionSection.vue';
+import JetDialogModal from '../../../Jetstream/DialogModal.vue';
+import JetDangerButton from '../../../Jetstream/DangerButton.vue';
+import JetInput from '../../../Jetstream/Input.vue';
+import JetInputError from '../../../Jetstream/InputError.vue';
+import JetSecondaryButton from '../../../Jetstream/SecondaryButton.vue';
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
@@ -40,32 +40,35 @@ const closeModal = () => {
 <template>
     <JetActionSection>
         <template #title>
-            Delete Account
+            حذف حساب کاریری
         </template>
 
         <template #description>
-            Permanently delete your account.
+            حذف دائمی حساب کاریری
         </template>
 
         <template #content>
             <div class="max-w-xl text-sm text-gray-600">
-                Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
+                پس از حذف حساب شما، تمام منابع و داده های آن برای همیشه حذف می شوند. قبل از حذف حساب خود، لطفاً هر داده
+                یا اطلاعاتی را که می‌خواهید حفظ کنید، دانلود کنید.
             </div>
 
             <div class="mt-5">
                 <JetDangerButton @click="confirmUserDeletion">
-                    Delete Account
+                    حذف حساب کاریری
                 </JetDangerButton>
             </div>
 
             <!-- Delete Account Confirmation Modal -->
             <JetDialogModal :show="confirmingUserDeletion" @close="closeModal">
                 <template #title>
-                    Delete Account
+                    حذف حساب کاریری
                 </template>
 
                 <template #content>
-                    Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
+                    آیا مطمئن هستید که می خواهید اکانت خود را حذف کنید؟ پس از حذف حساب شما، تمام منابع و داده های آن
+                    برای همیشه حذف می شوند. لطفاً رمز عبور خود را وارد کنید تا تأیید کنید که می خواهید حساب خود را برای
+                    همیشه حذف کنید.
 
                     <div class="mt-4">
                         <JetInput
@@ -77,13 +80,13 @@ const closeModal = () => {
                             @keyup.enter="deleteUser"
                         />
 
-                        <JetInputError :message="form.errors.password" class="mt-2" />
+                        <JetInputError :message="form.errors.password" class="mt-2"/>
                     </div>
                 </template>
 
                 <template #footer>
                     <JetSecondaryButton @click="closeModal">
-                        Cancel
+                        لغو
                     </JetSecondaryButton>
 
                     <JetDangerButton
@@ -92,7 +95,7 @@ const closeModal = () => {
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
-                        Delete Account
+                        حذف حساب کاریری
                     </JetDangerButton>
                 </template>
             </JetDialogModal>

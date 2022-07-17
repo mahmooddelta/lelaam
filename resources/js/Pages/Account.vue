@@ -17,8 +17,6 @@ const props = defineProps({
 })
 const selectedState = ref(props.user_state ?? null);
 watch(selectedState, (value) => {
-    // localStorage.setItem('state', value)
-    // localStorage.getItem('state')
     Inertia.visit(route('account.user.state.change', {state: value}, {
         preserveState: true,
         preserveScroll: true,
@@ -47,18 +45,30 @@ const pageTitle = usePage().props.value.user ? `${usePage().props.value.user.nam
     <Container>
         <section class="w-full flex justify-between items-center pb-4">
             <h1 class="text-4xl" v-text="pageTitle"></h1>
-            <Link :href="route('logout')" as="form" method="post" class="text-lg flex cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
-                     stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                </svg>
-                خروج از حساب کاربری
-            </Link>
+            <div class="flex">
+                <Link :href="route('profile.show')" as="button" class="text-lg flex cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    ویرایش حساب کاربری
+                </Link>
+                <div class="divider divider-horizontal"></div>
+                <Link :href="route('logout')" as="form" method="post" class="text-lg flex cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                    خروج از حساب کاربری
+                </Link>
+            </div>
         </section>
         <div class="divider"></div>
         <Collapse title="اعلانات من">
-            <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4" v-if="ads.data.length > 0">
+            <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4"
+                     v-if="ads.data.length > 0">
                 <Ad v-for="ad in ads.data" :key="ad.id" :ad="ad"/>
             </section>
             <div class="text-center" v-else>
@@ -81,7 +91,8 @@ const pageTitle = usePage().props.value.user ? `${usePage().props.value.user.nam
         </Collapse>
 
         <Collapse title="آخرین بازدید ها">
-            <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4" v-if="last_views.data.length > 0">
+            <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4"
+                     v-if="last_views.data.length > 0">
                 <Ad v-for="last_view in last_views.data" :key="last_view.id" :ad="last_view.ad"/>
             </section>
             <div class="text-center" v-else>
@@ -108,8 +119,8 @@ const pageTitle = usePage().props.value.user ? `${usePage().props.value.user.nam
                     <!-- row 1 -->
                     <tr class="hover" v-for="(report, index) in reports.data" :key="report.name">
                         <td v-text="index + 1"></td>
-                        <td v-text="report.report_type.name"></td>
-                        <td v-text="report.ad.title"></td>
+                        <td v-text="report.report_type?.name"></td>
+                        <td v-text="report.ad?.title"></td>
                         <td v-html="report.description"></td>
                         <td>
                             <div class="badge" :class="badgeType(report.status)" v-text="report.status_label"></div>

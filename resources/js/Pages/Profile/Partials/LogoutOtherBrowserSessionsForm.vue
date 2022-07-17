@@ -1,13 +1,13 @@
 <script setup>
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/inertia-vue3';
-import JetActionMessage from '@/Jetstream/ActionMessage.vue';
-import JetActionSection from '@/Jetstream/ActionSection.vue';
-import JetButton from '@/Jetstream/Button.vue';
-import JetDialogModal from '@/Jetstream/DialogModal.vue';
-import JetInput from '@/Jetstream/Input.vue';
-import JetInputError from '@/Jetstream/InputError.vue';
-import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
+import JetActionMessage from '../../../Jetstream/ActionMessage.vue';
+import JetActionSection from '../../../Jetstream/ActionSection.vue';
+import JetButton from '../../../Jetstream/Button.vue';
+import JetDialogModal from '../../../Jetstream/DialogModal.vue';
+import JetInput from '../../../Jetstream/Input.vue';
+import JetInputError from '../../../Jetstream/InputError.vue';
+import JetSecondaryButton from '../../../Jetstream/SecondaryButton.vue';
 
 defineProps({
     sessions: Array,
@@ -45,16 +45,16 @@ const closeModal = () => {
 <template>
     <JetActionSection>
         <template #title>
-            Browser Sessions
+            دستگاه های فعال
         </template>
 
         <template #description>
-            Manage and log out your active sessions on other browsers and devices.
+            مدیریت و خروج از دستگاه های فعال
         </template>
 
         <template #content>
             <div class="max-w-xl text-sm text-gray-600">
-                If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.
+                در صورت لزوم، می توانید از تمام جلسات مرورگر دیگر خود در همه دستگاه های خود خارج شوید. برخی از جلسات اخیر شما در زیر فهرست شده است. با این حال، این فهرست ممکن است جامع نباشد. اگر احساس می کنید حساب شما به خطر افتاده است، باید رمز عبور خود را نیز به روز کنید.
             </div>
 
             <!-- Other Browser Sessions -->
@@ -97,15 +97,18 @@ const closeModal = () => {
 
                     <div class="ml-3">
                         <div class="text-sm text-gray-600">
-                            {{ session.agent.platform ? session.agent.platform : 'Unknown' }} - {{ session.agent.browser ? session.agent.browser : 'Unknown' }}
+                            {{ session.agent.platform ? session.agent.platform : 'نامعلوم' }} - {{ session.agent.browser ? session.agent.browser : 'نامعلوم' }}
                         </div>
 
                         <div>
                             <div class="text-xs text-gray-500">
                                 {{ session.ip_address }},
 
-                                <span v-if="session.is_current_device" class="text-green-500 font-semibold">This device</span>
-                                <span v-else>Last active {{ session.last_active }}</span>
+                                <span v-if="session.is_current_device" class="text-green-500 font-semibold">دستگاه فعلی</span>
+                                <span v-else>
+                                    آخرین وضعیت فعال بودن در
+                                    {{ session.last_active }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -114,22 +117,22 @@ const closeModal = () => {
 
             <div class="flex items-center mt-5">
                 <JetButton @click="confirmLogout">
-                    Log Out Other Browser Sessions
+                    خارج شدن از دیگر دستگاه ها
                 </JetButton>
 
                 <JetActionMessage :on="form.recentlySuccessful" class="ml-3">
-                    Done.
+                    انجام شد.
                 </JetActionMessage>
             </div>
 
             <!-- Log Out Other Devices Confirmation Modal -->
             <JetDialogModal :show="confirmingLogout" @close="closeModal">
                 <template #title>
-                    Log Out Other Browser Sessions
+                    خارج شدن از دیگر دستگاه ها
                 </template>
 
                 <template #content>
-                    Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.
+                    لطفاً رمز عبور خود را وارد کنید تا تأیید کنید که می خواهید از سایر دستگاه ها خارج شوید.
 
                     <div class="mt-4">
                         <JetInput
@@ -147,7 +150,7 @@ const closeModal = () => {
 
                 <template #footer>
                     <JetSecondaryButton @click="closeModal">
-                        Cancel
+                        لغو
                     </JetSecondaryButton>
 
                     <JetButton
@@ -156,7 +159,7 @@ const closeModal = () => {
                         :disabled="form.processing"
                         @click="logoutOtherBrowserSessions"
                     >
-                        Log Out Other Browser Sessions
+                        خارج شدن از دیگر دستگاه ها
                     </JetButton>
                 </template>
             </JetDialogModal>

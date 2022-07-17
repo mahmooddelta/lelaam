@@ -41,7 +41,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <JetLabel for="password" value="رمز عبور" />
+                <JetLabel for="password" value="رمزعبور" />
                 <JetInput
                     id="password"
                     ref="passwordInput"

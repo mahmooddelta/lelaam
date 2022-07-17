@@ -2,13 +2,13 @@
 import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { useForm } from '@inertiajs/inertia-vue3';
-import JetButton from '@/Jetstream/Button.vue';
-import JetFormSection from '@/Jetstream/FormSection.vue';
-import JetInput from '@/Jetstream/Input.vue';
-import JetInputError from '@/Jetstream/InputError.vue';
-import JetLabel from '@/Jetstream/Label.vue';
-import JetActionMessage from '@/Jetstream/ActionMessage.vue';
-import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
+import JetButton from '../../../Jetstream/Button.vue';
+import JetFormSection from '../../../Jetstream/FormSection.vue';
+import JetInput from '../../../Jetstream/Input.vue';
+import JetInputError from '../../../Jetstream/InputError.vue';
+import JetLabel from '../../../Jetstream/Label.vue';
+import JetActionMessage from '../../../Jetstream/ActionMessage.vue';
+import JetSecondaryButton from '../../../Jetstream/SecondaryButton.vue';
 
 const props = defineProps({
     user: Object,
@@ -74,11 +74,11 @@ const clearPhotoFileInput = () => {
 <template>
     <JetFormSection @submitted="updateProfileInformation">
         <template #title>
-            Profile Information
+            معلومات شخصی
         </template>
 
         <template #description>
-            Update your account's profile information and email address.
+            ویرایش حساب کاربری
         </template>
 
         <template #form>
@@ -108,7 +108,7 @@ const clearPhotoFileInput = () => {
                 </div>
 
                 <JetSecondaryButton class="mt-2 mr-2" type="button" @click.prevent="selectNewPhoto">
-                    Select A New Photo
+                    انتخاب تصویر جدید
                 </JetSecondaryButton>
 
                 <JetSecondaryButton
@@ -117,7 +117,7 @@ const clearPhotoFileInput = () => {
                     class="mt-2"
                     @click.prevent="deletePhoto"
                 >
-                    Remove Photo
+                    حذف تصویر
                 </JetSecondaryButton>
 
                 <JetInputError :message="form.errors.photo" class="mt-2" />
@@ -125,7 +125,7 @@ const clearPhotoFileInput = () => {
 
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="name" value="Name" />
+                <JetLabel for="name" value="اسم کامل" />
                 <JetInput
                     id="name"
                     v-model="form.name"
@@ -138,7 +138,7 @@ const clearPhotoFileInput = () => {
 
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="email" value="Email" />
+                <JetLabel for="email" value="ایمیل" />
                 <JetInput
                     id="email"
                     v-model="form.email"
@@ -151,11 +151,11 @@ const clearPhotoFileInput = () => {
 
         <template #actions>
             <JetActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
+                ذخیره شد.
             </JetActionMessage>
 
             <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Save
+                ویرایش
             </JetButton>
         </template>
     </JetFormSection>
