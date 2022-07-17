@@ -57,7 +57,9 @@ class ChatController extends Controller
             ->whereHasSeen(false)
             ->update(['has_seen' => true, 'has_seen_at' => now()]);
         // Broadcast the event to channel
-        broadcast(new ConversationCreatedEvent($conversation, $ad));
+        if ($conversation->wasRecentlyCreated) {
+            broadcast(new ConversationCreatedEvent($conversation, $ad));
+        }
 
         $messages = $conversation->messages()->withTrashed()->with(['sender', 'receiver'])->get();
 
