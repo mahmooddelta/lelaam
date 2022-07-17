@@ -3,33 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conversation;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use function response;
+use Illuminate\Http\RedirectResponse;
+use function back;
 
 class ConversationsController extends Controller
 {
-    public function index()
+    public function destroy(Conversation $conversation): RedirectResponse
     {
+        $conversation->messages()->each(fn($message) => $message->forceDelete());
+        $conversation->delete();
 
-    }
-
-    public function store(Request $request)
-    {
-    }
-
-    public function show(Conversation $conversation)
-    {
-    }
-
-    public function update(Request $request, Conversation $conversation)
-    {
-    }
-
-    public function destroy(Conversation $conversation): JsonResponse
-    {
-        $conversation->messages()->each(fn($message) => $message->delete());
-
-        return $conversation->delete() ? response()->json(['message' => '.گفتگو حذف شد']) : response()->json(['message' => '!حذف گفتگو ناموفق بود']);;
+        return back();
     }
 }

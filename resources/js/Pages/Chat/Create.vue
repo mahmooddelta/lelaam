@@ -21,8 +21,8 @@ const props = defineProps({
     },
 });
 
-const messageDirection = message => (message?.sender?.id) === usePage().props.value.user.id ? 'justify-start' : 'justify-end';
-const messageStyle = message => (message?.sender?.id) === usePage().props.value.user.id ? 'badge badge-primary' : 'badge bg-adaptable';
+const messageDirection = message => (message?.sender?.id) === usePage().props.value.user.id ? 'place-self-start' : 'place-self-end';
+const messageStyle = message => (message?.sender?.id) === usePage().props.value.user.id ? `btn-primary p-3 rounded-2xl rounded-tr-none ${message.is_deleted ? 'italic' : ''}` : `bg-base-100 border-double border-2 border-primary-500 bg-adaptable p-4 rounded-2xl rounded-tl-none ${message.is_deleted ? 'italic' : ''}`;
 
 const form = useForm({
     message: null,
@@ -38,6 +38,22 @@ const submit = () => {
         replace: true,
         onFinish: () => {
             form.message = ''
+        },
+    });
+}
+
+const deleteMessage = (messageId) => {
+    Inertia.visit(route('chat.message.destroy', messageId), {
+        method: 'delete',
+        data: {},
+        replace: true,
+        preserveState: true,
+        preserveScroll: true,
+        onError: errors => {
+            toast.error('حذف پیام ناموفق بود!')
+        },
+        onFinish: visit => {
+            toast.success('پیام موفقانه حذف شد.')
         },
     });
 }
@@ -121,11 +137,41 @@ onMounted(() => {
         </div>
         <div class="divider"></div>
         <div id="chatList" class="w-full p-4 overflow-y-auto max-h-[19rem]">
-            <ul class="space-y-2" v-if="messages.data.length > 0">
-                <li v-for="message in messages.data" :key="message.id" class="flex"
+            <ul class="max-w-1/2 grid" v-if="messages.data.length > 0">
+                <li v-for="message in messages.data" :key="message.id"
                     :class="messageDirection(message)">
-                    <div class="relative max-w-xl p-4 rounded shadow-lg" :class="messageStyle(message)"
-                         v-text="message.body"></div>
+                    <div :class="messageStyle(message)" class="flex justify-between my-2">
+                        <div class="flex" v-if="message.is_deleted">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                            </svg>
+                            این پیام حذف شده است!
+                        </div>
+                        <div v-else v-text="message.body"></div>
+                        <div class="dropdown dropdown-right"
+                             v-if="message.sender.id === $page.props.user.id && ! message.is_deleted">
+                            <label tabindex="0" class="btn btn-xs btn-ghost ml-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                                </svg>
+                            </label>
+                            <ul tabindex="0" class="dropdown-content menu shadow bg-base-100 rounded-lg">
+                                <li>
+                                    <button @click="deleteMessage(message.id)" class="text-primary-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                        حذف
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </li>
             </ul>
             <div v-else>

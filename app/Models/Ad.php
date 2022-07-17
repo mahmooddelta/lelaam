@@ -24,6 +24,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\SlugOptions;
 use function auth;
 use function now;
+use function public_path;
 use function url;
 
 class Ad extends Model implements HasMedia
@@ -123,14 +124,31 @@ class Ad extends Model implements HasMedia
         return $this->hasMany(Conversation::class);
     }
 
+    /**
+     * @throws \League\Glide\Filesystem\FileNotFoundException
+     * @throws \Spatie\Image\Exceptions\InvalidManipulation
+     */
     public function registerMediaConversions(Media $media = null): void
     {
+        $this->addMediaConversion('ad')
+            ->width(1080)
+            ->watermark(public_path('images/logo.png'))
+            ->watermarkOpacity(50)
+            ->watermarkPadding(4, 4)
+            ->watermarkFit(Manipulations::FIT_CONTAIN)
+            ->withResponsiveImages()
+            ->nonQueued();
+
         $this->addMediaConversion('thumb')
             ->width(275)
             ->height(330)
             ->fit(Manipulations::FIT_FILL, 275, 330)
-            ->withResponsiveImages()
+            ->watermark(public_path('images/logo.png'))
+            ->watermarkOpacity(50)
+            ->watermarkPadding(4, 4)
+            ->watermarkFit(Manipulations::FIT_CONTAIN)
             ->nonQueued();
+
         $this->addMediaConversion('preview')
             ->fit(Manipulations::FIT_CROP, 300, 300)
             ->nonQueued();

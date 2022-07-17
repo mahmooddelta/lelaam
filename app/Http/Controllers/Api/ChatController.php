@@ -13,7 +13,6 @@ use App\Models\Ad;
 use App\Models\Conversation;
 use App\Models\Message;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -27,11 +26,11 @@ class ChatController extends Controller
     public function index(): AnonymousResourceCollection
     {
         return ConversationResource::collection(Conversation::query()
-                                                    ->whereReceiverId(auth('api')->id())
-                                                    ->orWhere('creator_id', auth('api')->id())
-                                                    ->with(['ad', 'creator', 'receiver'])
-                                                    ->latest()
-                                                    ->get());
+            ->whereReceiverId(auth('api')->id())
+            ->orWhere('creator_id', auth('api')->id())
+            ->with(['ad', 'creator', 'receiver'])
+            ->latest()
+            ->get());
     }
 
     public function create(Ad $ad): JsonResponse
@@ -59,23 +58,23 @@ class ChatController extends Controller
                 // Broadcast the event to channel
                 broadcast(new ConversationCreatedEvent($conversation, $ad));
 
-                $messages = $conversation->messages()->with(['sender', 'receiver'])->get();
+                $messages = $conversation->messages()->withTrashed()->with(['sender', 'receiver'])->get();
 
                 return \response()->json([
-                                             'conversation' => new ConversationResource($conversation),
-                                             'ad' => new AdResource($ad),
-                                             'messages' => MessageResource::collection($messages),
-                                         ]);
+                    'conversation' => new ConversationResource($conversation),
+                    'ad' => new AdResource($ad),
+                    'messages' => MessageResource::collection($messages),
+                ]);
             }
 
             return response()->json([
-                                        'message' => '!چت با خودتان غیرمنطقی است و ممکن نیست',
-                                    ], ResponseAlias::HTTP_UNAUTHORIZED);
+                'message' => '!چت با خودتان غیرمنطقی است و ممکن نیست',
+            ], ResponseAlias::HTTP_UNAUTHORIZED);
         }
 
         return response()->json([
-                                    'message' => '!چت با آگهی که به صورت مهمان ثبت شده ممکن نیست',
-                                ], ResponseAlias::HTTP_UNAUTHORIZED);
+            'message' => '!چت با آگهی که به صورت مهمان ثبت شده ممکن نیست',
+        ], ResponseAlias::HTTP_UNAUTHORIZED);
     }
 
     public function store(Ad $ad, StoreRequest $request): JsonResponse
@@ -84,7 +83,7 @@ class ChatController extends Controller
         if ($ad->user_id !== 0) {
             if ($ad->user_id !== auth('api')->id()) {
                 try {
-                    \DB::transaction(function () use ($request, $ad) {
+                    \DB::transaction(function() use ($request, $ad) {
                         $message = Message::create(
                             [
                                 'conversation_id' => $request->validated('conversation_id'),
@@ -104,20 +103,17 @@ class ChatController extends Controller
             }
 
             return response()->json([
-                                        'message' => '!چت با خودتان غیرمنطقی است و ممکن نیست',
-                                    ], ResponseAlias::HTTP_UNAUTHORIZED);
+                'message' => '!چت با خودتان غیرمنطقی است و ممکن نیست',
+            ], ResponseAlias::HTTP_UNAUTHORIZED);
         }
 
         return response()->json([
-                                    'message' => '!چت با آگهی که به صورت مهمان ثبت شده ممکن نیست',
-                                ], ResponseAlias::HTTP_UNAUTHORIZED);
+            'message' => '!چت با آگهی که به صورت مهمان ثبت شده ممکن نیست',
+        ], ResponseAlias::HTTP_UNAUTHORIZED);
     }
 
-    public function destroy(Ad $ad): JsonResponse
+    public function destroy(Message $message): JsonResponse
     {
-        return $ad->conversations()
-            ->where(fn(Builder $query) => $query->orWhere('creator_id', auth('api')->id())
-                ->orWhere('receiver_id', auth('api')->id()))
-            ->delete() ? response()->json(['message' => 'تاریخچه چت حذف شد.']) : response()->json(['message' => 'حذف تاریخچه چت ناموفق بود!']);
+        return $message->delete() ? response()->json(['message' => '.پیام حذف شد']) : response()->json(['message' => '!حذف پیام ناموفق بود'], ResponseAlias::HTTP_FAILED_DEPENDENCY);
     }
 }

@@ -1,6 +1,7 @@
 <script setup>
 import Container from "../Shared/Components/Container.vue";
 import {onBeforeUnmount} from "vue";
+import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     conversations: Object,
@@ -14,6 +15,22 @@ if (typeof window !== 'undefined') {
 
     onBeforeUnmount(() => {
         window.Echo.leave('conversation');
+    });
+}
+
+const deleteConversation = (conversationId) => {
+    Inertia.visit(route('conversation.destroy', conversationId), {
+        method: 'delete',
+        data: {},
+        replace: true,
+        preserveState: true,
+        preserveScroll: true,
+        onError: errors => {
+            toast.error('گفتگو ناموفق بود!')
+        },
+        onFinish: visit => {
+            toast.success('گفتگو موفقانه حذف شد.')
+        },
     });
 }
 </script>
@@ -38,20 +55,42 @@ if (typeof window !== 'undefined') {
             <h2 class="my-2 mb-2 ml-2 text-3xl text-gray-600">گفتگو ها</h2>
             <div class="divider"></div>
             <li class="overflow-y-auto max-h-[19rem]">
-                <Link v-for="conversation in conversations.data" :key="conversation.id"
-                      v-if="conversations.data.length > 0"
-                      :href="route('chat.create', {ad: conversation.ad.slug})"
-                      class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-base-100 focus:outline-none rounded">
-                    <img class="object-cover w-16 h-16"
-                         :src="conversation.ad.thumb" :alt="conversation.ad.title"/>
-                    <div class="w-full pb-2">
-                        <span class="block ml-2 font-semibold text-xl" v-text="conversation.ad.title"></span>
-                        <div class="text-sm ml-2 mt-1 text-gray-500">
-                            <p v-text="conversation.last_message_text"></p>
-                            <p v-text="conversation.last_message_time"></p>
+                <section v-for="conversation in conversations.data" :key="conversation.id"
+                         v-if="conversations.data.length > 0"
+                         class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-base-100 focus:outline-none rounded">
+                    <Link :href="route('chat.create', {ad: conversation.ad.slug})" class="flex items-center w-full">
+                        <img class="object-cover w-16 h-16"
+                             :src="conversation.ad.thumb" :alt="conversation.ad.title"/>
+                        <div class="w-full pb-2">
+                            <span class="block ml-2 font-semibold text-xl" v-text="conversation.ad.title"></span>
+                            <div class="text-sm ml-2 mt-1 text-gray-500">
+                                <p v-text="conversation.last_message_text"></p>
+                                <p v-text="conversation.last_message_time"></p>
+                            </div>
                         </div>
+                    </Link>
+                    <div class="dropdown dropdown-left dropdown-end"
+                    >
+                        <label tabindex="0" class="btn btn-xs btn-ghost">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                        </label>
+                        <ul tabindex="0" class="dropdown-content menu shadow bg-base-100 rounded-lg">
+                            <li>
+                                <button @click="deleteConversation(conversation.id)" class="text-primary-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                    حذف
+                                </button>
+                            </li>
+                        </ul>
                     </div>
-                </Link>
+                </section>
                 <div v-else>
                     <p class="text-center text-2xl">
                         گفتگویی وجود ندارد!

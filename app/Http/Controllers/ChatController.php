@@ -28,10 +28,10 @@ class ChatController extends Controller
     {
         return Inertia::render('Chat', [
             'conversations' => ConversationResource::collection(Conversation::whereReceiverId(auth()->id())
-                                                                    ->orWhere('creator_id', auth()->id())
-                                                                    ->with('ad')
-                                                                    ->latest()
-                                                                    ->get()),
+                ->orWhere('creator_id', auth()->id())
+                ->with('ad')
+                ->latest()
+                ->get()),
         ]);
     }
 
@@ -59,7 +59,7 @@ class ChatController extends Controller
         // Broadcast the event to channel
         broadcast(new ConversationCreatedEvent($conversation, $ad));
 
-        $messages = $conversation->messages()->with(['sender', 'receiver'])->get();
+        $messages = $conversation->messages()->withTrashed()->with(['sender', 'receiver'])->get();
 
         return Inertia::render('Chat/Create', [
             'conversation' => new ConversationResource($conversation),
@@ -73,7 +73,7 @@ class ChatController extends Controller
         $ad->load('media');
 
         try {
-            DB::transaction(function () use ($request, $ad) {
+            DB::transaction(function() use ($request, $ad) {
                 $message = Message::create(
                     [
                         'conversation_id' => $request->validated('conversation_id'),
@@ -88,11 +88,18 @@ class ChatController extends Controller
 
             return back()
                 ->with([
-                           'type' => 'error',
-                           'body', 'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!',
-                       ]);
+                    'type' => 'error',
+                    'body', 'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!',
+                ]);
         }
 
         return back()->with(['message' => 'پیام ارسال شد.']);
+    }
+
+    public function destroy(Message $message): RedirectResponse
+    {
+        $message->delete();
+
+        return back();
     }
 }

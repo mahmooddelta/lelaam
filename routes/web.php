@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ConversationsController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +32,7 @@ Route::post('phone/verify', [WebsiteController::class, 'phoneVerify'])
     ->middleware('auth');
 // Protected routes
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.verified'])
-    ->group(function () {
+    ->group(function() {
         Route::get('account', [AccountController::class, 'index'])
             ->name('account');
         Route::get('account/user/state/{state}/change', [AccountController::class, 'changeState'])
@@ -42,8 +43,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.veri
             ->name('post.report');
         // Chat & Messaging
         Route::get('chat', [ChatController::class, 'index'])->name('chat');
-        Route::get('chat/{ad:slug}/create', [ChatController::class, 'create'])->name('chat.create');
-        Route::post('chat/{ad:slug}/create', [ChatController::class, 'store'])->name('chat.store');
+        Route::get('chat/{ad:slug}', [ChatController::class, 'create'])->name('chat.create');
+        Route::post('chat/{ad:slug}/store', [ChatController::class, 'store'])->name('chat.store');
+        Route::delete('conversation/{conversation}/destroy', [ConversationsController::class, 'destroy'])->name('conversation.destroy');
+        Route::delete('chat/{message}/destroy', [ChatController::class, 'destroy'])->name('chat.message.destroy');
     });
 
 Route::mediaLibrary();
