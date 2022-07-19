@@ -11,6 +11,7 @@
         "php": "^8.0.2",
         "alperenersoy/filament-export": "^0.1.0@alpha",
         "ashallendesign/short-url": "^7.0",
+        "bezhansalleh/filament-google-analytics": "^0.0.2",
         "bezhansalleh/filament-shield": "1.*",
         "doctrine/dbal": "^3.3",
         "filament/filament": "^2.12",
