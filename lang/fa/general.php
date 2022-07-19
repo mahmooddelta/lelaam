@@ -162,6 +162,7 @@ return [
             'published' => 'منتشر شده',
             'not_published' => 'منتشر نشده',
             'category' => 'دسته بندی',
+            'user' => 'کاربر',
             'state' => 'ولایت',
             'district' => 'ناحیه',
             'created_on' => 'ثبت شده در تاریخ',

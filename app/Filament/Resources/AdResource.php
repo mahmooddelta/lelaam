@@ -8,6 +8,7 @@ use App\Filament\Resources\AdResource\RelationManagers;
 use App\Models\Ad;
 use App\Models\Attribute;
 use App\Models\Category;
+use App\Models\User;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -373,6 +374,9 @@ class AdResource extends Resource
                         false: fn(Builder $query) => $query->notExpired(),
                         blank: fn(Builder $query) => $query,
                     ),
+                Tables\Filters\SelectFilter::make('user_id')
+                    ->label(__('general.ads.filters.user'))
+                    ->options(User::pluck('name', 'id')->prepend('مهمان', '0')->toArray()),
             ])->bulkActions([
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
