@@ -283,7 +283,7 @@ class AdResource extends Resource
                 Tables\Columns\TextColumn::make('expires_at')
                     ->label(__('general.expires_at'))
                     ->toggleable()
-                    ->formatStateUsing(fn(Ad $record) => $record->expires_at->isPast() ? __('general.ads.filters.expired') : $record->expires_at->longRelativeToNowDiffForHumans()),
+                    ->formatStateUsing(fn(Ad $record) => $record->expires_at->isPast() ? __('general.ads.filters.expired').' در '.$record->expires_at->diffForHumans() : $record->expires_at->longRelativeToNowDiffForHumans()),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_published')
