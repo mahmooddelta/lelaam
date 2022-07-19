@@ -113,7 +113,7 @@ class UserResource extends Resource
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('state.name')
-                    ->label(__('general.users.fields.name'))
+                    ->label(__('general.users.fields.state_id'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
