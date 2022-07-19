@@ -19,6 +19,17 @@ return [
         'ads_published_chart' => 'آگهی های منتشر شده',
         'ads_not_published_chart' => 'آگهی های منتشر نشده',
     ],
+    'export' => [
+        'bulk_action_button_label' => 'ذخیره سازی یا پشتیبان گیری',
+        'file_name_field_label' => 'اسم فایل',
+        'format_field_label' => 'فرمت فایل',
+        'page_orientation_field_label' => 'جهت گیری صفحه',
+        'filters_column_field_label' => 'ستون های موردنیاز',
+        'additional_columns_field_label' => 'ستون های اضافی',
+        'additional_columns_title_field_label' => 'ستون های اضافی',
+        'additional_columns_default_value_field_label' => 'ستون های اضافی',
+        'additional_columns_add_button_label' => 'اضافه کردن ستون',
+    ],
     'actions' => [
         'status' => 'تغییر وضعیت',
     ],
