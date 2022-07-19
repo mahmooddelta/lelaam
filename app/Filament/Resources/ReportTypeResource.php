@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Filament\Resources\ReportTypeResource\Pages;
 use App\Filament\Resources\ReportTypeResource\RelationManagers;
 use App\Models\ReportType;
@@ -10,6 +11,8 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use function __;
+use function str;
 
 class ReportTypeResource extends Resource
 {
@@ -25,49 +28,61 @@ class ReportTypeResource extends Resource
     {
         return $form
             ->schema([
-                         Forms\Components\TextInput::make('name')
-                             ->label(__('general.report_types.fields.name'))
-                             ->required()
-                             ->maxLength(255),
+                Forms\Components\TextInput::make('name')
+                    ->label(__('general.report_types.fields.name'))
+                    ->required()
+                    ->maxLength(255),
 
-                         Forms\Components\Toggle::make('is_active')
-                             ->label(__('general.report_types.fields.is_active'))
-                             ->required()
-                             ->default(true),
+                Forms\Components\Toggle::make('is_active')
+                    ->label(__('general.report_types.fields.is_active'))
+                    ->required()
+                    ->default(true),
 
-                         Forms\Components\RichEditor::make('description')
-                             ->label(__('general.report_types.fields.description'))
-                             ->maxLength(16777215)
-                             ->columnSpan(2),
-                     ]);
+                Forms\Components\RichEditor::make('description')
+                    ->label(__('general.report_types.fields.description'))
+                    ->maxLength(16777215)
+                    ->columnSpan(2),
+            ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                          Tables\Columns\TextColumn::make('name')
-                              ->label(__('general.report_types.fields.name'))
-                              ->sortable()
-                              ->searchable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->label(__('general.report_types.fields.name'))
+                    ->sortable()
+                    ->searchable(),
 
-                          Tables\Columns\TextColumn::make('description')
-                              ->label(__('general.report_types.fields.description'))
-                              ->toggleable()
-                              ->limit(60),
+                Tables\Columns\TextColumn::make('description')
+                    ->label(__('general.report_types.fields.description'))
+                    ->toggleable()
+                    ->limit(60),
 
-                          Tables\Columns\BooleanColumn::make('is_active')
-                              ->label(__('general.report_types.fields.is_active'))
-                              ->sortable()
-                              ->toggleable(),
-                      ])
+                Tables\Columns\BooleanColumn::make('is_active')
+                    ->label(__('general.report_types.fields.is_active'))
+                    ->sortable()
+                    ->toggleable(),
+            ])
             ->filters([
-                          Tables\Filters\TernaryFilter::make('is_active')
-                              ->label(__('general.report_types.filters.is_active.status'))
-                              ->placeholder(__('general.report_types.filters.is_active.status_placeholder'))
-                              ->trueLabel(__('general.report_types.filters.is_active.is_active'))
-                              ->falseLabel(__('general.report_types.filters.is_active.is_inactive')),
-                      ]);
+                Tables\Filters\TernaryFilter::make('is_active')
+                    ->label(__('general.report_types.filters.is_active.status'))
+                    ->placeholder(__('general.report_types.filters.is_active.status_placeholder'))
+                    ->trueLabel(__('general.report_types.filters.is_active.is_active'))
+                    ->falseLabel(__('general.report_types.filters.is_active.is_inactive')),
+            ])->bulkActions([
+                FilamentExportBulkAction::make('export')
+                    ->label(__('general.export.bulk_action_button_label'))
+                    ->fileName(str(self::$model)->after("App\Models\\"))
+                    ->fileNameFieldLabel(__('general.export.file_name_field_label')) // Label for file name input
+                    ->formatFieldLabel(__('general.export.format_field_label')) // Label for format input
+                    ->pageOrientationFieldLabel(__('general.export.page_orientation_field_label')) // Label for page orientation input
+                    ->filterColumnsFieldLabel(__('general.export.filters_column_field_label')) // Label for filter columns input
+                    ->additionalColumnsFieldLabel(__('general.export.additional_columns_field_label')) // Label for additional columns input
+                    ->additionalColumnsTitleFieldLabel(__('general.export.additional_columns_title_field_label')) // Label for additional columns' title input
+                    ->additionalColumnsDefaultValueFieldLabel(__('general.export.additional_columns_default_value_field_label')) // Label for additional columns' default value input
+                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')) // Label for additional columns' add button,
+            ]);
     }
 
     public static function getPages(): array
