@@ -89,7 +89,7 @@ class CountryResource extends Resource
                     ->icon('heroicon-o-trash')
                     ->requiresConfirmation()
                     ->color('danger'),
-                
+
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
@@ -107,7 +107,8 @@ class CountryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\StatesRelationManager::class,
+            RelationManagers\DistrictsRelationManager::class,
         ];
     }
 
