@@ -3,6 +3,7 @@
 return [
     'created_at' => 'تاریخ ایجاد',
     'updated_at' => 'تاریخ ویرایش',
+    'expires_at' => 'تاریخ انقضا',
     'delete' => 'حذف',
     'delete_bulk' => 'حذف انتخاب شده',
     'status_helper' => 'در سایت نمایش داده شود یا نه؟',
@@ -173,6 +174,10 @@ return [
             'updated_on' => 'ویرایش شده در تاریخ',
             'updated_from' => 'ویرایش شده از تاریخ',
             'updated_until' => 'ویرایش شده تا تاریخ',
+            'expired_label' => 'منقضی شده / نشده',
+            'expired_placeholder' => 'انتخاب گزینه',
+            'expired' => 'منقضی شده',
+            'not_expired' => 'منقضی نشده',
         ],
     ],
     'attributes' => [

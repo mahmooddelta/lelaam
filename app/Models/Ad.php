@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\AdNotExpiredScope;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -169,12 +170,12 @@ class Ad extends Model implements HasMedia
 
     public function scopeExpired(Builder $query): Builder
     {
-        return $query->whereDate('expires_at', '>', now()->addMonth());
+        return $query->where('expires_at', '<', Carbon::parse($this->published_at ?? $this->created_at));
     }
 
     public function scopeNotExpired(Builder $query): Builder
     {
-        return $query->whereDate('expires_at', '<', now()->addMonth());
+        return $query->where('expires_at', '>', Carbon::parse($this->published_at ?? $this->created_at));
     }
 
     public function scopeNotPublished(Builder $query): Builder

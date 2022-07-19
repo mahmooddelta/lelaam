@@ -279,6 +279,10 @@ class AdResource extends Resource
                     ->label(__('general.created_at'))
                     ->toggleable()
                     ->formatStateUsing(fn(Ad $record) => $record->created_at->diffForHumans()),
+                Tables\Columns\TextColumn::make('expires_at')
+                    ->label(__('general.expires_at'))
+                    ->toggleable()
+                    ->formatStateUsing(fn(Ad $record) => $record->expires_at->isPast() ? __('general.ads.filters.expired') : $record->expires_at->longRelativeToNowDiffForHumans()),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_published')
@@ -359,6 +363,16 @@ class AdResource extends Resource
                                 fn(Builder $query, $date): Builder => $query->whereDate('updated_at', '<=', $date),
                             );
                     }),
+                Tables\Filters\TernaryFilter::make('expires_at')
+                    ->label(__('general.ads.filters.expired_label'))
+                    ->placeholder(__('general.ads.filters.expired_placeholder'))
+                    ->trueLabel(__('general.ads.filters.expired'))
+                    ->falseLabel(__('general.ads.filters.not_expired'))
+                    ->queries(
+                        true: fn(Builder $query) => $query->expired(),
+                        false: fn(Builder $query) => $query->notExpired(),
+                        blank: fn(Builder $query) => $query,
+                    ),
             ])->bulkActions([
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
