@@ -23,19 +23,20 @@ class WebsiteController extends Controller
                 ->whereHas('children')
                 ->with(['children' => fn($query) => $query->select(['id', 'name', 'slug', 'parent_id'])])
                 ->withCount('ads')
-                ->latest()
+                ->orderByDesc('ads_count')
+                ->take(4)
                 ->get()
-                ->map(function ($category) {
+                ->map(function($category) {
                     $category->setRelation('children', $category->children->take(5));
 
                     return $category;
                 }),
             'ads' => AdResource::collection(Ad::query()->published()
-                                                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'updated_at', 'id'])
-                                                ->with('media')
-                                                ->latest()
-                                                ->take(40)
-                                                ->get()),
+                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'updated_at', 'id'])
+                ->with('media')
+                ->latest()
+                ->take(40)
+                ->get()),
         ]);
     }
 
@@ -55,16 +56,16 @@ class WebsiteController extends Controller
         if (! isset(auth()->user()->phone)) {
             if (auth()->user()->hasVerifiedPhone()) {
                 return back()->with([
-                                        'type' => 'error',
-                                        'body', 'شماره تماس کاربر از قبل تایید شده است!',
-                                    ]);
+                    'type' => 'error',
+                    'body', 'شماره تماس کاربر از قبل تایید شده است!',
+                ]);
             }
 
             if (auth()->user()->phone !== $validated['phone']) {
                 return back()->with([
-                                        'type' => 'error',
-                                        'body', 'شماره تماس وارد شده، اشتباه است!',
-                                    ]);
+                    'type' => 'error',
+                    'body', 'شماره تماس وارد شده، اشتباه است!',
+                ]);
             }
 
             auth()
