@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Actions\Jetstream\DeleteUser;
 use App\Models\State;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
+use function array_merge;
 
 class JetstreamServiceProvider extends ServiceProvider
 {
@@ -32,8 +34,13 @@ class JetstreamServiceProvider extends ServiceProvider
 
         Jetstream::deleteUsersUsing(DeleteUser::class);
 
-        Fortify::registerView(function () {
+        Fortify::registerView(function() {
             return Inertia::render('Auth/Register', [
+                'states' => State::select(['id', 'name'])->get(),
+            ]);
+        });
+        Jetstream::inertia()->whenRendering('Profile/Show', function(Request $request, array $data) {
+            return array_merge($data, [
                 'states' => State::select(['id', 'name'])->get(),
             ]);
         });
