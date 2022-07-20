@@ -26,7 +26,7 @@ const deleteConversation = (conversationId) => {
         preserveState: true,
         preserveScroll: true,
         onError: errors => {
-            toast.error('گفتگو ناموفق بود!')
+            toast.error('حذف گفتگو ناموفق بود!')
         },
         onFinish: visit => {
             toast.success('گفتگو موفقانه حذف شد.')
@@ -58,19 +58,18 @@ const deleteConversation = (conversationId) => {
                 <section v-for="conversation in conversations.data" :key="conversation.id"
                          v-if="conversations.data.length > 0"
                          class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-base-100 focus:outline-none rounded">
-                    <Link :href="route('chat.create', {ad: conversation.ad.slug})" class="flex items-center w-full">
+                    <Link :href="route('chat.create', {ad: conversation?.ad?.slug})" class="flex items-center w-full">
                         <img class="object-cover w-16 h-16"
-                             :src="conversation.ad.thumb" :alt="conversation.ad.title"/>
+                             :src="conversation?.ad?.thumb" :alt="conversation?.ad?.title"/>
                         <div class="w-full pb-2">
-                            <span class="block ml-2 font-semibold text-xl" v-text="conversation.ad.title"></span>
+                            <span class="block ml-2 font-semibold text-xl" v-text="conversation?.ad?.title"></span>
                             <div class="text-sm ml-2 mt-1 text-gray-500">
                                 <p v-text="conversation.last_message_text"></p>
                                 <p v-text="conversation.last_message_time"></p>
                             </div>
                         </div>
                     </Link>
-                    <div class="dropdown dropdown-left dropdown-end"
-                    >
+                    <div class="dropdown dropdown-left dropdown-end">
                         <label tabindex="0" class="btn btn-xs btn-ghost">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
