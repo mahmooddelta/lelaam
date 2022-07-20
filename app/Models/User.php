@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use BezhanSalleh\FilamentShield\Traits\HasFilamentShield;
+use Cog\Contracts\Ban\Bannable as BannableContract;
+use Cog\Laravel\Ban\Traits\Bannable;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,10 +19,9 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
-use function app;
 use function is_null;
 
-class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject, MustVerifyEmail
+class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject, MustVerifyEmail, BannableContract
 {
 
     use HasApiTokens;
@@ -29,6 +30,7 @@ class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasRoles, HasFilamentShield, InteractsWithMedia;
+    use Bannable;
 
     /**
      * The attributes that are mass assignable.

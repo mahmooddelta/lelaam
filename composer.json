@@ -28,7 +28,6 @@
         "maize-tech/laravel-markable": "^1.0",
         "orangehill/iseed": "^3.0",
         "php-open-source-saver/jwt-auth": "^1.4",
-        "phpsa/filament-password-reveal": "^1.0",
         "pishran/laravel-persian-slug": "^2.2",
         "psr/simple-cache": "1.0",
         "pusher/pusher-php-server": "^7.0",
@@ -36,11 +35,13 @@
         "spatie/laravel-collection-macros": "^7.11",
         "spatie/laravel-medialibrary-pro": "2.*",
         "spatie/laravel-sluggable": "^3.4",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "ttungbmt/filament-ban": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",
         "fakerphp/faker": "^1.9.1",
+        "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
