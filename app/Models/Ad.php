@@ -185,7 +185,7 @@ class Ad extends Model implements HasMedia
 
     public function scopeTodayCreated(Builder $query): Ad|m|Builder
     {
-        return $query->whereDay('created_at', now()->day);
+        return $query->whereDay('created_at', now()->toDateString());
     }
 
     public function scopeIsOwner(Builder $query): Builder
