@@ -6,11 +6,16 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
+use Route;
+use function request;
 
 class AdNotExpiredScope implements Scope
 {
     public function apply(Builder $builder, Model $model)
     {
-        $builder->where('expires_at', '>', Carbon::parse($model->published_at ?? $model->created_at));
+        if (! (Route::is('chat') || Route::is('chat.*') || Route::is('conversation.*')
+            || \request()->is('api/*/chat') || \request()->is('api/*/conversation') || request()->is('api/*/conversations'))) {
+            $builder->where('expires_at', '>', Carbon::parse($model->published_at ?? $model->created_at));
+        }
     }
 }
