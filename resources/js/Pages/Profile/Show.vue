@@ -10,6 +10,7 @@ import UpdateProfileInformationForm from '../../Pages/Profile/Partials/UpdatePro
 defineProps({
     confirmsTwoFactorAuthentication: Boolean,
     sessions: Array,
+    states: Object,
 });
 </script>
 
@@ -24,15 +25,15 @@ defineProps({
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <div v-if="$page.props.jetstream.canUpdateProfileInformation">
-                    <UpdateProfileInformationForm :user="$page.props.user" />
+                    <UpdateProfileInformationForm :user="$page.props.user" :states="states"/>
 
-                    <JetSectionBorder />
+                    <JetSectionBorder/>
                 </div>
 
                 <div v-if="$page.props.jetstream.canUpdatePassword">
-                    <UpdatePasswordForm class="mt-10 sm:mt-0" />
+                    <UpdatePasswordForm class="mt-10 sm:mt-0"/>
 
-                    <JetSectionBorder />
+                    <JetSectionBorder/>
                 </div>
 
                 <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication">
@@ -41,15 +42,15 @@ defineProps({
                         class="mt-10 sm:mt-0"
                     />
 
-                    <JetSectionBorder />
+                    <JetSectionBorder/>
                 </div>
 
-                <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0" />
+                <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0"/>
 
                 <template v-if="$page.props.jetstream.hasAccountDeletionFeatures">
-                    <JetSectionBorder />
+                    <JetSectionBorder/>
 
-                    <DeleteUserForm class="mt-10 sm:mt-0" />
+                    <DeleteUserForm class="mt-10 sm:mt-0"/>
                 </template>
             </div>
         </div>

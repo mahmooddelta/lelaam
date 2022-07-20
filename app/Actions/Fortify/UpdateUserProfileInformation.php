@@ -14,16 +14,30 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      *
      * @param  mixed  $user
      * @param  array  $input
+     *
      * @return void
      */
     public function update($user, array $input)
     {
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['bail', 'sometimes', 'filled', 'nullable', 'string', 'email', 'max:255', Rule::unique('users')
-                ->ignore($user->id)],
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
-            'phone' => ['required', 'string', 'min:10', 'max:14', Rule::unique('users')->ignore($user->id)],
+            'name' => 'sometimes|required|string|max:255',
+            'email' => [
+                'sometimes',
+                'filled',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'phone' => [
+                'sometimes',
+                'filled',
+                'string',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'password' => 'sometimes|filled|string|min:8|confirmed',
+            'state_id' => 'sometimes|filled|integer|min:0|exists:states,id',
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
@@ -35,10 +49,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $this->updateVerifiedUser($user, $input);
         } else {
             $user->forceFill([
-                                 'name' => $input['name'],
-                                 'email' => $input['email'],
-                                 'phone' => $input['phone'],
-                             ])->save();
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'phone' => $input['phone'],
+                'state_id' => $input['state_id'],
+            ])->save();
         }
     }
 
@@ -47,17 +62,18 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      *
      * @param  mixed  $user
      * @param  array  $input
+     *
      * @return void
      */
     protected function updateVerifiedUser($user, array $input)
     {
         $user->forceFill([
-                             'name' => $input['name'],
-                             'email' => $input['email'],
-                             'email_verified_at' => null,
-                             'phone' => $input['phone'],
-                             'phone_verified_at' => null,
-                         ])->save();
+            'name' => $input['name'],
+            'email' => $input['email'],
+            'email_verified_at' => null,
+            'phone' => $input['phone'],
+            'phone_verified_at' => null,
+        ])->save();
 
         $user->sendEmailVerificationNotification();
     }

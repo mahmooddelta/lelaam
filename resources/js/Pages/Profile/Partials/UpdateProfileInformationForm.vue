@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
-import { useForm } from '@inertiajs/inertia-vue3';
+import {ref} from 'vue';
+import {Inertia} from '@inertiajs/inertia';
+import {useForm} from '@inertiajs/inertia-vue3';
 import JetButton from '../../../Jetstream/Button.vue';
 import JetFormSection from '../../../Jetstream/FormSection.vue';
 import JetInput from '../../../Jetstream/Input.vue';
@@ -9,9 +9,11 @@ import JetInputError from '../../../Jetstream/InputError.vue';
 import JetLabel from '../../../Jetstream/Label.vue';
 import JetActionMessage from '../../../Jetstream/ActionMessage.vue';
 import JetSecondaryButton from '../../../Jetstream/SecondaryButton.vue';
+import ClientOnly from '@duannx/vue-client-only';
 
 const props = defineProps({
     user: Object,
+    states: Object,
 });
 
 const form = useForm({
@@ -19,6 +21,8 @@ const form = useForm({
     name: props.user.name,
     email: props.user.email,
     photo: null,
+    phone: props.user.phone,
+    state_id: props.user.state_id ?? 'انتخاب ولایت',
 });
 
 const photoPreview = ref(null);
@@ -43,7 +47,7 @@ const selectNewPhoto = () => {
 const updatePhotoPreview = () => {
     const photo = photoInput.value.files[0];
 
-    if (! photo) return;
+    if (!photo) return;
 
     const reader = new FileReader();
 
@@ -92,7 +96,7 @@ const clearPhotoFileInput = () => {
                     @change="updatePhotoPreview"
                 >
 
-                <JetLabel for="photo" value="Photo" />
+                <JetLabel for="photo" value="Photo"/>
 
                 <!-- Current Profile Photo -->
                 <div v-show="! photoPreview" class="mt-2">
@@ -120,12 +124,12 @@ const clearPhotoFileInput = () => {
                     حذف تصویر
                 </JetSecondaryButton>
 
-                <JetInputError :message="form.errors.photo" class="mt-2" />
+                <JetInputError :message="form.errors.photo" class="mt-2"/>
             </div>
 
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="name" value="اسم کامل" />
+                <JetLabel for="name" value="اسم کامل"/>
                 <JetInput
                     id="name"
                     v-model="form.name"
@@ -133,19 +137,42 @@ const clearPhotoFileInput = () => {
                     class="mt-1 block w-full"
                     autocomplete="name"
                 />
-                <JetInputError :message="form.errors.name" class="mt-2" />
+                <JetInputError :message="form.errors.name" class="mt-2"/>
             </div>
 
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="email" value="ایمیل" />
+                <JetLabel for="email" value="ایمیل"/>
                 <JetInput
                     id="email"
                     v-model="form.email"
                     type="email"
                     class="mt-1 block w-full"
                 />
-                <JetInputError :message="form.errors.email" class="mt-2" />
+                <JetInputError :message="form.errors.email" class="mt-2"/>
+            </div>
+
+            <!-- Phone -->
+            <div class="col-span-6 sm:col-span-4">
+                <JetLabel for="phone" value="شماره تماس"/>
+                <JetInput
+                    id="phone"
+                    v-model="form.phone"
+                    type="phone"
+                    class="mt-1 block w-full"
+                />
+                <JetInputError :message="form.errors.phone" class="mt-2"/>
+            </div>
+
+            <!-- State -->
+            <div class="col-span-6 sm:col-span-4">
+                <JetLabel for="state" value="ولایت"/>
+                <select name="state" id="state" class="select select-bordered w-full mt-1 block" v-model="form.state_id"
+                        placeholder="انتخاب ولایت">
+                    <option selected disabled>انتخاب ولایت</option>
+                    <option v-for="state in states" :key="state.id" :value="state.id" v-text="state.name"></option>
+                </select>
+                <JetInputError :message="form.errors.state_id" class="mt-2"/>
             </div>
         </template>
 
@@ -160,3 +187,18 @@ const clearPhotoFileInput = () => {
         </template>
     </JetFormSection>
 </template>
+<script>
+import {defineAsyncComponent} from "vue";
+
+export default {
+    name: "UpdateProfileInformationForm",
+    components: {
+        VOtpInput: defineAsyncComponent(() => {
+            if (typeof window !== 'undefined') {
+                return import('vue3-otp-input')
+                    .then(module => module.default)
+            }
+        })
+    },
+}
+</script>
