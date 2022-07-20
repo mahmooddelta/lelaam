@@ -115,19 +115,19 @@ const disableTwoFactorAuthentication = () => {
         </template>
 
         <template #content>
-            <h3 v-if="twoFactorEnabled && ! confirming" class="text-lg font-medium text-gray-900">
+            <h3 v-if="twoFactorEnabled && ! confirming" class="text-lg font-medium">
                 شما تایید دومرحله ای را فعال نموده اید.
             </h3>
 
-            <h3 v-else-if="twoFactorEnabled && confirming" class="text-lg font-medium text-gray-900">
+            <h3 v-else-if="twoFactorEnabled && confirming" class="text-lg font-medium">
                 اتمام مراحل فعال سازی تایید دومرحله ای.
             </h3>
 
-            <h3 v-else class="text-lg font-medium text-gray-900">
+            <h3 v-else class="text-lg font-medium">
                 شما تایید دومرحله ای را فعال ننموده اید.
             </h3>
 
-            <div class="mt-3 max-w-xl text-sm text-gray-600">
+            <div class="mt-3 max-w-xl text-sm">
                 <p>
                     وقتی تایید دومرحله ای فعال است، از شما خواسته میشود تا یک توکن امن و تصادفی را وارد کنید. شما میتوانید این توکن را از برنامه Google Authenticator در گوشی تان بدست آورید.
                 </p>
@@ -135,7 +135,7 @@ const disableTwoFactorAuthentication = () => {
 
             <div v-if="twoFactorEnabled">
                 <div v-if="qrCode">
-                    <div class="mt-4 max-w-xl text-sm text-gray-600">
+                    <div class="mt-4 max-w-xl text-sm">
                         <p v-if="confirming" class="font-semibold">
                             برای پایان دادن به فعال کردن احراز هویت دو مرحله ای، کد QR زیر را با استفاده از برنامه احراز هویت گوشی خود اسکن کنید یا کلید تنظیم را وارد کرده و کد OTP تولید شده را ارائه دهید.
                         </p>
@@ -147,7 +147,7 @@ const disableTwoFactorAuthentication = () => {
 
                     <div class="mt-4" v-html="qrCode" />
 
-                    <div class="mt-4 max-w-xl text-sm text-gray-600" v-if="setupKey">
+                    <div class="mt-4 max-w-xl text-sm" v-if="setupKey">
                         <p class="font-semibold">
                             کلید تنظیمات:
                             <span v-html="setupKey"></span>
@@ -174,7 +174,7 @@ const disableTwoFactorAuthentication = () => {
                 </div>
 
                 <div v-if="recoveryCodes.length > 0 && ! confirming">
-                    <div class="mt-4 max-w-xl text-sm text-gray-600">
+                    <div class="mt-4 max-w-xl text-sm">
                         <p class="font-semibold">
                             این کدهای بازیابی را در یک مدیر رمز عبور امن ذخیره کنید. اگر دستگاه احراز هویت دو مرحله ای شما گم شود، می توان از آنها برای بازیابی دسترسی به حساب شما استفاده کرد.
                         </p>

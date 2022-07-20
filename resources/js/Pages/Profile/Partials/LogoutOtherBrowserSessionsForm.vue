@@ -53,7 +53,7 @@ const closeModal = () => {
         </template>
 
         <template #content>
-            <div class="max-w-xl text-sm text-gray-600">
+            <div class="max-w-xl text-sm">
                 در صورت لزوم، می توانید از تمام جلسات مرورگر دیگر خود در همه دستگاه های خود خارج شوید. برخی از جلسات اخیر شما در زیر فهرست شده است. با این حال، این فهرست ممکن است جامع نباشد. اگر احساس می کنید حساب شما به خطر افتاده است، باید رمز عبور خود را نیز به روز کنید.
             </div>
 
@@ -69,7 +69,7 @@ const closeModal = () => {
                             stroke-width="2"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
-                            class="w-8 h-8 text-gray-500"
+                            class="w-8 h-8"
                         >
                             <path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
@@ -83,7 +83,7 @@ const closeModal = () => {
                             fill="none"
                             stroke-linecap="round"
                             stroke-linejoin="round"
-                            class="w-8 h-8 text-gray-500"
+                            class="w-8 h-8"
                         >
                             <path d="M0 0h24v24H0z" stroke="none" /><rect
                                 x="7"
@@ -96,12 +96,12 @@ const closeModal = () => {
                     </div>
 
                     <div class="ml-3">
-                        <div class="text-sm text-gray-600">
+                        <div class="text-sm">
                             {{ session.agent.platform ? session.agent.platform : 'نامعلوم' }} - {{ session.agent.browser ? session.agent.browser : 'نامعلوم' }}
                         </div>
 
                         <div>
-                            <div class="text-xs text-gray-500">
+                            <div class="text-xs">
                                 {{ session.ip_address }},
 
                                 <span v-if="session.is_current_device" class="text-green-500 font-semibold">دستگاه فعلی</span>
