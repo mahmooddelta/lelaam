@@ -19,8 +19,8 @@ class ConversationResource extends JsonResource
         return [
             'id' => $this->id,
 
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at->diffForHumans(),
+            'updated_at' => $this->when($this->updated_at, $this->updated_at->diffForHumans()),
             'messages_count' => $this->when($this->messages_count, $this->messages_count),
 
             'ad' => new AdResource($this->whenLoaded('ad')),
