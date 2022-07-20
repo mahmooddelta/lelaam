@@ -32,7 +32,7 @@ class AccountController extends Controller
                 ->user()
                 ?->reports()
                 ->active()
-                ->with(['ad:id,title,slug'])
+                ->with(['ad' => fn($query) => $query->withoutGlobalScope(AdNotExpiredScope::class)->select(['id', 'title', 'slug'])])
                 ->get()),
             'user_state' => auth()->user()->state_id,
         ]);
