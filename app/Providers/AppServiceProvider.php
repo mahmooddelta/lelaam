@@ -27,15 +27,13 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      *
      * @return void
+     * @throws \Exception
      */
     public function boot()
     {
-        Filament::serving(function() {
-            Filament::registerTheme('');
-            Filament::pushMeta([
-                (new Vite())(['resources/js/app.js']),
-            ]);
-        });
+        Filament::registerTheme(
+            app(Vite::class)('resources/js/app.js'),
+        );
 
         Str::macro('persian_slug', function($string, $separator = '-') {
             $string = trim($string);
