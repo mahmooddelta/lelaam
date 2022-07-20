@@ -18,13 +18,11 @@ class DashboardStats extends BaseWidget
     protected function getCards(): array
     {
         return [
-            Card::make(__('general.widgets.num_categories'), Category::count())
+            Card::make(__('general.widgets.num_categories'), Category::visible()->count())
                 ->icon('heroicon-s-tag')
                 ->color('success')
                 ->url('admin/categories'),
-            Card::make(__('general.widgets.num_users'), User::query()
-                ->whereHas('roles', fn(Builder $builder) => $builder->whereNot('name', 'super_admin'))
-                ->count())
+            Card::make(__('general.widgets.num_users'), User::query()->whereHas('roles', fn(Builder $builder) => $builder->whereNot('name', 'super_admin'))->count())
                 ->icon('heroicon-s-users')
                 ->color('warning')
                 ->url('admin/users'),

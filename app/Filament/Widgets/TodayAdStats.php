@@ -18,15 +18,11 @@ class TodayAdStats extends BaseWidget
                 ->icon('heroicon-s-calendar')
                 ->color('primary'),
 
-            Card::make(__('general.widgets.today_num_published_ads'), Ad::todayCreated()
-                ->published()
-                ->count())
+            Card::make(__('general.widgets.today_num_published_ads'), Ad::todayCreated()->published()->count())
                 ->icon('heroicon-s-badge-check')
                 ->color('primary'),
 
-            Card::make(__('general.widgets.today_num_not_published_ads'), Ad::todayCreated()
-                ->notPublished()
-                ->count())
+            Card::make(__('general.widgets.today_num_not_published_ads'), Ad::todayCreated()->notPublished()->count())
                 ->icon('heroicon-s-ban')
                 ->color('primary'),
 
