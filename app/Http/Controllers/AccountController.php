@@ -37,15 +37,4 @@ class AccountController extends Controller
             'user_state' => auth()->user()->state_id,
         ]);
     }
-
-    public function changeState(State $state): RedirectResponse
-    {
-        auth()->user()?->update(['state_id' => $state->id]);
-
-        return back()
-            ->with([
-                'type' => 'success',
-                'body' => 'ولایت شما تغییر یافت.',
-            ]);
-    }
 }

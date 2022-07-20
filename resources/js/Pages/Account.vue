@@ -3,8 +3,6 @@
 import Container from "../Shared/Components/Container.vue";
 import Collapse from "../Shared/Components/Collapse.vue";
 import Ad from "../Shared/Ad.vue"
-import {ref, watch} from "vue";
-import {Inertia} from "@inertiajs/inertia";
 import {usePage} from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
@@ -14,14 +12,6 @@ const props = defineProps({
     last_views: Object,
     user_state: Number,
     reports: Object,
-})
-const selectedState = ref(props.user_state ?? null);
-watch(selectedState, (value) => {
-    Inertia.visit(route('account.user.state.change', {state: value}, {
-        preserveState: true,
-        preserveScroll: true,
-        replace: true,
-    }))
 })
 
 const badgeType = type => {
@@ -137,18 +127,6 @@ const pageTitle = usePage().props.value.user ? `${usePage().props.value.user.nam
         </Collapse>
 
         <div class="divider"></div>
-
-        <Collapse title="تغییر ولایت">
-            <section class="w-full grid grid-cols-4 md:grid-cols-4 gap-4 px-4">
-                <div class="form-control" v-for="state in states" :key="state.id">
-                    <label class="label cursor-pointer flex justify-start">
-                        <input type="radio" name="states" class="radio checked:bg-red-500" v-model="selectedState"
-                               :value="state.id"/>
-                        <span class="label-text px-2" v-text="state.name"></span>
-                    </label>
-                </div>
-            </section>
-        </Collapse>
 
         <Collapse title="پشتیبانی و راهنمایی">
             <section class="flex justify-center">

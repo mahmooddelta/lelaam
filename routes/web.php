@@ -35,8 +35,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.veri
     ->group(function() {
         Route::get('account', [AccountController::class, 'index'])
             ->name('account');
-        Route::get('account/user/state/{state}/change', [AccountController::class, 'changeState'])
-            ->name('account.user.state.change');
         Route::get('post/{ad:slug}/bookmark', [AdController::class, 'bookmark'])
             ->name('ad.bookmark');
         Route::post('post/{ad:slug}/report', [AdController::class, 'report'])
