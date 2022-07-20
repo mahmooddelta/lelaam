@@ -2,7 +2,7 @@
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 import Container from "../../Shared/Components/Container.vue";
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import {scrollToBottom} from "../../custom";
 
 const props = defineProps({
@@ -94,6 +94,8 @@ if (typeof window !== 'undefined') {
 
 const title = () => ` گفتگو درباره ${usePage().props.value.ad.data?.title}` ?? 'گفتگو';
 
+const isCreator = computed(() => props.ad.user === usePage().props.value.user.name)
+
 onMounted(() => {
     scrollToBottom('#chatList');
 });
@@ -102,7 +104,8 @@ onMounted(() => {
     <Head :title="title()"/>
     <Container>
         <div class="md:flex md:items-center md:justify-between">
-            <Link as="div" class="flex justify-center md:justify-end cursor-pointer items-center pb-2 md:pb-0"
+            <Link v-if="! isCreator" as="div"
+                  class="flex justify-center md:justify-end cursor-pointer items-center pb-2 md:pb-0"
                   :href="route('ad.show', { ad: ad.data?.slug })"
                   title="رفتن به مشخصات آگهی">
                 <img class="object-cover w-16 h-16"
@@ -115,15 +118,35 @@ onMounted(() => {
                     </section>
                 </span>
             </Link>
+            <div v-else class="flex justify-center md:justify-end cursor-pointer items-center pb-2 md:pb-0">
+                <img class="object-cover w-16 h-16"
+                     :src="conversation.data.creator?.profile_photo_url"
+                     :alt="`${conversation.data.creator?.name} profile picture`"/>
+                <span class="ml-2 font-bold text-gray-600 text-2xl">
+                    {{ conversation.data.creator?.name }}
+                    <section v-if="isTyping" class="text-sm text-gray-500">
+                        <i>در حال تایپ...</i>
+                    </section>
+                </span>
+            </div>
             <div class="flex justify-between md:justify-end py-4 md:py-0">
-                <a v-if="ad.data?.phone_number" :href="`tel:${ad.data?.phone_number}`"
+                <a v-if="ad.data?.phone_number && ! isCreator" :href="`tel:${ad.data?.phone_number}`"
                    class="btn btn-primary btn-sm mr-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                               d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                     </svg>
-                    تماس
+                    تماس با فروشنده
+                </a>
+                <a v-else :href="`tel:${conversation.data.creator?.phone}`"
+                   class="btn btn-primary btn-sm mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                    </svg>
+                    تماس با خریدار
                 </a>
                 <Link :href="route('chat')"
                       class="btn btn-primary btn-sm mr-2">
