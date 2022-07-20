@@ -141,7 +141,7 @@ onMounted(() => {
                 <li tabindex="0" v-for="message in messages.data" :key="message.id"
                     class="dropdown dropdown-start"
                     :class="messageDirection(message)">
-                    <div :class="messageStyle(message)" class="my-2">
+                    <div :class="messageStyle(message)" class="my-2 max-w-xl">
                         <div class="flex" v-if="message.is_deleted">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -151,7 +151,7 @@ onMounted(() => {
                             این پیام حذف شده است!
                         </div>
                         <div v-else v-text="message.body" class="break-all"></div>
-                        <!-- !TODO find a good design for {{ message.created_at}} -->
+                        <small class="text-sm italic text-left" v-text="message.created_at"></small>
                     </div>
                     <div v-if="message.sender.id === $page.props.user.id && ! message.is_deleted">
                         <ul tabindex="0" class="dropdown-content menu shadow bg-base-100 rounded-lg">
