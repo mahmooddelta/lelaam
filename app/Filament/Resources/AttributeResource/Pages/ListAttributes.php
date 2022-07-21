@@ -3,16 +3,17 @@
 namespace App\Filament\Resources\AttributeResource\Pages;
 
 use App\Filament\Resources\AttributeResource;
-use App\Models\Attribute;
+use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Database\Eloquent\Builder;
 
 class ListAttributes extends ListRecords
 {
     protected static string $resource = AttributeResource::class;
 
-    protected function getTableQuery(): Builder
+    protected function getActions(): array
     {
-        return Attribute::query()->latest();
+        return [
+            Actions\CreateAction::make(),
+        ];
     }
 }

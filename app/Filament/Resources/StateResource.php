@@ -7,18 +7,16 @@ use App\Filament\Resources\StateResource\Pages;
 use App\Filament\Resources\StateResource\RelationManagers;
 use App\Models\Country;
 use App\Models\State;
-use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Collection;
-use function __;
-use function str;
+use Filament\Tables\Columns\TextColumn;
 
 class StateResource extends Resource
 {
-
     protected static ?string $model = State::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-map';
@@ -29,13 +27,13 @@ class StateResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('country_id')
+                Select::make('country_id')
                     ->options(Country::select('id', 'name')
                         ->pluck('name', 'id')
                         ->toArray())
                     ->label(__('general.states.fields.country_id'))
                     ->required(),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->label(__('general.states.fields.name'))
                     ->required()
                     ->maxLength(255),
@@ -46,29 +44,25 @@ class StateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label(__('general.states.fields.name'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('country.name')
+                TextColumn::make('country.name')
                     ->label(__('general.states.fields.country_id'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
             ])
             ->filters([
-
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkAction::make('delete')
-                    ->label(__('general.delete_bulk'))
-                    ->action(fn(Collection $records) => $records->each(fn(State $record) => $record->delete()))
-                    ->icon('heroicon-o-trash')
-                    ->requiresConfirmation()
-                    ->color('danger'),
-
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
@@ -79,7 +73,8 @@ class StateResource extends Resource
                     ->additionalColumnsFieldLabel(__('general.export.additional_columns_field_label')) // Label for additional columns input
                     ->additionalColumnsTitleFieldLabel(__('general.export.additional_columns_title_field_label')) // Label for additional columns' title input
                     ->additionalColumnsDefaultValueFieldLabel(__('general.export.additional_columns_default_value_field_label')) // Label for additional columns' default value input
-                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')) // Label for additional columns' add button,
+                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')), // Label for additional columns' add button
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
@@ -87,6 +82,15 @@ class StateResource extends Resource
     {
         return [
             RelationManagers\DistrictsRelationManager::class,
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListStates::route('/'),
+            'create' => Pages\CreateState::route('/create'),
+            'edit' => Pages\EditState::route('/{record}/edit'),
         ];
     }
 
@@ -103,14 +107,5 @@ class StateResource extends Resource
     protected static function getNavigationGroup(): ?string
     {
         return __('nav.location');
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListStates::route('/'),
-            'create' => Pages\CreateState::route('/create'),
-            'edit' => Pages\EditState::route('/{record}/edit'),
-        ];
     }
 }

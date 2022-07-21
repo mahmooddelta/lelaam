@@ -6,16 +6,19 @@ use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
-use Filament\Forms;
+use Filament\Forms\Components\MultiSelect;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\BooleanColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
-use function __;
 use function str;
-use function trans;
 
 class UserResource extends Resource
 {
@@ -25,55 +28,41 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    public static function getLabel(): string
-    {
-        return trans('general.users.title');
-    }
-
-    public static function getPluralLabel(): string
-    {
-        return trans('general.users.title_plural');
-    }
-
-    protected static function getNavigationGroup(): ?string
-    {
-        return __('nav.users_roles');
-    }
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->label(__('general.users.fields.name'))
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->label(__('general.users.fields.email'))
                     ->email()
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('phone')
+                TextInput::make('phone')
                     ->label(__('general.users.fields.phone'))
                     ->tel()
                     ->maxLength(20),
 
-                Forms\Components\TextInput::make('password')
+                TextInput::make('password')
                     ->label(__('general.users.fields.password'))
                     ->password()
                     ->required()
                     ->maxLength(255)
                     ->dehydrateStateUsing(fn($state) => ! empty($state) ? Hash::make($state) : ""),
 
-                Forms\Components\Select::make('state_id')
+                Select::make('state_id')
                     ->label(__('general.users.fields.state_id'))
                     ->relationship('state', 'name')
                     ->nullable(),
 
-                Forms\Components\MultiSelect::make('roles')
+                MultiSelect::make('roles')
                     ->relationship('roles', 'name')
+                    ->preload()
                     ->label(trans('general.users.fields.roles')),
             ]);
     }
@@ -82,50 +71,58 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label(__('general.users.fields.name'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->label(__('general.users.fields.email'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\BooleanColumn::make('email_verified_at')
+                BooleanColumn::make('email_verified_at')
                     ->label(__('general.users.fields.email_verified_at'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('phone')
+                TextColumn::make('phone')
                     ->label(__('general.users.fields.phone'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\BooleanColumn::make('phone_verified_at')
+                BooleanColumn::make('phone_verified_at')
                     ->label(__('general.users.fields.phone_verified_at'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('state.name')
+                Tables\Columns\BadgeColumn::make('roles.name')
+                    ->formatStateUsing(fn($state) => $state ? str($state)->replace('_', ' ')->title() : 'بدون نقش')
+                    ->colors(['primary'])
+                    ->label(__('general.users.fields.roles'))
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('state.name')
                     ->label(__('general.users.fields.state_id'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label(__('general.created_at'))
                     ->searchable()
                     ->sortable()
                     ->toggleable()
                     ->formatStateUsing(fn(User $record) => $record->created_at->diffForHumans() ?? ''),
 
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
                     ->searchable()
                     ->sortable()
@@ -133,7 +130,7 @@ class UserResource extends Resource
                     ->formatStateUsing(fn(User $record) => $record->updated_at->diffForHumans() ?? ''),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('email_verified_at')
+                TernaryFilter::make('email_verified_at')
                     ->nullable()
                     ->label(__('general.users.filters.email.status'))
                     ->placeholder(__('general.users.filters.email.status_placeholder'))
@@ -144,7 +141,7 @@ class UserResource extends Resource
                         false: fn(Builder $query) => $query->whereNull('email_verified_at'),
                         blank: fn(Builder $query) => $query,
                     ),
-                Tables\Filters\TernaryFilter::make('phone_verified_at')
+                TernaryFilter::make('phone_verified_at')
                     ->nullable()
                     ->label(__('general.users.filters.phone.status'))
                     ->placeholder(__('general.users.filters.phone.status_placeholder'))
@@ -155,7 +152,11 @@ class UserResource extends Resource
                         false: fn(Builder $query) => $query->whereNull('phone_verified_at'),
                         blank: fn(Builder $query) => $query,
                     ),
-            ])->bulkActions([
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
@@ -166,7 +167,8 @@ class UserResource extends Resource
                     ->additionalColumnsFieldLabel(__('general.export.additional_columns_field_label')) // Label for additional columns input
                     ->additionalColumnsTitleFieldLabel(__('general.export.additional_columns_title_field_label')) // Label for additional columns' title input
                     ->additionalColumnsDefaultValueFieldLabel(__('general.export.additional_columns_default_value_field_label')) // Label for additional columns' default value input
-                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')) // Label for additional columns' add button,
+                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')), // Label for additional columns' add button
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
@@ -184,5 +186,20 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getLabel(): string
+    {
+        return trans('general.users.title');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return trans('general.users.title_plural');
+    }
+
+    protected static function getNavigationGroup(): ?string
+    {
+        return __('nav.users_roles');
     }
 }

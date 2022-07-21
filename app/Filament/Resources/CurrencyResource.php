@@ -11,18 +11,19 @@ use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
+use Filament\Tables;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
-use function __;
-use function str;
+use Filament\Tables\Filters\TernaryFilter;
 
 class CurrencyResource extends Resource
 {
-
     protected static ?string $model = Currency::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+
     protected static ?int $navigationSort = 999;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
@@ -46,17 +47,26 @@ class CurrencyResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('symbol')
-                    ->label(__('general.currencies.fields.name'))
+                    ->label(__('general.currencies.fields.symbol'))
                     ->searchable(),
                 TextColumn::make('name')
-                    ->label(__('general.currencies.fields.symbol'))
+                    ->label(__('general.currencies.fields.name'))
                     ->searchable(),
                 BooleanColumn::make('is_active')
                     ->label(__('general.currencies.fields.is_active')),
             ])
             ->filters([
-                //
-            ])->bulkActions([
+                TernaryFilter::make('is_active')
+                    ->label(__('general.reports.filters.is_active.label'))
+                    ->placeholder(__('general.reports.filters.is_active.label_placeholder'))
+                    ->trueLabel(__('general.reports.filters.is_active.is_active'))
+                    ->falseLabel(__('general.reports.filters.is_active.is_inactive')),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
@@ -67,23 +77,15 @@ class CurrencyResource extends Resource
                     ->additionalColumnsFieldLabel(__('general.export.additional_columns_field_label')) // Label for additional columns input
                     ->additionalColumnsTitleFieldLabel(__('general.export.additional_columns_title_field_label')) // Label for additional columns' title input
                     ->additionalColumnsDefaultValueFieldLabel(__('general.export.additional_columns_default_value_field_label')) // Label for additional columns' default value input
-                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')) // Label for additional columns' add button,
+                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')), // Label for additional columns' add button
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCurrencies::route('/'),
-            'create' => Pages\CreateCurrency::route('/create'),
-            'edit' => Pages\EditCurrency::route('/{record}/edit'),
+            'index' => Pages\ManageCurrencies::route('/'),
         ];
     }
 

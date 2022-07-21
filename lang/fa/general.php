@@ -149,6 +149,7 @@ return [
             'attribute_values_section' => 'مقدار ویژگی ها',
             'no_user' => 'مهمان',
             'negotiable' => 'توافقی',
+            'attributes_relation_manager_select' => 'یک ویژگی انتخاب نمائید'
         ],
         'relations' => [
             'attributes' => [

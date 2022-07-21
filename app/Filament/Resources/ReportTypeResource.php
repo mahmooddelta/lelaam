@@ -6,13 +6,16 @@ use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Filament\Resources\ReportTypeResource\Pages;
 use App\Filament\Resources\ReportTypeResource\RelationManagers;
 use App\Models\ReportType;
-use Filament\Forms;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use function __;
-use function str;
+use Filament\Tables\Columns\BooleanColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 
 class ReportTypeResource extends Resource
 {
@@ -28,17 +31,17 @@ class ReportTypeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->label(__('general.report_types.fields.name'))
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\Toggle::make('is_active')
+                Toggle::make('is_active')
                     ->label(__('general.report_types.fields.is_active'))
                     ->required()
                     ->default(true),
 
-                Forms\Components\RichEditor::make('description')
+                RichEditor::make('description')
                     ->label(__('general.report_types.fields.description'))
                     ->maxLength(16777215)
                     ->columnSpan(2),
@@ -49,28 +52,33 @@ class ReportTypeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label(__('general.report_types.fields.name'))
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->label(__('general.report_types.fields.description'))
                     ->toggleable()
                     ->limit(60),
 
-                Tables\Columns\BooleanColumn::make('is_active')
+                BooleanColumn::make('is_active')
                     ->label(__('general.report_types.fields.is_active'))
                     ->sortable()
                     ->toggleable(),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('is_active')
+                TernaryFilter::make('is_active')
                     ->label(__('general.report_types.filters.is_active.status'))
                     ->placeholder(__('general.report_types.filters.is_active.status_placeholder'))
                     ->trueLabel(__('general.report_types.filters.is_active.is_active'))
                     ->falseLabel(__('general.report_types.filters.is_active.is_inactive')),
-            ])->bulkActions([
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
@@ -81,7 +89,8 @@ class ReportTypeResource extends Resource
                     ->additionalColumnsFieldLabel(__('general.export.additional_columns_field_label')) // Label for additional columns input
                     ->additionalColumnsTitleFieldLabel(__('general.export.additional_columns_title_field_label')) // Label for additional columns' title input
                     ->additionalColumnsDefaultValueFieldLabel(__('general.export.additional_columns_default_value_field_label')) // Label for additional columns' default value input
-                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')) // Label for additional columns' add button,
+                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')), // Label for additional columns' add button
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 

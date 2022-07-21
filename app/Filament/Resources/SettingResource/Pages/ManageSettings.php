@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\AdReportResource\Pages;
+namespace App\Filament\Resources\SettingResource\Pages;
 
-use App\Filament\Resources\AdReportResource;
+use App\Filament\Resources\SettingResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
-class ManageAdReports extends ManageRecords
+class ManageSettings extends ManageRecords
 {
-    protected static string $resource = AdReportResource::class;
+    protected static string $resource = SettingResource::class;
 
     protected function getActions(): array
     {

@@ -15,13 +15,12 @@ use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
+use Filament\Tables;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
-use function __;
-use function str;
 
 class AdReportResource extends Resource
 {
@@ -134,7 +133,12 @@ class AdReportResource extends Resource
                     ->trueLabel(__('general.reports.filters.is_active.is_active'))
                     ->falseLabel(__('general.reports.filters.is_active.is_inactive')),
             ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
             ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
@@ -169,5 +173,10 @@ class AdReportResource extends Resource
     protected static function getNavigationGroup(): ?string
     {
         return __('nav.leelam');
+    }
+
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::$model::active()->whereStatus('pending')->count();
     }
 }

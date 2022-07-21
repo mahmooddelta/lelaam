@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
+use App\Events\AdPublishStatusChangedEvent;
 use App\Filament\Resources\AdResource\Pages;
 use App\Filament\Resources\AdResource\RelationManagers;
 use App\Models\Ad;
@@ -26,6 +27,8 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
@@ -377,7 +380,41 @@ class AdResource extends Resource
                 Tables\Filters\SelectFilter::make('user_id')
                     ->label(__('general.ads.filters.user'))
                     ->options(User::pluck('name', 'id')->prepend('مهمان', '0')->toArray()),
-            ])->bulkActions([
+            ])
+            ->actions([
+                Action::make('status')
+                    ->label(__('general.actions.status'))
+                    ->icon('heroicon-o-refresh')
+                    ->color('primary')
+                    ->visible(fn(Ad $record): bool => auth()->user()?->can('update', $record))
+                    ->action(function(Ad $record) {
+                        broadcast(new AdPublishStatusChangedEvent($record))->toOthers();
+
+                        return $record->update(
+                            [
+                                'is_published' => ! $record->is_published,
+                                'published_at' => ! $record->is_published ? now()->toDateTimeString() : null,
+                            ]);
+                    }),
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                BulkAction::make('status')
+                    ->label(__('general.actions.status'))
+                    ->icon('heroicon-o-refresh')
+                    ->color('primary')
+                    ->visible(fn(Ad $record): bool => auth()->user()?->can('update', $record))
+                    ->action(fn(Collection $records) => $records->each(function($record) {
+                        broadcast(new AdPublishStatusChangedEvent($record));
+
+                        return $record->update(
+                            [
+                                'is_published' => ! $record->is_published,
+                                'published_at' => ! $record->is_published ? now()->toDateTimeString() : null,
+                            ]);
+                    }))
+                    ->deselectRecordsAfterCompletion()
+                    ->requiresConfirmation(),
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
@@ -388,7 +425,8 @@ class AdResource extends Resource
                     ->additionalColumnsFieldLabel(__('general.export.additional_columns_field_label')) // Label for additional columns input
                     ->additionalColumnsTitleFieldLabel(__('general.export.additional_columns_title_field_label')) // Label for additional columns' title input
                     ->additionalColumnsDefaultValueFieldLabel(__('general.export.additional_columns_default_value_field_label')) // Label for additional columns' default value input
-                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')) // Label for additional columns' add button,
+                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')), // Label for additional columns' add button,
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
@@ -397,6 +435,15 @@ class AdResource extends Resource
         return [
             RelationManagers\AttributesRelationManager::class,
             RelationManagers\ValuesRelationManager::class,
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListAds::route('/'),
+            'create' => Pages\CreateAd::route('/create'),
+            'edit' => Pages\EditAd::route('/{record}/edit'),
         ];
     }
 
@@ -415,12 +462,8 @@ class AdResource extends Resource
         return __('nav.leelam');
     }
 
-    public static function getPages(): array
+    protected static function getNavigationBadge(): ?string
     {
-        return [
-            'index' => Pages\ListAds::route('/'),
-            'create' => Pages\CreateAd::route('/create'),
-            'edit' => Pages\EditAd::route('/{record}/edit'),
-        ];
+        return static::$model::todayCreated()->notPublished()->count();
     }
 }

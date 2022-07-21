@@ -7,31 +7,36 @@ use App\Filament\Resources\SettingResource\Pages;
 use App\Filament\Resources\SettingResource\RelationManagers;
 use App\Models\Setting;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use function __;
 use function str;
 
 class SettingResource extends Resource
 {
-
     protected static ?string $model = Setting::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
+
     protected static ?int $navigationSort = 1000;
+
     protected static ?string $recordTitleAttribute = 'key';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('key')
+                TextInput::make('key')
                     ->label(__('general.settings.fields.key'))
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('value')
+                TextInput::make('value')
                     ->label(__('general.settings.fields.value'))
                     ->maxLength(255),
             ]);
@@ -41,18 +46,23 @@ class SettingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('key')
+                TextColumn::make('key')
                     ->label(__('general.settings.fields.key')),
-                Tables\Columns\TextColumn::make('value')
+                TextColumn::make('value')
                     ->label(__('general.settings.fields.value')),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->formatStateUsing(fn(Setting $record) => $record->created_at->diffForHumans()),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->formatStateUsing(fn(Setting $record) => $record->updated_at->diffForHumans()),
             ])
             ->filters([
                 //
-            ])->bulkActions([
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
@@ -63,14 +73,15 @@ class SettingResource extends Resource
                     ->additionalColumnsFieldLabel(__('general.export.additional_columns_field_label')) // Label for additional columns input
                     ->additionalColumnsTitleFieldLabel(__('general.export.additional_columns_title_field_label')) // Label for additional columns' title input
                     ->additionalColumnsDefaultValueFieldLabel(__('general.export.additional_columns_default_value_field_label')) // Label for additional columns' default value input
-                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')) // Label for additional columns' add button,
+                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')), // Label for additional columns' add button
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
-    public static function getRelations(): array
+    public static function getPages(): array
     {
         return [
-            //
+            'index' => Pages\ManageSettings::route('/'),
         ];
     }
 
@@ -87,14 +98,5 @@ class SettingResource extends Resource
     protected static function getNavigationGroup(): ?string
     {
         return __('nav.setting');
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListSettings::route('/'),
-            'create' => Pages\CreateSetting::route('/create'),
-            'edit' => Pages\EditSetting::route('/{record}/edit'),
-        ];
     }
 }

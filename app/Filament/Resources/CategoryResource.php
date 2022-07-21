@@ -3,9 +3,7 @@
 namespace App\Filament\Resources;
 
 use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
-use App\Filament\Resources\CategoryResource\Pages\CreateCategory;
-use App\Filament\Resources\CategoryResource\Pages\EditCategory;
-use App\Filament\Resources\CategoryResource\Pages\ListCategories;
+use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers\AttributesRelationManager;
 use App\Filament\Resources\CategoryResource\RelationManagers\ChildrenRelationManager;
 use App\Models\Category;
@@ -21,16 +19,15 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\BooleanColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use Livewire\Component;
 use RalphJSmit\Filament\SEO\SEO;
-use function __;
-use function str;
 
 class CategoryResource extends Resource
 {
-
     protected static ?string $model = Category::class;
 
     protected static ?string $slug = 'categories';
@@ -105,7 +102,7 @@ class CategoryResource extends Resource
                                 ->label(__('general.updated_at'))
                                 ->content(fn(?Category $record): string => $record ? $record->updated_at->diffForHumans() : '-'),
                         ])
-                        ->visible(fn(Component $livewire): bool => ! $livewire instanceof ChildrenRelationManager)
+//                        ->visible(fn(Component $livewire): bool => ! $livewire instanceof ChildrenRelationManager)
                         ->columns(1),
                     $layout::make()
                         ->schema([
@@ -122,7 +119,9 @@ class CategoryResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return Category::query()
-            ->with('children');
+            ->with('children')
+            ->withCount('children')
+            ->orderByDesc('children_count');
     }
 
     public static function getLabel(): string
@@ -144,28 +143,28 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label(__('general.categories.fields.name'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('parent.name')
+                TextColumn::make('parent.name')
                     ->label(__('general.categories.fields.parent_id'))
                     ->searchable()
                     ->sortable()
                     ->default(__('general.categories.placeholders.no_parent'))
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('children_count')
+                TextColumn::make('children_count')
                     ->counts('children')
                     ->label(__('general.categories.placeholders.num_children'))
                     ->sortable()
                     ->toggleable()
                     ->visible(fn(Component $livewire): bool => ! $livewire instanceof ChildrenRelationManager),
-                Tables\Columns\BooleanColumn::make('is_visible')
+                BooleanColumn::make('is_visible')
                     ->label(__('general.categories.fields.is_visible'))
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
                     ->date()
                     ->sortable()
@@ -173,12 +172,12 @@ class CategoryResource extends Resource
                     ->toggleable(),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('is_visible')
+                TernaryFilter::make('is_visible')
                     ->label(__('general.categories.filters.status'))
                     ->placeholder(__('general.categories.filters.status_placeholder'))
                     ->trueLabel(__('general.categories.filters.visible'))
                     ->falseLabel(__('general.categories.filters.not_visible')),
-                Tables\Filters\TernaryFilter::make('parent_id')
+                TernaryFilter::make('parent_id')
                     ->nullable()
                     ->label(__('general.categories.filters.parent_status'))
                     ->placeholder(__('general.categories.filters.parent_status_placeholder'))
@@ -189,7 +188,11 @@ class CategoryResource extends Resource
                         false: fn(Builder $query) => $query->whereNotNull('parent_id'),
                         blank: fn(Builder $query) => $query,
                     ),
-            ])->bulkActions([
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
@@ -200,7 +203,8 @@ class CategoryResource extends Resource
                     ->additionalColumnsFieldLabel(__('general.export.additional_columns_field_label')) // Label for additional columns input
                     ->additionalColumnsTitleFieldLabel(__('general.export.additional_columns_title_field_label')) // Label for additional columns' title input
                     ->additionalColumnsDefaultValueFieldLabel(__('general.export.additional_columns_default_value_field_label')) // Label for additional columns' default value input
-                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')) // Label for additional columns' add button,
+                    ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')), // Label for additional columns' add button
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
@@ -215,9 +219,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListCategories::route('/'),
-            'create' => CreateCategory::route('/create'),
-            'edit' => EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListCategories::route('/'),
+            'create' => Pages\CreateCategory::route('/create'),
+            'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
 }
