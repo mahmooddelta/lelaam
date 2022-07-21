@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "961b0ddea361f3617aae053bb7e8346c",
+    "content-hash": "1ea18c7684236697c79cb50214bee2a1",
     "packages": [
         {
             "name": "akaunting/laravel-money",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/akaunting/laravel-money.git",
-                "reference": "a4a3a204250a1185080c9cf0fe6f7f50d0e144cf"
+                "reference": "daf8ca8dc91b5a08d31dbf0788e2a4723185451f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/akaunting/laravel-money/zipball/a4a3a204250a1185080c9cf0fe6f7f50d0e144cf",
-                "reference": "a4a3a204250a1185080c9cf0fe6f7f50d0e144cf",
+                "url": "https://api.github.com/repos/akaunting/laravel-money/zipball/daf8ca8dc91b5a08d31dbf0788e2a4723185451f",
+                "reference": "daf8ca8dc91b5a08d31dbf0788e2a4723185451f",
                 "shasum": ""
             },
             "require": {
@@ -70,9 +70,9 @@
             ],
             "support": {
                 "issues": "https://github.com/akaunting/laravel-money/issues",
-                "source": "https://github.com/akaunting/laravel-money/tree/3.1.0"
+                "source": "https://github.com/akaunting/laravel-money/tree/3.1.1"
             },
-            "time": "2022-07-19T11:23:57+00:00"
+            "time": "2022-07-20T09:28:53+00:00"
         },
         {
             "name": "alperenersoy/filament-export",
@@ -417,30 +417,37 @@
         },
         {
             "name": "bezhansalleh/filament-shield",
-            "version": "v1.1.12",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bezhanSalleh/filament-shield.git",
-                "reference": "9090369f00d3d656edb9472699253bb06acc085f"
+                "reference": "45c2f9cfd3861a4e92e8daad609c895924e2688f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bezhanSalleh/filament-shield/zipball/9090369f00d3d656edb9472699253bb06acc085f",
-                "reference": "9090369f00d3d656edb9472699253bb06acc085f",
+                "url": "https://api.github.com/repos/bezhanSalleh/filament-shield/zipball/45c2f9cfd3861a4e92e8daad609c895924e2688f",
+                "reference": "45c2f9cfd3861a4e92e8daad609c895924e2688f",
                 "shasum": ""
             },
             "require": {
-                "filament/filament": "^2.0",
+                "filament/filament": "^2.13",
                 "illuminate/contracts": "^8.0|^9.0",
                 "php": "^8.0|^8.1",
+                "spatie/invade": "^1.0",
                 "spatie/laravel-package-tools": "^1.9.2",
                 "spatie/laravel-permission": "^5.0"
             },
             "require-dev": {
+                "barryvdh/laravel-ide-helper": "^2.12",
+                "friendsofphp/php-cs-fixer": "^3.9",
                 "nunomaduro/collision": "^5.0|^6.0",
+                "nunomaduro/larastan": "^2.0.1",
                 "orchestra/testbench": "^6.0|^7.0",
                 "pestphp/pest": "^1.21",
                 "pestphp/pest-plugin-laravel": "^1.1",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
                 "phpunit/phpunit": "^9.5"
             },
             "type": "library",
@@ -448,7 +455,10 @@
                 "laravel": {
                     "providers": [
                         "BezhanSalleh\\FilamentShield\\FilamentShieldServiceProvider"
-                    ]
+                    ],
+                    "aliases": {
+                        "FilamentShield": "BezhanSalleh\\FilamentShield\\Facades\\FilamentShield"
+                    }
                 }
             },
             "autoload": {
@@ -484,7 +494,7 @@
             ],
             "support": {
                 "issues": "https://github.com/bezhanSalleh/filament-shield/issues",
-                "source": "https://github.com/bezhanSalleh/filament-shield/tree/v1.1.12"
+                "source": "https://github.com/bezhanSalleh/filament-shield/tree/v2.0.1"
             },
             "funding": [
                 {
@@ -492,7 +502,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-05-19T13:26:03+00:00"
+            "time": "2022-07-19T22:08:12+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -9900,6 +9910,72 @@
                 "source": "https://github.com/spatie/image-optimizer/tree/1.6.2"
             },
             "time": "2021-12-21T10:08:05+00:00"
+        },
+        {
+            "name": "spatie/invade",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/invade.git",
+                "reference": "d0a9c895a96152549d478a7e3420e19039eef038"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/invade/zipball/d0a9c895a96152549d478a7e3420e19039eef038",
+                "reference": "d0a9c895a96152549d478a7e3420e19039eef038",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "pestphp/pest": "^1.20",
+                "phpstan/phpstan": "^1.4",
+                "spatie/ray": "^1.28"
+            },
+            "type": "library",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "phpstan-extension.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Spatie\\Invade\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP function to work with private properties and methods",
+            "homepage": "https://github.com/spatie/invade",
+            "keywords": [
+                "invade",
+                "spatie"
+            ],
+            "support": {
+                "source": "https://github.com/spatie/invade/tree/1.1.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-07-05T09:31:00+00:00"
         },
         {
             "name": "spatie/laravel-analytics",

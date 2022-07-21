@@ -31,7 +31,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'nav.group' => 'Users and Roles',
+    'nav.group' => 'Filament Shield',
     'nav.role.label' => 'Roles',
     'nav.role.icon' => 'heroicon-o-shield-check',
     'resource.label.role' => 'Role',
@@ -42,20 +42,26 @@ return [
     | Section & Tabs
     |--------------------------------------------------------------------------
     */
+
     'section' => 'Entities',
     'resources' => 'Resources',
     'widgets' => 'Widgets',
     'pages' => 'Pages',
     'custom' => 'Custom Permissions',
 
-    /**
-     * Role Setting Page
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Role Setting Page
+    |--------------------------------------------------------------------------
+    */
+    
     'page' => [
-        'name' => 'Setting',
+        'name' => 'Shield Settings',
         'icon' => 'heroicon-o-adjustments',
         'save' => 'Save',
-        'generate' => 'Save & Generate'
+        'generate' => 'Save & Generate',
+        'load_default_settings' => 'Load Default Settings',
+        'cancel' => 'Cancel',
     ],
     'labels.super_admin.toggle_input' => 'Super Admin Role',
     'labels.super_admin.text_input' => 'Role Name',
@@ -63,11 +69,11 @@ return [
     'labels.filament_user.text_input' => 'Role Name',
     'labels.role_policy.toggle_input' => 'Role Policy Registered?',
     'labels.role_policy.message' => 'Ensure the policy is registered and the permissions are enforced',
-    'labels.prefixes.placeholder' => 'Default Permission Prefixes',
-    'labels.prefixes.resource' => 'Resource',
-    'labels.prefixes.resource.placeholder' => 'Add or Remove Resource Permissions...',
-    'labels.prefixes.page' => 'Page',
-    'labels.prefixes.widget' => 'Widget',
+    'labels.permission_prefixes.placeholder' => 'Default Permission Prefixes',
+    'labels.permission_prefixes.resource' => 'Resource',
+    'labels.permission_prefixes.resource.placeholder' => 'Add or Remove Resource Permissions...',
+    'labels.permission_prefixes.page' => 'Page',
+    'labels.permission_prefixes.widget' => 'Widget',
     'labels.entities.placeholder' => 'Entity Permission Generators & Tabs',
     'labels.entities.message' => 'Generators & Tabs are ',
     'labels.entities.resources' => 'Resources',
@@ -88,10 +94,33 @@ return [
     'labels.exclude.widgets' => 'Widgets',
     'labels.exclude.widgets.placeholder' => 'Select widgets ...',
 
-    /**
-     * Messages
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Messages
+    |--------------------------------------------------------------------------
+    */
+
     'forbidden' => 'You do not have permission to access',
-    'update' => 'Renewed Shield\'s Config!',
-    'generate' => 'Renewed Shield\'s Config & Generated Permissions w/o Policies!',
+    'update' => 'Shield\'s config updated!',
+    'generate' => 'Updated Shield\'s config & Generated Permissions and/or Policies based on the new config.',
+    'loaded_default_settings' => 'Loaded Shield\'s default settings.',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Resource Permissions' Labels
+    |--------------------------------------------------------------------------
+    */
+
+    'resource_permission_prefixes_labels' => [
+        'view' => 'View',
+        'view_any' => 'View Any',
+        'create' => 'Create',
+        'update' => 'Update',
+        'delete' => 'Delete',
+        'delete_any' => 'Delete Any',
+        'force_delete' => 'Force Delete',
+        'force_delete_any' => 'Force Delete Any',
+        'restore' => 'Restore',
+        'restore_any' => 'Restore Any',
+    ]
 ];
