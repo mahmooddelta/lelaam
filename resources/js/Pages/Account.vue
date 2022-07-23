@@ -75,7 +75,7 @@ const pageTitle = usePage().props.value.user ? `${usePage().props.value.user.nam
             </section>
             <div class="text-center" v-else>
                 <p class="text-2xl">
-                    شما هیچ اعلانی نشانی نکرده اید!
+                    شما هیچ اعلانی را نشانی نکرده اید!
                 </p>
             </div>
         </Collapse>
