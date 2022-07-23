@@ -5,6 +5,7 @@ import {computed, ref, watch} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import RichEditor from "../Shared/Components/CKEditor.vue";
 import ClientOnly from '@duannx/vue-client-only';
+import MLPAttachment from "../Shared/Components/MLPAttachment.vue";
 // Functions
 const isNumber = (str) => {
     const pattern = /^\d+\.?\d*$/;
@@ -78,36 +79,20 @@ if (isFormSubmitting.value === false) {
         }), {}, {preserveScroll: true, preserveState: true, replace: true,})
     })
 }
-// Third Party Libraries configs
-const mlp_translations = {
-    fileTypeNotAllowed: 'شما باید فایل با فرمت type انتخاب کنید',
-    tooLarge: 'فایل انتخاب شده بسیار بزرگ است, max',
-    tooSmall: 'فایل انتخاب شده بسیار کوچک است, min',
-    tryAgain: 'لطفاً دوباره کوشش نمایید',
-    somethingWentWrong: 'مشکلی در آپلود شدن فایل پیش آمده است!',
-    selectOrDrag: 'فایل را انتخاب یا بکشید',
-    selectOrDragMax: 'انتخاب یا کشیدن به تعداد {maxItems} فایل',
-    file: {singular: 'فایل', plural: 'فایل ها'},
-    anyImage: 'هر نوع تصویر',
-    anyVideo: 'هر نوع ویدیو',
-    goBack: 'بازگشت',
-    dropFile: 'فایل را کشیده و بیاندازید',
-    dragHere: 'فایل را اینجا بیاندازید',
-    remove: 'حذف',
-    download: 'دانلود',
-};
-const onImageChange = (media) => {
-    form.images = media;
-};
-
 const populateAttributes = (value, index) => {
     const newAttribute = {
         attribute_id: index,
         value: value,
     };
-    form.attributes[index] === 'undefined' ? form.attributes.push(newAttribute) : form.attributes[index] = newAttribute;
+    const attributeIndex = form.attributes.findIndex((item) => item.attribute_id === index);
+    attributeIndex < 0 ? form.attributes.push(newAttribute) : form.attributes[attributeIndex] = newAttribute;
 };
 
+const getAttributeError = (collection, attributeId) => {
+    return collection.findIndex((item) => item.attribute_id === attributeId);
+}
+
+const mediaChanged = media => form.images = media;
 </script>
 
 <template>
@@ -117,37 +102,24 @@ const populateAttributes = (value, index) => {
             <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- First grid -->
                 <section>
-                    <div>
-                        <label class="label block flex justify-between mb-2">
+                    <MLPAttachment @media-changed="mediaChanged" :errors="form.errors.images" :model-value="form.images"
+                                   :collection-name="'ads'">
+                        <template #label>
                             <span class="label-text font-bold">عکس آگهی</span>
                             <small class="text-sm text-left">
-                            <span class="flex">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
-                                     viewBox="0 0 24 24"
-                                     stroke="#fb5858"
-                                     stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                افزودن عکس، احتمال دیده شدن آگهی شما را افزایش میدهد.
-                            </span>
+                                <span class="flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="#fb5858"
+                                         stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    افزودن عکس، احتمال دیده شدن آگهی شما را افزایش میدهد.
+                                </span>
                             </small>
-                        </label>
-                        <client-only>
-                            <media-library-attachment
-                                name="ads"
-                                @change="onImageChange"
-                                :initial-value="form.images"
-                                :max-items="5"
-                                :translations="mlp_translations"
-
-                                :validation-rules="{accept: ['image/jpeg', 'image/png', 'image/jpg'], maxSizeInKB: 5 * 1024, minSizeInKB: 5}"
-                                :validation-errors="form.errors.images"
-                                multiple
-                            />
-                        </client-only>
-                        <div v-if="form.errors.images" class="text-red-500 text-sm my-2">{{ form.errors.images }}</div>
-                    </div>
+                        </template>
+                    </MLPAttachment>
                     <div class="divider"></div>
                     <section class="my-4" :class="{'grid grid-cols-1 lg:grid-cols-2 gap-4' : !isNegotiable}">
                         <div class="form-control">
@@ -171,9 +143,8 @@ const populateAttributes = (value, index) => {
                             <input type="number" v-model="form.price" placeholder="منصفانه ترین قیمت"
                                    class="input input-bordered bg-adaptable"
                                    :class="{'input-error': form.errors.price}"/>
-                            <div v-if="form.errors.price" class="text-red-500 text-sm my-2">{{
-                                    form.errors.price
-                                }}
+                            <div v-if="form.errors.price" class="text-red-500 text-sm my-2">
+                                {{ form.errors.price }}
                             </div>
                         </div>
                     </section>
@@ -269,9 +240,8 @@ const populateAttributes = (value, index) => {
                                   id="category"
                                   :reduce="option => option.slug"
                                   v-model="form.category_id"/>
-                        <div v-if="form.errors.category_id" class="text-red-500 text-sm my-2">{{
-                                form.errors.category_id
-                            }}
+                        <div v-if="form.errors.category_id" class="text-red-500 text-sm my-2">
+                            {{ form.errors.category_id }}
                         </div>
                     </div>
                     <section v-if="attributes.data && attributes.data.length > 0">
@@ -285,13 +255,13 @@ const populateAttributes = (value, index) => {
                                            v-text="attribute.name"></label>
                                     <input :type="attribute.frontend_type"
                                            :id="attribute.id"
+                                           :value="form[`attributes.${index}.value`]"
                                            @change="populateAttributes($event.target.value, attribute.id)"
                                            class="input input-bordered bg-adaptable">
-                                    <!-- !TODO Fix error validation showing up by fixing up adding the attribute in correct attributes index of attribute.id-->
-                                    <!-- attributes.0.value -->
-                                    <div v-if="form.errors.attributes && form.errors.attributes[attribute.id]['value']"
-                                         class="text-red-500 text-sm my-2">
-                                        {{ form.errors.attributes[attribute.id]['value'] }}
+                                    <div
+                                        v-if="form.errors[`attributes.${getAttributeError(form.attributes, attribute.id)}.value`]"
+                                        class="text-red-500 text-sm my-2"
+                                        v-text="form.errors[`attributes.${getAttributeError(form.attributes, attribute.id)}.value`]">
                                     </div>
                                 </div>
                                 <div class="form-control" v-if="attribute.frontend_type === 'checkbox'">
@@ -306,6 +276,11 @@ const populateAttributes = (value, index) => {
                                             required
                                             @change="populateAttributes($event.target.value, attribute.id)"
                                         >
+                                        <div
+                                            v-if="form.errors[`attributes.${getAttributeError(form.attributes, attribute.id)}.value`]"
+                                            class="text-red-500 text-sm my-2"
+                                            v-text="form.errors[`attributes.${getAttributeError(form.attributes, attribute.id)}.value`]">
+                                        </div>
                                     </label>
                                 </div>
                                 <div class="form-control" v-if="attribute.frontend_type === 'radio'">
@@ -320,6 +295,11 @@ const populateAttributes = (value, index) => {
                                             required
                                             @change="populateAttributes($event.target.value, attribute.id)"
                                         >
+                                        <div
+                                            v-if="form.errors[`attributes.${getAttributeError(form.attributes, attribute.id)}.value`]"
+                                            class="text-red-500 text-sm my-2"
+                                            v-text="form.errors[`attributes.${getAttributeError(form.attributes, attribute.id)}.value`]">
+                                        </div>
                                     </label>
                                 </div>
                                 <div class="form-control"
@@ -348,10 +328,8 @@ const populateAttributes = (value, index) => {
                         <input type="text" v-model="form.address"
                                placeholder="آدرس دقیق سرعت پیدا کردن جنس مورد نیاز مشتری را افزایش میدهد"
                                class="input input-bordered bg-adaptable" :class="{'input-error': form.errors.address}"/>
-                        <div v-if="form.errors.address" class="text-red-500 text-sm my-2">{{
-                                form.errors.address
-                            }}
-                        </div>
+                        <div v-if="form.errors.address" class="text-red-500 text-sm my-2"
+                             v-text="form.errors.address"></div>
                     </div>
                     <div class="form-control">
                         <label class="label">
@@ -361,9 +339,8 @@ const populateAttributes = (value, index) => {
                                placeholder="شماره تماس را برای ارتباط با مشتری وارد کنید"
                                class="input input-bordered bg-adaptable"
                                :class="{'input-error': form.errors.phone_number}"/>
-                        <div v-if="form.errors.phone_number" class="text-red-500 text-sm my-2">
-                            {{ form.errors.phone_number }}
-                        </div>
+                        <div v-if="form.errors.phone_number" class="text-red-500 text-sm my-2"
+                             v-text="form.errors.phone_number"></div>
                     </div>
 
                     <div class="form-control">
@@ -373,7 +350,8 @@ const populateAttributes = (value, index) => {
                         <input type="text" v-model="form.title"
                                placeholder="لطفاً کوتاه، دقیق و مشخص بنویسید و به موارد چشمگیر اشاره کنید"
                                class="input input-bordered bg-adaptable" :class="{'input-error': form.errors.title}"/>
-                        <div v-if="form.errors.title" class="text-red-500 text-sm my-2">{{ form.errors.title }}</div>
+                        <div v-if="form.errors.title" class="text-red-500 text-sm my-2"
+                             v-text="form.errors.title"></div>
                     </div>
                 </section>
             </section>
@@ -389,18 +367,3 @@ const populateAttributes = (value, index) => {
         </form>
     </Container>
 </template>>
-<script>
-import {defineAsyncComponent} from "vue";
-
-export default {
-    name: "AdCreate",
-    components: {
-        MediaLibraryAttachment: defineAsyncComponent(() => {
-            if (typeof window !== 'undefined') {
-                return import('@spatie/media-library-pro-vue3-attachment')
-                    .then(module => module.MediaLibraryAttachment)
-            }
-        })
-    },
-}
-</script>
