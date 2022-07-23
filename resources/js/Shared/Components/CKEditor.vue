@@ -33,7 +33,6 @@ export default {
             config: {
                 language: 'fa',
                 toolbar: [
-                    "heading", "|",
                     'bold', 'italic', '|',
                     'bulletedList', 'numberedList', '|',
                     'blockQuote', '|',
