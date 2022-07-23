@@ -6,7 +6,7 @@ import {renderToString} from '@vue/server-renderer';
 import {createInertiaApp, Head, Link} from '@inertiajs/inertia-vue3';
 import createServer from '@inertiajs/server';
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
-import route from 'ziggy';
+import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 import Layout from '../js/Layouts/Layout.vue';
 // Vue Select
 import VueSelect from "vue-select";
@@ -22,7 +22,9 @@ if (typeof window !== 'undefined') {
 }
 
 createServer((page) => createInertiaApp({
-    page, render: renderToString, title: (title) => `${title} - ${appName}`, resolve: name => {
+    page,
+    render: renderToString,
+    title: (title) => `${title} - ${appName}`, resolve: name => {
         return resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')).then(page => {
             page.default.layout = page.default.layout || Layout
             return page;
@@ -36,14 +38,9 @@ createServer((page) => createInertiaApp({
             .use(Toast, {
                 position: POSITION.TOP_RIGHT, rtl: true,
             })
-            .mixin({
-                methods: {
-                    route: (name, params, absolute) => {
-                        return route(name, params, absolute, {
-                            ...page.props.ziggy, location: new URL(page.props.ziggy.url),
-                        });
-                    },
-                },
+            .use(ZiggyVue, {
+                ...page.props.ziggy,
+                location: new URL(page.props.ziggy.location),
             });
     },
 }));

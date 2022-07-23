@@ -11,8 +11,6 @@ import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 import VueSelect from "vue-select";
 // Toast
 import Toast, {POSITION, useToast} from 'vue-toastification'
-// Livewire AutoHMR
-import {livewire_hot_reload} from 'virtual:livewire-hot-reload';
 
 let appName = 'Laravel';
 
@@ -21,7 +19,6 @@ if (typeof window !== 'undefined') {
     window.toast = useToast();
 }
 
-livewire_hot_reload();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
