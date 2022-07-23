@@ -16,6 +16,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class ReportTypeResource extends Resource
 {
@@ -114,5 +115,10 @@ class ReportTypeResource extends Resource
     protected static function getNavigationGroup(): ?string
     {
         return __('nav.leelam');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::$model::latest();
     }
 }

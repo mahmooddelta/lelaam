@@ -3,8 +3,11 @@
 namespace App\Filament\Resources\AdResource\Pages;
 
 use App\Filament\Resources\AdResource;
+use App\Models\Ad;
+use App\Models\Scopes\AdNotExpiredScope;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListAds extends ListRecords
 {
@@ -15,5 +18,20 @@ class ListAds extends ListRecords
         return [
             Actions\CreateAction::make(),
         ];
+    }
+
+    protected function getTableQuery(): Builder
+    {
+        return Ad::query()->latest('created_at')->withoutGlobalScope(AdNotExpiredScope::class);
+    }
+
+    protected function getTableFiltersFormColumns(): int|array
+    {
+        return 2;
+    }
+
+    protected function getTableFiltersFormWidth(): string
+    {
+        return '4xl';
     }
 }

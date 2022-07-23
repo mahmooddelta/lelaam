@@ -21,6 +21,7 @@ use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class AdReportResource extends Resource
 {
@@ -178,5 +179,10 @@ class AdReportResource extends Resource
     protected static function getNavigationBadge(): ?string
     {
         return static::$model::active()->whereStatus('pending')->count();
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::$model::latest();
     }
 }

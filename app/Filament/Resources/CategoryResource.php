@@ -19,10 +19,13 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 use RalphJSmit\Filament\SEO\SEO;
 
@@ -190,9 +193,24 @@ class CategoryResource extends Resource
                     ),
             ])
             ->actions([
+                Action::make('status')
+                    ->label(__('general.actions.status'))
+                    ->icon('heroicon-o-refresh')
+                    ->color('primary')
+                    ->visible(fn(Category $record): bool => auth()->user()?->can('update', $record))
+                    ->action(fn(Category $record) => $record->update(['is_visible' => ! $record->is_visible])),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
+                BulkAction::make('status')
+                    ->label(__('general.actions.status'))
+                    ->icon('heroicon-o-refresh')
+                    ->color('primary')
+                    ->visible(fn(Category $record): bool => auth()->user()?->can('update', $record))
+                    ->action(fn(Collection $records) => $records->each(fn($record) => $record->update(['is_visible' => ! $record->is_visible])))
+                    ->deselectRecordsAfterCompletion()
+                    ->requiresConfirmation(),
+
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
@@ -204,6 +222,7 @@ class CategoryResource extends Resource
                     ->additionalColumnsTitleFieldLabel(__('general.export.additional_columns_title_field_label')) // Label for additional columns' title input
                     ->additionalColumnsDefaultValueFieldLabel(__('general.export.additional_columns_default_value_field_label')) // Label for additional columns' default value input
                     ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')), // Label for additional columns' add button
+
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }

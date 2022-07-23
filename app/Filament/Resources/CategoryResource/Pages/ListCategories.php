@@ -16,4 +16,14 @@ class ListCategories extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    protected function getTableFiltersFormColumns(): int|array
+    {
+        return 2;
+    }
+
+    protected function getTableFiltersFormWidth(): string
+    {
+        return '4xl';
+    }
 }
