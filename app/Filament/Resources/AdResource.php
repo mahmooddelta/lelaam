@@ -9,6 +9,7 @@ use App\Filament\Resources\AdResource\RelationManagers;
 use App\Models\Ad;
 use App\Models\Attribute;
 use App\Models\Category;
+use App\Models\Scopes\AdNotExpiredScope;
 use App\Models\User;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
@@ -465,5 +466,10 @@ class AdResource extends Resource
     protected static function getNavigationBadge(): ?string
     {
         return static::$model::todayCreated()->notPublished()->count();
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::$model::query()->latest('created_at')->withoutGlobalScope(AdNotExpiredScope::class);
     }
 }

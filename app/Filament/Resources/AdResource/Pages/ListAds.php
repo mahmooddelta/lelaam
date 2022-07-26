@@ -20,11 +20,6 @@ class ListAds extends ListRecords
         ];
     }
 
-    protected function getTableQuery(): Builder
-    {
-        return Ad::query()->latest('created_at')->withoutGlobalScope(AdNotExpiredScope::class);
-    }
-
     protected function getTableFiltersFormColumns(): int|array
     {
         return 2;
