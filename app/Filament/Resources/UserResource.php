@@ -6,6 +6,9 @@ use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use Filament\Facades\FilamentNotification;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\MultiSelect;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -13,11 +16,15 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+use function __;
 use function str;
 
 class UserResource extends Resource
@@ -155,8 +162,89 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('ban')
+                    ->label(__('general.users.actions.ban.label'))
+                    ->icon('heroicon-o-lock-closed')
+                    ->requiresConfirmation()
+                    ->modalWidth('sm')
+                    ->form(function() {
+                        return [
+                            TextInput::make('comment')
+                                ->label(__('general.users.actions.ban.comment')),
+
+                            DateTimePicker::make('expired_at')
+                                ->label(__('general.users.actions.ban.expires_at'))
+                                ->visible(fn(callable $get) => ! $get('permanent')),
+
+                            Checkbox::make('permanent')
+                                ->label(__('general.users.actions.ban.permanent'))
+                                ->reactive()
+                                ->default(true),
+                        ];
+                    })
+                    ->action(function(User $record, array $data) {
+                        if ($record->isNotBanned()) {
+                            $record->ban([
+                                'comment' => $data['comment'],
+                                'expired_at' => $data['expired_at'] ?? null,
+                            ]);
+                            FilamentNotification::notify('success', __('general.users.actions.ban.messages.success'));
+                        } else {
+                            FilamentNotification::notify('error', __('general.users.actions.ban.messages.error'));
+                        }
+                    }),
+                Tables\Actions\Action::make('unban')
+                    ->label(__('general.users.actions.unban.label'))
+                    ->icon('heroicon-o-lock-open')
+                    ->requiresConfirmation()
+                    ->action(function(Model $record) {
+                        $record->unban();
+                        FilamentNotification::notify('success', __('general.users.actions.unban.messages.success'));
+                    }),
             ])
             ->bulkActions([
+                BulkAction::make('banned_at')
+                    ->label(__('general.users.actions.ban.label'))
+                    ->icon('heroicon-o-lock-closed')
+                    ->requiresConfirmation()
+                    ->modalWidth('sm')
+                    ->form(function() {
+                        return [
+                            TextInput::make('comment')
+                                ->label(__('general.users.actions.ban.comment')),
+
+                            DateTimePicker::make('expired_at')
+                                ->label(__('general.users.actions.ban.expires_at'))
+                                ->visible(fn(callable $get) => ! $get('permanent')),
+
+                            Checkbox::make('permanent')
+                                ->label(__('general.users.actions.ban.permanent'))
+                                ->reactive()
+                                ->default(true),
+                        ];
+                    })
+                    ->action(function(Collection $records, array $data) {
+                        $records->each(function(User $record) use ($data) {
+                            if ($record->isNotBanned()) {
+                                $record->ban([
+                                    'comment' => $data['comment'],
+                                    'expired_at' => $data['expired_at'] ?? null,
+                                ]);
+                                FilamentNotification::notify('success', __('general.users.actions.ban.messages.success_plural'));
+                            } else {
+                                FilamentNotification::notify('error', __('general.users.actions.ban.messages.error_plural'));
+                            }
+                        });
+                        FilamentNotification::notify('success', 'کاربر بلاک شد.');
+                    }),
+                BulkAction::make('unban')
+                    ->label(__('general.users.actions.unban.plural_label'))
+                    ->icon('heroicon-o-lock-open')
+                    ->requiresConfirmation()
+                    ->action(function(Collection $records) {
+                        $records->each->unban();
+                        FilamentNotification::notify('success', __('general.users.actions.unban.messages.success_plural'));
+                    }),
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))

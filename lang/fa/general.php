@@ -149,7 +149,7 @@ return [
             'attribute_values_section' => 'مقدار ویژگی ها',
             'no_user' => 'مهمان',
             'negotiable' => 'توافقی',
-            'attributes_relation_manager_select' => 'یک ویژگی انتخاب نمائید'
+            'attributes_relation_manager_select' => 'یک ویژگی انتخاب نمائید',
         ],
         'relations' => [
             'attributes' => [
@@ -235,6 +235,31 @@ return [
                 'status_placeholder' => 'همه وضعیت ها',
                 "verified" => "تایید شده",
                 "unverified" => "تایید نشده",
+            ],
+        ],
+        'actions' => [
+            'ban' => [
+                'label' => 'بلاک کاربر',
+                'plural_label' => 'بلاک کاربران',
+                'comment' => 'دلیل؟',
+                'expires_at' => 'تاریخ پایان بلاک',
+                'permanent' => 'بلاک دائمی',
+                'messages' => [
+                    'success' => 'کاربر بلاک شد.',
+                    'error' => 'عملیات ناموفق بود!',
+                    'success_plural' => 'کاربران انتخاب شده بلاک شدند.',
+                    'error_plural' => 'عملیات ناموفق بود!',
+                ],
+            ],
+            'unban' => [
+                'label' => 'رفع بلاک کاربر',
+                'plural_label' => 'رفع بلاک کاربران',
+                'messages' => [
+                    'success' => 'کاربر رفع بلاک شد.',
+                    'error' => 'رفع بلاک کاربر ناموفق بود!',
+                    'success_plural' => 'کاربران رفع بلاک شدند.',
+                    'error_plural' => 'رفع بلاک کاربر ناموفق بود!',
+                ],
             ],
         ],
     ],
