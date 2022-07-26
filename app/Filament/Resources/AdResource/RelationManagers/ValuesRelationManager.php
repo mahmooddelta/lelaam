@@ -15,6 +15,7 @@ use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use function __;
 
 class ValuesRelationManager extends RelationManager
@@ -68,14 +69,18 @@ class ValuesRelationManager extends RelationManager
                         Select::make('attribute_id')
                             ->relationship('attribute', 'name')
                             ->label(__('general.attributes.title'))
-                            ->options(Attribute::whereFrontendType('select')->whereHas('values')->pluck('name', 'id')->toArray())
+                            ->options(fn($livewire) => Attribute::whereFrontendType('select')->whereNotIn('id', $livewire->ownerRecord?->attributes()->pluck('attribute_id')->toArray())->whereHas('values')->pluck('name', 'id')->toArray())
                             ->reactive(),
                         $action->getRecordSelect()
                             ->label(__('general.attribute_values.title'))
-                            ->options(function(callable $get) {
+                            ->options(function(callable $get, $livewire) {
                                 $attribute = $get('attribute_id');
                                 if ($attribute) {
-                                    return AttributeValue::whereAttributeId($attribute)->pluck('name', 'id')->toArray();
+                                    return AttributeValue::query()
+                                        ->whereAttributeId($attribute)
+                                        ->whereNotIn('id', $livewire->ownerRecord?->values->pluck('id')->toArray())
+                                        ->pluck('name', 'id')
+                                        ->toArray();
                                 }
 
                                 return [];
@@ -94,6 +99,11 @@ class ValuesRelationManager extends RelationManager
     public static function getTitle(): string
     {
         return __('general.attribute_values.title_plural');
+    }
+
+    protected static function getModelLabel(): string
+    {
+        return __('general.attribute_values.title');
     }
 
     public static function getPluralRecordLabel(): string
