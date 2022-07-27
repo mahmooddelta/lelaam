@@ -24,16 +24,16 @@ class RolesTableSeeder extends Seeder
                 'id' => 1,
                 'name' => 'super_admin',
                 'guard_name' => 'web',
-                'created_at' => '2022-07-20 16:00:53',
-                'updated_at' => '2022-07-20 16:00:53',
+                'created_at' => '2022-07-27 10:26:09',
+                'updated_at' => '2022-07-27 10:26:09',
             ),
             1 => 
             array (
                 'id' => 2,
                 'name' => 'user',
                 'guard_name' => 'web',
-                'created_at' => '2022-07-20 16:00:53',
-                'updated_at' => '2022-07-21 08:29:32',
+                'created_at' => '2022-07-27 10:29:15',
+                'updated_at' => '2022-07-27 10:29:15',
             ),
         ));
         
