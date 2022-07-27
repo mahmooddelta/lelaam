@@ -17,7 +17,7 @@ class ReportTypePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view_any_reporttype');
+        return $user->can('view_any_report::type');
     }
 
     /**
@@ -28,7 +28,7 @@ class ReportTypePolicy
      */
     public function view(User $user)
     {
-        return $user->can('view_reporttype');
+        return $user->can('view_report::type');
     }
 
     /**
@@ -39,7 +39,7 @@ class ReportTypePolicy
      */
     public function create(User $user)
     {
-        return $user->can('create_reporttype');
+        return $user->can('create_report::type');
     }
 
     /**
@@ -50,7 +50,7 @@ class ReportTypePolicy
      */
     public function update(User $user)
     {
-        return $user->can('update_reporttype');
+        return $user->can('update_report::type');
     }
 
     /**
@@ -61,7 +61,7 @@ class ReportTypePolicy
      */
     public function delete(User $user)
     {
-        return $user->can('delete_reporttype');
+        return $user->can('delete_report::type');
     }
 
     /**
@@ -72,7 +72,62 @@ class ReportTypePolicy
      */
     public function deleteAny(User $user)
     {
-        return $user->can('delete_any_reporttype');
+        return $user->can('delete_any_report::type');
+    }
+
+    /**
+     * Determine whether the user can permanently delete.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function forceDelete(User $user)
+    {
+        return $user->can('force_delete_report::type');
+    }
+
+    /**
+     * Determine whether the user can permanently bulk delete.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function forceDeleteAny(User $user)
+    {
+        return $user->can('force_delete_any_report::type');
+    }
+
+    /**
+     * Determine whether the user can restore.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function restore(User $user)
+    {
+        return $user->can('restore_report::type');
+    }
+
+    /**
+     * Determine whether the user can bulk restore.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function restoreAny(User $user)
+    {
+        return $user->can('restore_any_report::type');
+    }
+
+    /**
+     * Determine whether the user can bulk restore.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function replicate(User $user)
+    {
+        return $user->can('replicate_report::type');
     }
 
 }

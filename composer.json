@@ -12,7 +12,7 @@
         "alperenersoy/filament-export": "^0.1.0@alpha",
         "ashallendesign/short-url": "^7.0",
         "bezhansalleh/filament-google-analytics": "^0.0.2",
-        "bezhansalleh/filament-shield": "2.*",
+        "bezhansalleh/filament-shield": "^2.0",
         "doctrine/dbal": "^3.3",
         "filament/filament": "^2.12",
         "filament/spatie-laravel-media-library-plugin": "^2.11",

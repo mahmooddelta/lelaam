@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use BezhanSalleh\FilamentShield\Traits\HasFilamentShield;
 use Cog\Contracts\Ban\Bannable as BannableContract;
 use Cog\Laravel\Ban\Traits\Bannable;
 use Filament\Models\Contracts\FilamentUser;
@@ -29,7 +28,7 @@ class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    use HasRoles, HasFilamentShield, InteractsWithMedia;
+    use HasRoles, InteractsWithMedia;
     use Bannable;
 
     /**

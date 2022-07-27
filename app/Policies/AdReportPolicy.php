@@ -17,7 +17,7 @@ class AdReportPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view_any_adreport');
+        return $user->can('view_any_ad::report');
     }
 
     /**
@@ -28,7 +28,7 @@ class AdReportPolicy
      */
     public function view(User $user)
     {
-        return $user->can('view_adreport');
+        return $user->can('view_ad::report');
     }
 
     /**
@@ -39,7 +39,7 @@ class AdReportPolicy
      */
     public function create(User $user)
     {
-        return $user->can('create_adreport');
+        return $user->can('create_ad::report');
     }
 
     /**
@@ -50,7 +50,7 @@ class AdReportPolicy
      */
     public function update(User $user)
     {
-        return $user->can('update_adreport');
+        return $user->can('update_ad::report');
     }
 
     /**
@@ -61,7 +61,7 @@ class AdReportPolicy
      */
     public function delete(User $user)
     {
-        return $user->can('delete_adreport');
+        return $user->can('delete_ad::report');
     }
 
     /**
@@ -72,7 +72,62 @@ class AdReportPolicy
      */
     public function deleteAny(User $user)
     {
-        return $user->can('delete_any_adreport');
+        return $user->can('delete_any_ad::report');
+    }
+
+    /**
+     * Determine whether the user can permanently delete.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function forceDelete(User $user)
+    {
+        return $user->can('force_delete_ad::report');
+    }
+
+    /**
+     * Determine whether the user can permanently bulk delete.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function forceDeleteAny(User $user)
+    {
+        return $user->can('force_delete_any_ad::report');
+    }
+
+    /**
+     * Determine whether the user can restore.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function restore(User $user)
+    {
+        return $user->can('restore_ad::report');
+    }
+
+    /**
+     * Determine whether the user can bulk restore.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function restoreAny(User $user)
+    {
+        return $user->can('restore_any_ad::report');
+    }
+
+    /**
+     * Determine whether the user can bulk restore.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function replicate(User $user)
+    {
+        return $user->can('replicate_ad::report');
     }
 
 }
