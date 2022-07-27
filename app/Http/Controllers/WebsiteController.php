@@ -57,14 +57,14 @@ class WebsiteController extends Controller
             if (auth()->user()->hasVerifiedPhone()) {
                 return back()->with([
                     'type' => 'error',
-                    'body', 'شماره تماس کاربر از قبل تایید شده است!',
+                    'body' =>  'شماره تماس کاربر از قبل تایید شده است!',
                 ]);
             }
 
             if (auth()->user()->phone !== $validated['phone']) {
                 return back()->with([
                     'type' => 'error',
-                    'body', 'شماره تماس وارد شده، اشتباه است!',
+                    'body' =>  'شماره تماس وارد شده، اشتباه است!',
                 ]);
             }
 

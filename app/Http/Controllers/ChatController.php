@@ -91,7 +91,7 @@ class ChatController extends Controller
             return back()
                 ->with([
                     'type' => 'error',
-                    'body', 'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!',
+                    'body' =>  'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!',
                 ]);
         }
 
