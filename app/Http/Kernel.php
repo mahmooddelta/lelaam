@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'jwt' => \App\Http\Middleware\JWT::class,
         'phone.verified' => \App\Http\Middleware\EnsurePhoneVerifiedMiddleware::class,
         'api.phone.verified' => \App\Http\Middleware\EnsureAPIUserVerifiedPhoneMiddleware::class,
+        'logs-out-banned-user' => \Cog\Laravel\Ban\Http\Middleware\LogsOutBannedUser::class,
     ];
 }

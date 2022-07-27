@@ -27,11 +27,9 @@ Route::get('post/{ad:slug}', [AdController::class, 'show'])->name('ad.show');
 Route::get('categories', [CategoryController::class, 'index'])->name('categories');
 // Phone Verification
 Route::get('phone/verify', [WebsiteController::class, 'phoneUnverified'])->name('phone.verify');
-Route::post('phone/verify', [WebsiteController::class, 'phoneVerify'])
-    ->name('phone.verify.store')
-    ->middleware('auth');
+Route::post('phone/verify', [WebsiteController::class, 'phoneVerify'])->name('phone.verify.store')->middleware('auth');
 // Protected routes
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.verified'])
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.verified', 'logs-out-banned-user'])
     ->group(function() {
         Route::get('account', [AccountController::class, 'index'])
             ->name('account');
