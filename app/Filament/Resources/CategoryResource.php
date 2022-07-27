@@ -163,6 +163,11 @@ class CategoryResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->visible(fn(Component $livewire): bool => ! $livewire instanceof ChildrenRelationManager),
+                Tables\Columns\BadgeColumn::make('position')
+                    ->colors(['primary'])
+                    ->label(__('general.categories.fields.position'))
+                    ->sortable()
+                    ->searchable(),
                 BooleanColumn::make('is_visible')
                     ->label(__('general.categories.fields.is_visible'))
                     ->sortable()
@@ -224,7 +229,7 @@ class CategoryResource extends Resource
                     ->additionalColumnsAddButtonLabel(__('general.export.additional_columns_add_button_label')), // Label for additional columns' add button
 
                 Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])->reorderable('position');
     }
 
     public static function getRelations(): array

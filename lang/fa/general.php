@@ -51,6 +51,7 @@ return [
             'parent_id' => 'والد/پدر',
             'is_visible' => 'فعال',
             'description' => 'توضیحات',
+            'position' => 'موقعیت نمایش',
         ],
         'placeholders' => [
             'no_parent' => 'بدون والد',
