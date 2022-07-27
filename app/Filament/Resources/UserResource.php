@@ -6,12 +6,12 @@ use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
-use Filament\Facades\FilamentNotification;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\MultiSelect;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -188,9 +188,17 @@ class UserResource extends Resource
                                 'comment' => $data['comment'],
                                 'expired_at' => $data['expired_at'] ?? null,
                             ]);
-                            FilamentNotification::notify('success', __('general.users.actions.ban.messages.success'));
+                            Notification::make()
+                                ->title(__('general.users.actions.ban.messages.success'))
+                                ->icon('heroicon-o-check-circle')
+                                ->success()
+                                ->send();
                         } else {
-                            FilamentNotification::notify('error', __('general.users.actions.ban.messages.error'));
+                            Notification::make()
+                                ->title(__('general.users.actions.ban.messages.error'))
+                                ->icon('heroicon-o-x-circle')
+                                ->danger()
+                                ->send();
                         }
                     }),
                 Tables\Actions\Action::make('unban')
@@ -199,7 +207,11 @@ class UserResource extends Resource
                     ->requiresConfirmation()
                     ->action(function(Model $record) {
                         $record->unban();
-                        FilamentNotification::notify('success', __('general.users.actions.unban.messages.success'));
+                        Notification::make()
+                            ->title(__('general.users.actions.unban.messages.success'))
+                            ->icon('heroicon-o-check-circle')
+                            ->success()
+                            ->send();
                     }),
             ])
             ->bulkActions([
@@ -230,12 +242,19 @@ class UserResource extends Resource
                                     'comment' => $data['comment'],
                                     'expired_at' => $data['expired_at'] ?? null,
                                 ]);
-                                FilamentNotification::notify('success', __('general.users.actions.ban.messages.success_plural'));
+                                Notification::make()
+                                    ->title(__('general.users.actions.ban.messages.success_plural'))
+                                    ->icon('heroicon-o-check-circle')
+                                    ->success()
+                                    ->send();
                             } else {
-                                FilamentNotification::notify('error', __('general.users.actions.ban.messages.error_plural'));
+                                Notification::make()
+                                    ->title(__('general.users.actions.ban.messages.error_plural'))
+                                    ->icon('heroicon-o-x-circle')
+                                    ->danger()
+                                    ->send();
                             }
                         });
-                        FilamentNotification::notify('success', 'کاربر بلاک شد.');
                     }),
                 BulkAction::make('unban')
                     ->label(__('general.users.actions.unban.plural_label'))
@@ -243,7 +262,11 @@ class UserResource extends Resource
                     ->requiresConfirmation()
                     ->action(function(Collection $records) {
                         $records->each->unban();
-                        FilamentNotification::notify('success', __('general.users.actions.unban.messages.success_plural'));
+                        Notification::make()
+                            ->title(__('general.users.actions.unban.messages.success_plural'))
+                            ->icon('heroicon-o-check-circle')
+                            ->success()
+                            ->send();
                     }),
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
