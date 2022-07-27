@@ -288,6 +288,6 @@ class UserResource extends Resource
 
     protected static function getNavigationGroup(): ?string
     {
-        return __('nav.users_roles');
+        return __('nav.users');
     }
 }
