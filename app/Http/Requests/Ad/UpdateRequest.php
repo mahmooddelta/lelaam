@@ -5,18 +5,13 @@ namespace App\Http\Requests\Ad;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Category;
+use App\Models\Currency;
 use App\Models\District;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
-use Symfony\Component\HttpFoundation\Response;
-use function request;
-use function response;
 
 class UpdateRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -88,11 +83,25 @@ class UpdateRequest extends FormRequest
             'images' => [
                 'nullable',
             ],
-            'images.*' => [
+            'images.*.uuid' => [
                 'required_with:images',
-                'image',
-                'mimes:jpeg,png,jpg,gif,svg',
-                'max:5100',
+                'string',
+                'exists:media,uuid',
+            ],
+            'images.*.name' => [
+                'required_with:images',
+                'string',
+                'exists:media,name',
+            ],
+            'images.*.extension' => [
+                'required_with:images',
+                'string',
+                Rule::in(['jpeg', 'png', 'jpg', 'gif', 'svg']),
+            ],
+            'images.*.size' => [
+                'required_with:images',
+                'numeric',
+                'max:'. 5 * 1024 * 1024,
             ],
             'attributes' => [
                 'nullable',
@@ -130,22 +139,9 @@ class UpdateRequest extends FormRequest
         $this->merge([
             'category_id' => Category::whereSlug($this->category_id)
                 ->value('id'),
+            'district_id' => District::whereName($this->district_id)
+                ->value('id'),
+            'currency_id' => $this->currency_id !== 0 ? Currency::whereName($this->currency_id)->value('id') : 0,
         ]);
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        if (request()->is('api/*')) {
-            $errors = $validator->errors();
-
-            $response = response()->json([
-                'status' => 'validation_failed',
-                'message' => $errors->messages(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-
-            throw new HttpResponseException($response);
-        }
-
-        return parent::failedValidation($validator);
     }
 }

@@ -27,6 +27,9 @@ const price = computed(() => isEmpty(props.ad.price) ? `<b class="text-bold">ت�
             <p v-if="ad?.is_expired" class="badge badge-error text-xs">
                 آگهی منقضی شده است!
             </p>
+            <div class="card-actions justify-end">
+                <slot name="footer" :ad="ad"/>
+            </div>
         </div>
     </Link>
 </template>

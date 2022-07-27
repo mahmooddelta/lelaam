@@ -8,7 +8,6 @@ use App\Http\Resources\BookmarkResource;
 use App\Models\Ad;
 use App\Models\Scopes\AdNotExpiredScope;
 use App\Models\State;
-use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Maize\Markable\Models\Bookmark;
 use Maize\Markable\Models\Like;
@@ -22,7 +21,7 @@ class AccountController extends Controller
             'ads' => AdResource::collection(Ad::isOwner()
                 ->with('media')
                 ->withoutGlobalScope(AdNotExpiredScope::class)
-                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'expires_at', 'published_at'])
+                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'expires_at', 'published_at', 'is_published'])
                 ->latest()
                 ->get()),
             'states' => State::select(['id', 'name'])->get(),

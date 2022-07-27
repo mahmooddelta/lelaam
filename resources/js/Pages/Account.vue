@@ -59,7 +59,20 @@ const pageTitle = usePage().props.value.user ? `${usePage().props.value.user.nam
         <Collapse title="اعلانات من">
             <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4"
                      v-if="ads.data.length > 0">
-                <Ad v-for="ad in ads.data" :key="ad.id" :ad="ad"/>
+                <Ad v-for="ad in ads.data" :key="ad.id" :ad="ad">
+                    <template #footer="{ ad: ad }"
+                              v-if="$page.props.user && ad.user !== 'مهمان' && ad.is_published && !ad.is_expired && ad.user !== $page.props.user.name">
+                        <Link as="button" class="btn btn-primary btn-outline btn-sm"
+                              :href="route('post.edit', ad.slug)">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                            ویرایش
+                        </Link>
+                    </template>
+                </Ad>
             </section>
             <div class="text-center" v-else>
                 <p class="text-2xl">

@@ -1,94 +1,5 @@
-<script setup>
-import Container from "../Shared/Components/Container.vue";
-import {useForm, usePage} from "@inertiajs/inertia-vue3";
-import {computed, ref, watch} from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import RichEditor from "../Shared/Components/CKEditor.vue";
-import ClientOnly from '@duannx/vue-client-only';
-import MLPAttachment from "../Shared/Components/MLPAttachment.vue";
-import Label from "../Jetstream/Label.vue";
-import Input from "../Jetstream/Input.vue";
-// Functions
-const isNumber = (str) => {
-    const pattern = /^\d+\.?\d*$/;
-    return pattern.test(str);
-}
-// To set default selected values of v-select
-const setSelectValue = (field, collection) => (typeof field === null || field === null) ? null : isNumber(field) ? collection.filter((f) => f.id === +field)[0]?.name || '' : field;
-// Props
-const props = defineProps({
-    currencies: Object,
-    states: Object,
-    districts: Object,
-    categories: Object,
-    attributes: Object,
-    state: undefined,
-    category: undefined,
-})
-// Form
-const form = useForm({
-    title: null,
-    price: null,
-    phone_number: null,
-    desc: '',
-    address: null,
-    category_id: setSelectValue(props.category, props.categories),
-    currency_id: null,
-    district_id: null,
-    is_chat_enabled: true,
-    images: usePage().props.value.errors,
-    attributes: [],
-    values: [],
-})
-const isFormSubmitting = ref(false);
-// Form submit action
-const save = () => {
-    isFormSubmitting.value = true;
-    form.post(route('ad.create.store'), {
-        preserveState: true,
-        preserveScroll: true,
-        replace: true,
-    })
-}
-const state = ref(setSelectValue(props.state, props.states))
-let isNegotiable = computed(() => {
-    return form.currency_id === 0;
-});
-if (isFormSubmitting.value === false) {
-    // Form watcher
-    watch(() => form.category_id, () => {
-        Inertia.get(route('ad.create', {
-            category: form.category_id,
-            state: state.value,
-        }), {}, {preserveScroll: true, preserveState: true, replace: true,})
-    })
-
-    // State watcher
-    watch(state, (value) => {
-        Inertia.get(route('ad.create', {
-            category: form.category_id,
-            state: state.value,
-        }), {}, {preserveScroll: true, preserveState: true, replace: true,})
-    })
-}
-const populateAttributes = (value, index) => {
-    const newAttribute = {
-        attribute_id: index,
-        value: value,
-    };
-    const attributeIndex = form.attributes.findIndex((item) => item.attribute_id === index);
-    attributeIndex < 0 ? form.attributes.push(newAttribute) : form.attributes[attributeIndex] = newAttribute;
-};
-
-const getAttributeError = (collection, attributeId) => {
-    return collection.findIndex((item) => item.attribute_id === attributeId);
-}
-
-const mediaChanged = media => form.images = media;
-</script>
-
 <template>
-    <Head title="ثبت آگهی جدید"/>
+    <Head :title="title"/>
     <Container>
         <form id="ad_form" @submit.prevent="save" method="post">
             <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -245,7 +156,9 @@ const mediaChanged = media => form.images = media;
                                            required
                                            placeholder="لطفاً مقدار مدنظر تان را وارد کنید."
                                            @change="populateAttributes($event.target.value, attribute.id)"
-                                           class="input input-bordered bg-adaptable">
+                                           class="input input-bordered bg-adaptable"
+                                           :value="form.attributes[`${getAttributeError(form.attributes, attribute.id)}`]?.value ?? ''"
+                                    >
                                     <div
                                         v-if="form.errors[`attributes.${getAttributeError(form.attributes, attribute.id)}.value`]"
                                         class="text-red-500 text-sm my-2"
@@ -293,13 +206,14 @@ const mediaChanged = media => form.images = media;
                                 <div class="form-control"
                                      v-else-if="attribute.frontend_type === 'select' && attribute.values.length > 0">
                                     <Label :value="attribute.name" :required="true" :input-id="attribute.id"/>
-                                    <v-select :value="form.values[attribute.id]"
-                                              required
-                                              placeholder="لطفاً یک گزینه را انتخاب نمایید" :options="attribute.values"
-                                              label="name"
-                                              :id="attribute.id"
-                                              :reduce="(option) => { return { attribute_value_id: option.id, attribute_id: attribute.id } }"
-                                              v-model="form.values[attribute.id]"/>
+                                    <v-select
+                                        required
+                                        placeholder="لطفاً یک گزینه را انتخاب نمایید"
+                                        :options="attribute.values"
+                                        label="name"
+                                        :id="attribute.id"
+                                        :reduce="(option) => { return { attribute_value_id: option.id, attribute_id: attribute.id } }"
+                                        v-model="form.values[`${getAttributeError(form.values, attribute.id)}`]"/>
                                 </div>
                             </template>
                         </section>
@@ -325,7 +239,6 @@ const mediaChanged = media => form.images = media;
                             placeholder="شماره تماس را برای ارتباط با مشتری وارد کنید"
                             :error="form.errors.phone_number"/>
                     </div>
-
                     <div class="form-control">
                         <Label value="عنوان آگهی" :required="true" input-id="title"/>
                         <Input
@@ -341,7 +254,7 @@ const mediaChanged = media => form.images = media;
             <!-- Form Submit -->
             <section class="my-6 flex justify-end">
                 <button class="btn btn-primary" type="submit" :disabled="form.processing">
-                    ارسال آگهی
+                    ویرایش آگهی
                 </button>
                 <Link as="button" class="btn btn-ghost ml-4" type="button" :href="route('home')">
                     انصراف
@@ -349,4 +262,120 @@ const mediaChanged = media => form.images = media;
             </section>
         </form>
     </Container>
-</template>>
+</template>
+<script setup>
+import Container from "../../Shared/Components/Container.vue";
+import {useForm} from "@inertiajs/inertia-vue3";
+import {computed, onMounted, ref, watch} from "vue";
+import {Inertia} from "@inertiajs/inertia";
+import RichEditor from "../../Shared/Components/CKEditor.vue";
+import ClientOnly from '@duannx/vue-client-only';
+import MLPAttachment from "../../Shared/Components/MLPAttachment.vue";
+import Label from "../../Jetstream/Label.vue";
+import Input from "../../Jetstream/Input.vue";
+// Functions
+const isNumber = (str) => {
+    const pattern = /^\d+\.?\d*$/;
+    return pattern.test(str);
+}
+// To set default selected values of v-select
+const setSelectValue = (field, collection) => (typeof field === null || field === null) ? null : isNumber(field) ? collection.filter((f) => f.id === +field)[0]?.name || '' : field;
+// Props
+const props = defineProps({
+    ad: Object,
+    currencies: Object,
+    states: Object,
+    districts: Object,
+    categories: Object,
+    attributes: Object,
+    values: Object,
+    state: null,
+    category: null,
+})
+// Form
+const form = useForm({
+    title: props.ad.title,
+    price: props.ad.price,
+    phone_number: props.ad.phone_number,
+    desc: props.ad.desc,
+    address: props.ad.address,
+    category_id: setSelectValue(props.category ?? props.ad.category.name, props.categories),
+    currency_id: setSelectValue(props.ad.currency.id, props.currencies),
+    district_id: setSelectValue(props.ad.district.id, props.districts),
+    is_chat_enabled: props.ad.is_chat_enabled,
+    images: props.ad.media,
+    attributes: [],
+    values: [],
+})
+
+onMounted(() => {
+    for (const attribute of props.attributes.data) {
+        populateAttributes(attribute.value, attribute.id)
+    }
+
+    for (const value of props.values.data) {
+        form.values.push({
+            attribute_id: value.attribute_id,
+            attribute_value_id: value.id,
+            name: value.name
+        })
+    }
+})
+
+const isFormSubmitting = ref(false);
+// Form submit action
+const save = () => {
+    isFormSubmitting.value = true;
+    form.post(route('post.update', props.ad.slug), {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+    })
+}
+const state = ref(setSelectValue(props.state, props.states))
+let isNegotiable = computed(() => {
+    return form.currency_id === 0;
+});
+if (isFormSubmitting.value === false) {
+    // Form watcher
+    watch(() => form.category_id, () => {
+        Inertia.get(route('post.edit', {
+            post: props.ad.slug,
+            category: form.category_id,
+            state: state.value,
+        }), {}, {
+            preserveScroll: true,
+            preserveState: true,
+            replace: true,
+            onFinish: () => {
+                form.values = [];
+                form.attributes = [];
+            }
+        })
+    })
+
+    // State watcher
+    watch(state, () => {
+        Inertia.get(route('post.edit', {
+            post: props.ad.slug,
+            category: form.category_id,
+            state: state.value,
+        }), {}, {preserveScroll: true, preserveState: true, replace: true,})
+    })
+}
+const populateAttributes = (value, index) => {
+    const newAttribute = {
+        attribute_id: index,
+        value: value,
+    };
+    const attributeIndex = form.attributes.findIndex((item) => item.attribute_id === index);
+    attributeIndex < 0 ? form.attributes.push(newAttribute) : form.attributes[attributeIndex] = newAttribute;
+};
+
+const getAttributeError = (collection, attributeId) => {
+    return collection.findIndex((item) => item.attribute_id === attributeId);
+}
+
+const mediaChanged = media => form.images = media;
+const title = computed(() => ` ویرایش ${props.ad.title}`);
+</script>>

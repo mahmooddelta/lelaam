@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Ad\StoreRequest;
+use App\Http\Requests\Ad\UpdateRequest;
 use App\Http\Resources\AdResource;
+use App\Http\Resources\Api\AdEditResource;
 use App\Http\Resources\AttributeResource;
+use App\Http\Resources\AttributeValueResource;
 use App\Models\Ad;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\District;
 use App\Models\ReportType;
 use App\Models\State;
+use Arr;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,6 +31,7 @@ use function back;
 use function count;
 use function redirect;
 use function request;
+use function to_route;
 
 class AdController extends Controller
 {
@@ -160,7 +165,7 @@ class AdController extends Controller
             return back()
                 ->with([
                     'type' => 'error',
-                    'body', 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
+                    'body' => 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
                 ]);
         }
 
@@ -191,5 +196,99 @@ class AdController extends Controller
             'type' => 'success',
             'body' => 'گزارش تخلف یا مشکل شما ارسال شد. لطفاً منتظر بررسی مدیر سایت باشید!',
         ]);
+    }
+
+    public function edit(Ad $post): Response
+    {
+        abort_if($post->user_id === auth()->id(), ResponseAlias::HTTP_UNAUTHORIZED, 'شما اجازه ویرایش آگهی که توسط شما ساخته نشده است را ندارید!');
+
+        $post->load(['category', 'currency', 'district.state', 'attributes.values', 'values', 'media']);
+
+        return Inertia::render('Ad/AdEdit', [
+            'ad' => AdEditResource::make($post),
+            'currencies' => Currency::select(['id', 'name'])->get()->prepend(['id' => 0, 'name' => 'توافقی']),
+            'states' => State::select(['id', 'name'])->get(),
+            'districts' => District::select(['id', 'name', 'state_id'])
+                ->when(request()?->has('state'), fn($query) => $query->where('state_id', request('state')))
+                ->get(),
+            'categories' => Category::select(['slug', 'name', 'id'])->get(),
+            'attributes' => request()?->has('category') ? AttributeResource::collection(Category::whereSlug(request('category'))
+                ->orWhere('name', request('category'))
+                ->orWhere('id', request('category'))
+                ->first()
+                ?->attributes()
+                ->with('values')
+                ->get()) : AttributeResource::collection($post->attributes()->with('values')->get()),
+            'values' => AttributeValueResource::collection($post->values()->get()),
+            'category' => request()?->has('category') ? request('category') : null,
+            'state' => request()?->has('state') ? request('state') : null,
+        ]);
+    }
+
+    public function update(UpdateRequest $request, Ad $post): RedirectResponse
+    {
+        if ($post->user_id === auth()->id()) {
+            if ($post->is_published) {
+                try {
+                    DB::transaction(function() use ($request, $post) {
+                        $post->update($request->validated() + ['is_published' => false]);
+                        // Sync Attributes
+                        if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
+                            $post->attributes()->sync($request->input('attributes'));
+                        }
+                        // Sync Values
+                        if ($request->input('values') && count(request()->input('values')) > 0) {
+                            $filtered = Arr::map($request->input('values'), function($value, $key) {
+                                unset($value['name']);
+
+                                return $value;
+                            });
+                            $post->values()->sync($filtered);
+                        }
+                        // Sync Media
+                        if ($request->has('images') && $request->hasFile('images')) {
+                            if (count($post->media) > 0) {
+                                $post->clearMediaCollection('ads');
+                            }
+
+                            $post->addMultipleMediaFromRequest(['images'])
+                                ->each(function($fileAdder) {
+                                    $fileAdder->toMediaCollection('ads');
+                                });
+                        }
+
+                        return to_route('account')
+                            ->with([
+                                'type' => 'success',
+                                'body' => '.آگهی شما ویرایش شد',
+                            ]);
+                    });
+                } catch (Exception $exception) {
+                    return back()
+                        ->with([
+                            'type' => 'error',
+                            'body' => '!ویرایش آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید',
+                        ]);
+                }
+            } else {
+                return back()
+                    ->with([
+                        'type' => 'error',
+                        'body' => '!ویرایش آگهی شما در انتظار تایید مدیر سایت است. تا تایید آن شکیبا باشید یا آگهی شما تا هنوز منتشر نشده است',
+                    ]);
+            }
+        } else {
+            return back()
+                ->with([
+                    'type' => 'error',
+                    'body' => 'شما اجازه ویرایش آگهی که توسط شما ساخته نشده است را ندارید!',
+                ]);
+        }
+
+        return to_route('account')
+            ->with([
+                'type' => 'success',
+                'body' => '.آگهی شما ویرایش شد',
+            ]);
     }
 }
