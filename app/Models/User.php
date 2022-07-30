@@ -77,7 +77,7 @@ class User extends Authenticatable implements HasMedia, FilamentUser, JWTSubject
 
     public function canAccessFilament(): bool
     {
-        return $this->hasRole(['super_admin'], 'web');
+        return $this->hasRole(['super_admin', 'admin'], 'web');
     }
 
     public function ads(): HasMany

@@ -130,4 +130,15 @@ class ReportTypePolicy
         return $user->can('replicate_report::type');
     }
 
+    /**
+     * Determine whether the user can reorder.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function reorder(User $user)
+    {
+        return $user->can('reorder_report::type');
+    }
+
 }

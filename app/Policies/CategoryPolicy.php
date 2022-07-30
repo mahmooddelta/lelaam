@@ -130,4 +130,15 @@ class CategoryPolicy
         return $user->can('replicate_category');
     }
 
+    /**
+     * Determine whether the user can reorder.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function reorder(User $user)
+    {
+        return $user->can('reorder_category');
+    }
+
 }

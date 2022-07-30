@@ -156,5 +156,6 @@ return [
         'restore' => 'بازگرداندن',
         'restore_any' => 'بازگرداندن همه',
         'replicate' => 'کپی کردن',
+        'reorder' => 'مرتب سازی',
     ],
 ];
