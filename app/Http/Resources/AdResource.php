@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 use function count;
+use function is_null;
 use function secure_asset;
 use function url;
 
@@ -45,7 +46,7 @@ class AdResource extends JsonResource
             'media' => MediaResource::collection($this->whenLoaded('media')),
 
             'user' => $this->when('user', $this?->user?->name ?? 'مهمان'),
-            'user_info' => $this->when('user', $this?->user?->only(['phone', 'email'])),
+            'user_info' => $this->when(! is_null($this->user_id), $this?->user?->only(['phone', 'email'])),
             'category' => CategoryResource::make($this->whenLoaded('category')),
             'district' => $this->when('district', $this?->district?->name ?? 'District'),
             'state' => $this?->district?->state?->name ?? 'State',
