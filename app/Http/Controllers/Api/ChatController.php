@@ -83,30 +83,24 @@ class ChatController extends Controller
     {
         $ad->load(['media'])->select(['id', 'title', 'slug', 'phone_number', 'user_id']);
         if ($ad->user_id !== 0) {
-            if ($ad->user_id !== auth('api')->id()) {
-                try {
-                    \DB::transaction(function() use ($request, $ad) {
-                        $message = Message::create(
-                            [
-                                'conversation_id' => $request->validated('conversation_id'),
-                                'sender_id' => auth('api')->id(),
-                                'receiver_id' => $ad->user_id,
-                                'body' => $request->validated('message'),
-                            ]);
-                        broadcast(new MessageSentEvent($message->conversation, $message))->toOthers();
-                    });
-                } catch (Exception $exception) {
-                    \Log::error($exception);
+            try {
+                \DB::transaction(function() use ($request, $ad) {
+                    $message = Message::create(
+                        [
+                            'conversation_id' => $request->validated('conversation_id'),
+                            'sender_id' => auth('api')->id(),
+                            'receiver_id' => $ad->user_id,
+                            'body' => $request->validated('message'),
+                        ]);
+                    broadcast(new MessageSentEvent($message->conversation, $message))->toOthers();
+                });
+            } catch (Exception $exception) {
+                \Log::error($exception);
 
-                    return \response()->json(['message' => '!مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید']);
-                }
-
-                return \response()->json(['message' => '.پیام ارسال شد']);
+                return \response()->json(['message' => '!مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید']);
             }
 
-            return response()->json([
-                'message' => '!چت با خودتان غیرمنطقی است و ممکن نیست',
-            ], ResponseAlias::HTTP_UNAUTHORIZED);
+            return \response()->json(['message' => '.پیام ارسال شد']);
         }
 
         return response()->json([
