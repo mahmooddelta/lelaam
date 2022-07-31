@@ -344,4 +344,33 @@ return [
             'is_visible' => 'آیا در سایت نمایش داده شود؟',
         ],
     ],
+    'blog_posts' => [
+        'title' => 'نوشته بلاگ',
+        'title_plural' => 'نوشته های بلاگ',
+        'fields' => [
+            'category_id' => 'دسته بندی',
+            'user_id' => 'توسط',
+            'title' => 'عنوان',
+            'slug' => 'اسلاگ',
+            'content' => 'توضیحات',
+            'published_at' => 'نشر شده',
+            'media' => 'انتخاب تصاویر',
+            'tags' => 'تگ ها',
+        ],
+        'placeholders' => [
+            'category' => 'انتخاب دسته بندی',
+            'address_section' => 'آدرس  و ناحیه',
+            'photo_section' => 'تصاویر',
+            'no_user' => 'مهمان',
+            'tags' => 'با کامه (،) تگ وارد شده را اضافه کنید.',
+        ],
+        'filters' => [
+            'status' => 'وضعیت',
+            'status_placeholder' => 'همه وضعیت ها',
+            'published' => 'منتشر شده',
+            'not_published' => 'منتشر نشده',
+            'category' => 'دسته بندی',
+            'user' => 'کاربر',
+        ],
+    ],
 ];
