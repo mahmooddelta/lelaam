@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\ConversationsController;
 use App\Http\Controllers\Blog\CategoryController as BlogCategoryController;
 use App\Http\Controllers\Blog\PostController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('categories', [CategoryController::class, 'index']);
