@@ -5,4 +5,5 @@ return [
     'location' => 'موقعیت',
     'users' => 'کاربران',
     'setting' => 'تنظیمات',
+    'blog' => 'بلاگ',
 ];

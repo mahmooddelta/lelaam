@@ -319,4 +319,29 @@ return [
             ],
         ],
     ],
+    // Blog
+    'blog_categories' => [
+        'title' => 'دسته بندی بلاگ',
+        'title_plural' => 'دسته بندی های بلاگ',
+        'fields' => [
+            'name' => 'نام',
+            'slug' => 'اسلاگ',
+            'description' => 'توضیحات',
+            'is_visible' => 'وضعیت نمایش',
+            'position' => 'موقعیت نمایش',
+        ],
+        'filters' => [
+            'status' => 'وضعیت',
+            'status_placeholder' => 'همه وضعیت ها',
+            'visible' => 'فعال',
+            'not_visible' => 'غیر فعال',
+        ],
+        'relations' => [
+            'post' => 'پست',
+            'posts' => 'پست ها',
+        ],
+        'placeholder' => [
+            'is_visible' => 'آیا در سایت نمایش داده شود؟',
+        ],
+    ],
 ];

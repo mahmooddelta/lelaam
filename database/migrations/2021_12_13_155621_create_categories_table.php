@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
-	
+
 	/**
 	 * Run the migrations.
 	 *
@@ -14,21 +14,27 @@ return new class () extends Migration {
 	public function up () {
 		Schema::create('categories', function (Blueprint $table) {
 			$table->id();
+
 			$table->foreignId('parent_id')
 				->nullable();
+
 			$table->string('name');
 			$table->string('slug')
 				->unique();
+
 			$table->longText('description')
 				->nullable();
+
 			$table->unsignedSmallInteger('position')
 				->default(0);
+
 			$table->boolean('is_visible')
 				->default(false);
+
 			$table->timestamps();
 		});
 	}
-	
+
 	/**
 	 * Reverse the migrations.
 	 *
