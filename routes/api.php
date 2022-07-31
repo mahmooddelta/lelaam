@@ -3,9 +3,11 @@
 use App\Http\Controllers\Api\AdController;
 use App\Http\Controllers\Api\AppController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\ConversationsController;
+use App\Http\Controllers\Blog\CategoryController as BlogCategoryController;
+use App\Http\Controllers\Blog\PostController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('categories', [CategoryController::class, 'index']);
@@ -55,3 +57,6 @@ Route::middleware(['api', 'jwt'])->group(function() {
 Route::get('posts/{category:slug?}', [AdController::class, 'index']);
 Route::post('post/create', [AdController::class, 'store']);
 Route::get('post/{ad:slug}', [AdController::class, 'show']);
+// Blog
+Route::get('blog/categories', BlogCategoryController::class);
+Route::get('blog', PostController::class);
