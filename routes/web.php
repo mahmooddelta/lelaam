@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdController;
+use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ConversationsController;
@@ -47,5 +48,5 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.veri
         Route::delete('conversation/{conversation}/destroy', [ConversationsController::class, 'destroy'])->name('conversation.destroy');
         Route::delete('chat/{message}/destroy', [ChatController::class, 'destroy'])->name('chat.message.destroy');
     });
-
+Route::get('blog', [BlogController::class, 'index'])->name('blog.index');
 Route::mediaLibrary();
