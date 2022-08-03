@@ -31,9 +31,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Filament::registerTheme(
-            app(Vite::class)('resources/js/app.js'),
-        );
+        Filament::serving(function() {
+            Filament::registerTheme(
+                app(Vite::class)('resources/css/filament.css', 'build/admin'),
+            );
+        });
 
         Str::macro('persian_slug', function($string, $separator = '-') {
             $string = trim($string);

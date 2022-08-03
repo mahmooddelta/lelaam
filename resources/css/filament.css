@@ -1,16 +1,13 @@
+@import '../../vendor/filament/forms/dist/module.esm.css';
+
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
+
+@import 'tippy.js/dist/tippy.css';
+@import 'tippy.js/themes/light.css';
 
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-
-@import "vue-select/dist/vue-select.css";
-@import '../../public/custom/css/custom.css';
-
-@import '@spatie/media-library-pro-styles';
-
-@import 'vue-toastification/dist/index.css';
-@import '@splidejs/vue-splide/css';
 
 @layer base {
     html {

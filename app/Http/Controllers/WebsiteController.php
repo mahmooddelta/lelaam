@@ -22,7 +22,7 @@ class WebsiteController extends Controller
             'categories' => Category::query()->select(['id', 'name', 'slug'])
                 ->whereHas('children')
                 ->with(['children' => fn($query) => $query->select(['id', 'name', 'slug', 'parent_id'])])
-                ->withCount('ads')
+                ->withCount(['ads' => fn($query) => $query->published()])
                 ->orderByDesc('ads_count')
                 ->take(4)
                 ->get()
@@ -57,14 +57,14 @@ class WebsiteController extends Controller
             if (auth()->user()->hasVerifiedPhone()) {
                 return back()->with([
                     'type' => 'error',
-                    'body' =>  'شماره تماس کاربر از قبل تایید شده است!',
+                    'body' => 'شماره تماس کاربر از قبل تایید شده است!',
                 ]);
             }
 
             if (auth()->user()->phone !== $validated['phone']) {
                 return back()->with([
                     'type' => 'error',
-                    'body' =>  'شماره تماس وارد شده، اشتباه است!',
+                    'body' => 'شماره تماس وارد شده، اشتباه است!',
                 ]);
             }
 

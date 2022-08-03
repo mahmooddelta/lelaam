@@ -4,9 +4,6 @@ import vue from '@vitejs/plugin-vue';
 import path from "path";
 import basicSsl from '@vitejs/plugin-basic-ssl'
 
-const certificates = {
-    key: 'C:\\laragon\\etc\\ssl\\laragon.key', crt: 'C:\\laragon\\etc\\ssl\\laragon.crt',
-}
 export default defineConfig({
     plugins: [
         laravel({
@@ -23,6 +20,19 @@ export default defineConfig({
         }),
         basicSsl(),
     ],
+    css: {
+        postcss: {
+            plugins: [
+                require("tailwindcss")({
+                    config: "./tailwind.config.js",
+                }),
+                require("autoprefixer"),
+            ],
+        },
+    },
+    build: {
+        outDir: "./public/build/frontend",
+    },
     resolve: {
         alias: {
             '@': 'resources/js',

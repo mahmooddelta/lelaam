@@ -1,5 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
-const colors = require('tailwindcss/colors')
+const colors = require("tailwindcss/colors");
 
 module.exports = {
     content: [
@@ -8,7 +8,6 @@ module.exports = {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
-        './vendor/filament/**/*.blade.php',
     ],
     darkMode: 'class',
     theme: {
@@ -22,7 +21,6 @@ module.exports = {
                 success: colors.green,
                 warning: colors.yellow,
             },
-
         },
     },
     daisyui: {
