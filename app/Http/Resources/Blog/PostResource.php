@@ -28,6 +28,8 @@ class PostResource extends JsonResource
             'published_at' => $this->when(! is_null($this->published_at), $this?->published_at?->diffForHumans() ?? ''),
             'is_published' => ! is_null($this->published_at),
 
+            'is_featured' => $this->is_featured,
+
             'media_count' => $this->whenCounted('media', $this->media_count),
 
             'category' => new CategoryResource($this->whenLoaded('category')),

@@ -32,10 +32,12 @@ class Post extends Model implements HasMedia
         'slug',
         'content',
         'published_at',
+        'is_featured',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
+        'is_featured' => 'boolean',
     ];
 
     protected static function boot()
