@@ -62,7 +62,12 @@ class Post extends Model implements HasMedia
 
     public function scopePublished(Builder $builder): Builder
     {
-        return $builder->whereNotNull('is_published');
+        return $builder->whereNotNull('published_at');
+    }
+
+    public function scopeFeatured(Builder $builder): Builder
+    {
+        return $builder->whereIsFeatured(true);
     }
 
     /**

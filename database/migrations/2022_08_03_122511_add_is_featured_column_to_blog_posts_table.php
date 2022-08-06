@@ -8,7 +8,9 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('blog_posts', function(Blueprint $table) {
-            $table->boolean('is_featured')->default(false);
+            $table->boolean('is_featured')
+                ->after('content')
+                ->default(false);
         });
     }
 

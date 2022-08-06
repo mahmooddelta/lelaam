@@ -48,5 +48,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.veri
         Route::delete('conversation/{conversation}/destroy', [ConversationsController::class, 'destroy'])->name('conversation.destroy');
         Route::delete('chat/{message}/destroy', [ChatController::class, 'destroy'])->name('chat.message.destroy');
     });
+// Blog routes
 Route::get('blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('blog/{post:slug}', [BlogController::class, 'show'])->name('blog.post');
+// Media Library routes
 Route::mediaLibrary();

@@ -1,0 +1,54 @@
+<script setup>
+import Container from "../../Shared/Components/Container.vue";
+
+defineProps({
+    post: Object,
+})
+</script>
+
+<template>
+    <Head :title="post.data.title"/>
+    <Container>
+        <section>
+            <img :src="post.data.media[0].url"
+                 :alt="post.data.title + '_image_' + post.data?.media[0]?.uuid"
+                 class="rounded-lg w-full object-cover max-h-[26rem]" loading="lazy"/>
+        </section>
+        <section class="pt-6">
+            <div class="mb-6 flex justify-between">
+                <div class="flex justify-between">
+                    <div class="w-8 h-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                        <img :src="post.data?.user?.profile_photo_url"
+                             class="object-cover rounded-full"
+                             :alt="post.data?.user?.name + 'profile picture'"/>
+                    </div>
+                    <div class="ml-4 text-xs">
+                        <strong v-text="post.data?.user?.name ?? ''"></strong>
+                        <p>نویسنده بلاگ لیلام</p>
+                    </div>
+                </div>
+                <section class="flex">
+                    <strong class="text-sm flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                        </svg>
+                        {{ post.data?.category?.name ?? '' }}
+                    </strong>
+                    <span class="mx-4 text-gray-500">|</span>
+                    <div class="text-sm flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        {{ post.data.published_at ?? '' }}
+                    </div>
+                </section>
+            </div>
+            <h1 class="text-2xl font-bold" v-text="post.data.title"></h1>
+            <p class="text-justify my-4" v-html="post.data.content"></p>
+        </section>
+    </Container>
+</template>

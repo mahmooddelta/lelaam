@@ -8,10 +8,9 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use function is_null;
-use function str;
 
 /** @mixin \App\Models\Blog\Post */
-class PostResource extends JsonResource
+class PostResourceFull extends JsonResource
 {
     /**
      * @param  Request  $request
@@ -24,7 +23,7 @@ class PostResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
 
-            'content' => $this->when($this->content, str($this->content)->limit(350)),
+            'content' => $this->when($this->content, $this->content),
 
             'published_at' => $this->when(! is_null($this->published_at), $this?->published_at?->diffForHumans() ?? ''),
             'is_published' => ! is_null($this->published_at),
