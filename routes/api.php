@@ -26,7 +26,6 @@ Route::middleware(['api'])->prefix('auth')->group(function() {
     Route::post('profile/update', [AuthController::class, 'updateProfile']);
     // Phone verification
     Route::get('profile/phone/verified/status', [AuthController::class, 'profilePhoneVerified']);
-    Route::post('profile/phone/verify', [AuthController::class, 'profilePhoneVerifiedUpdate']);
 });
 Route::middleware(['api', 'jwt'])->group(function() {
     // Ad Reports
@@ -39,6 +38,8 @@ Route::middleware(['api', 'jwt'])->group(function() {
     Route::get('user/posts', [AdController::class, 'userAds']);
     // Ad Bookmark
     Route::get('post/{ad:slug}/bookmark', [AdController::class, 'bookmark']);
+    // Update auth user verified phone field
+    Route::post('auth/profile/phone/verify', [AuthController::class, 'profilePhoneVerifiedUpdate']);
     // Protected routes with phone verification
     Route::middleware(['api.phone.verified'])->group(function() {
         // Conversations

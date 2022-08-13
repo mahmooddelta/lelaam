@@ -11,6 +11,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Kreait\Firebase\Exception\Auth\UserNotFound;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Symfony\Component\HttpFoundation\Response;
@@ -232,8 +234,22 @@ class AuthController extends Controller
                     Rule::exists('users')->where(fn($query) => $query->where('phone', $request->input('phone'))),
                     Rule::unique('users', 'phone')->ignoreModel(auth('api')->user()),
                 ],
+                'uid' => [
+                    'required',
+                    'filled',
+                    'alpha_num',
+                    'min:28',
+                    'max:28',
+                ],
             ]);
-        if (auth('api')->user()->hasVerifiedPhone()) {
+        try {
+            if (Firebase::auth()->getUser($request->uid)->phoneNumber !== auth('api')->user()->phone) {
+                return response()->json(['message' => '!شماره تماس وارد شده، اشتباه است'], Response::HTTP_UNAUTHORIZED);
+            }
+        } catch (UserNotFound $exception) {
+            return response()->json(['message' => '!شناسه کاربری وارد شده، درست نیست'], Response::HTTP_NOT_FOUND);
+        }
+        if (auth('api')->user()?->hasVerifiedPhone()) {
             return response()->json(['message' => '!شماره تماس کاربر از قبل تایید شده است'], Response::HTTP_FORBIDDEN);
         }
 
