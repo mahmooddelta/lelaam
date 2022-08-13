@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 return [
     /*
@@ -47,7 +47,7 @@ return [
              *
              */
             'credentials' => [
-                'file' => env('FIREBASE_CREDENTIALS', env('GOOGLE_APPLICATION_CREDENTIALS')),
+                'file' => storage_path('app/firebase/firebase_leelam.json'),
 
                 /*
                  * If you want to prevent the auto discovery of credentials, set the
