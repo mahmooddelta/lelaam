@@ -15,6 +15,7 @@ use App\Models\Message;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use function auth;
 use function broadcast;
@@ -33,50 +34,54 @@ class ChatController extends Controller
             ->get());
     }
 
-    public function create(Ad $ad): JsonResponse
+    public function create(Ad $ad, Conversation $conversation = null): JsonResponse
     {
-        if ($ad->user_id !== 0) {
-            if ($ad->user_id !== auth('api')->id()) {
-                $ad->load('media');
+        try {
+            return DB::transaction(function() use ($ad, $conversation) {
+                if ($ad->user_id !== 0) {
+                    $ad->load('media');
 
-                $conversation = Conversation::query()
-                    ->whereReceiverId(auth('api')->id())
-                    ->orWhere('creator_id', auth('api')->id())
-                    ->with(['creator', 'receiver'])
-                    ->firstOrCreate(
-                        [
-                            'ad_id' => $ad->id,
-                        ],
-                        [
-                            'creator_id' => auth('api')->id(),
-                            'receiver_id' => $ad->user_id,
-                        ]);
-                // Make the unread messages read
-                Message::whereConversationId($conversation->id)
-                    ->whereHasSeen(false)
-                    ->update(['has_seen' => true, 'has_seen_at' => now()]);
-                // Broadcast the event to channel
-                if ($conversation->wasRecentlyCreated) {
-                    broadcast(new ConversationCreatedEvent($conversation, $ad));
+                    if ($conversation === null) {
+                        $conversation = Conversation::query()
+                            ->whereReceiverId(auth('api')->id())
+                            ->orWhere('creator_id', auth('api')->id())
+                            ->with(['creator', 'receiver'])
+                            ->firstOrCreate(
+                                [
+                                    'ad_id' => $ad->id,
+                                ],
+                                [
+                                    'creator_id' => auth('api')->id(),
+                                    'receiver_id' => $ad->user_id,
+                                ]);
+                    }
+                    // Make the unread messages read
+                    Message::whereConversationId($conversation->id)
+                        ->whereHasSeen(false)
+                        ->update(['has_seen' => true, 'has_seen_at' => now()]);
+                    // Broadcast the event to channel
+                    if ($conversation->wasRecentlyCreated) {
+                        broadcast(new ConversationCreatedEvent($conversation, $ad));
+                    }
+
+                    $messages = $conversation->messages()->withTrashed()->with(['sender', 'receiver'])->get();
+
+                    return \response()->json([
+                        'conversation' => new ConversationResource($conversation),
+                        'ad' => new AdResource($ad),
+                        'messages' => MessageResource::collection($messages),
+                    ]);
                 }
 
-                $messages = $conversation->messages()->withTrashed()->with(['sender', 'receiver'])->get();
-
-                return \response()->json([
-                    'conversation' => new ConversationResource($conversation),
-                    'ad' => new AdResource($ad),
-                    'messages' => MessageResource::collection($messages),
-                ]);
-            }
-
+                return response()->json([
+                    'message' => '!چت با آگهی که به صورت مهمان ثبت شده ممکن نیست',
+                ], ResponseAlias::HTTP_UNAUTHORIZED);
+            });
+        } catch (Exception $exception) {
             return response()->json([
-                'message' => '!چت با خودتان غیرمنطقی است و ممکن نیست',
-            ], ResponseAlias::HTTP_UNAUTHORIZED);
+                'message' => 'مشکلی در ایجاد گفتگوی شما پیش آمده است. لطفا دوباره کوشش کنید!',
+            ], ResponseAlias::HTTP_BAD_REQUEST);
         }
-
-        return response()->json([
-            'message' => '!چت با آگهی که به صورت مهمان ثبت شده ممکن نیست',
-        ], ResponseAlias::HTTP_UNAUTHORIZED);
     }
 
     public function store(Ad $ad, StoreRequest $request): JsonResponse

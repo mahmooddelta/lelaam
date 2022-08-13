@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.veri
         Route::post('post/{post:slug}/edit', [AdController::class, 'update'])->name('post.update');
         // Chat & Messaging
         Route::get('chat', [ChatController::class, 'index'])->name('chat');
-        Route::get('chat/{ad:slug}', [ChatController::class, 'create'])->name('chat.create');
+        Route::get('chat/{ad:slug}/{conversation?}', [ChatController::class, 'create'])->name('chat.create');
         Route::post('chat/{ad:slug}/store', [ChatController::class, 'store'])->name('chat.store');
         Route::delete('conversation/{conversation}/destroy', [ConversationsController::class, 'destroy'])->name('conversation.destroy');
         Route::delete('chat/{message}/destroy', [ChatController::class, 'destroy'])->name('chat.message.destroy');

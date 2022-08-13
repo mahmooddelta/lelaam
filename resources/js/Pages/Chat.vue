@@ -58,7 +58,8 @@ const deleteConversation = (conversationId) => {
                 <section v-for="conversation in conversations.data" :key="conversation.id"
                          v-if="conversations.data.length > 0"
                          class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-base-100 focus:outline-none rounded">
-                    <Link :href="route('chat.create', {ad: conversation?.ad?.slug})" class="flex items-center w-full">
+                    <Link :href="route('chat.create', {ad: conversation?.ad?.slug, conversation: conversation.id})"
+                          class="flex items-center w-full">
                         <img class="object-cover w-16 h-16"
                              :src="conversation?.ad?.thumb" :alt="conversation?.ad?.title"/>
                         <div class="w-full pb-2">

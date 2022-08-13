@@ -35,39 +35,49 @@ class ChatController extends Controller
         ]);
     }
 
-    public function create(Ad $ad): Response
+    public function create(Ad $ad, Conversation $conversation = null): Response|RedirectResponse
     {
-        $ad->load('media');
+        try {
+            return DB::transaction(function() use ($ad, $conversation) {
+                $ad->load('media');
+                if ($conversation === null) {
+                    $conversation = Conversation::query()
+                        ->whereReceiverId(auth()->id())
+                        ->orWhere('creator_id', auth()->id())
+                        ->with(['creator', 'receiver'])
+                        ->firstOrCreate(
+                            [
+                                'ad_id' => $ad->id,
+                            ],
+                            [
+                                'creator_id' => auth()->id(),
+                                'receiver_id' => $ad->user_id,
+                            ]);
+                }
 
-        $conversation = Conversation::query()
-            ->whereReceiverId(auth()->id())
-            ->orWhere('creator_id', auth()->id())
-            ->with(['creator', 'receiver'])
-            ->firstOrCreate(
-                [
-                    'ad_id' => $ad->id,
-                ],
-                [
-                    'creator_id' => auth()->id(),
-                    'receiver_id' => $ad->user_id,
+                // Make the unread messages read
+                Message::whereConversationId($conversation->id)
+                    ->whereHasSeen(false)
+                    ->update(['has_seen' => true, 'has_seen_at' => now()]);
+                // Broadcast the event to channel
+                if ($conversation->wasRecentlyCreated) {
+                    broadcast(new ConversationCreatedEvent($conversation, $ad));
+                }
+
+                $messages = $conversation->messages()->withTrashed()->with(['sender', 'receiver'])->get();
+
+                return Inertia::render('Chat/Create', [
+                    'conversation' => new ConversationResource($conversation),
+                    'ad' => new AdResource($ad),
+                    'messages' => MessageResource::collection($messages),
                 ]);
-
-        // Make the unread messages read
-        Message::whereConversationId($conversation->id)
-            ->whereHasSeen(false)
-            ->update(['has_seen' => true, 'has_seen_at' => now()]);
-        // Broadcast the event to channel
-        if ($conversation->wasRecentlyCreated) {
-            broadcast(new ConversationCreatedEvent($conversation, $ad));
+            });
+        } catch (Exception $exception) {
+            return back()->with([
+                'type' => 'error',
+                'body' => 'مشکلی در ایجاد گفتگوی شما پیش آمده است. لطفا دوباره کوشش کنید!',
+            ]);
         }
-
-        $messages = $conversation->messages()->withTrashed()->with(['sender', 'receiver'])->get();
-
-        return Inertia::render('Chat/Create', [
-            'conversation' => new ConversationResource($conversation),
-            'ad' => new AdResource($ad),
-            'messages' => MessageResource::collection($messages),
-        ]);
     }
 
     public function store(StoreRequest $request, Ad $ad): RedirectResponse
@@ -91,7 +101,7 @@ class ChatController extends Controller
             return back()
                 ->with([
                     'type' => 'error',
-                    'body' =>  'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!',
+                    'body' => 'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!',
                 ]);
         }
 

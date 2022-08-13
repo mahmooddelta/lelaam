@@ -3,11 +3,11 @@
 use App\Http\Controllers\Api\AdController;
 use App\Http\Controllers\Api\AppController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\ConversationsController;
 use App\Http\Controllers\Blog\CategoryController as BlogCategoryController;
 use App\Http\Controllers\Blog\PostController;
-use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('categories', [CategoryController::class, 'index']);
@@ -43,7 +43,7 @@ Route::middleware(['api', 'jwt'])->group(function() {
     Route::middleware(['api.phone.verified'])->group(function() {
         // Conversations
         Route::get('conversations', [ChatController::class, 'index']);
-        Route::get('conversation/{ad:slug}/messages', [ChatController::class, 'create']);
+        Route::get('conversation/{ad:slug}/{conversation?}/messages', [ChatController::class, 'create']);
         Route::delete('conversation/{conversation}/destroy', [ConversationsController::class, 'destroy']);
         // Chat
         Route::post('chat/{ad:slug}/store', [ChatController::class, 'store']);
