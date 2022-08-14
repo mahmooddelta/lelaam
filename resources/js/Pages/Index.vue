@@ -12,10 +12,10 @@ defineProps({
     <Head title="خانه"/>
     <div class="min-h-fit bg-base-200 py-10">
         <div class="w-full text-center">
-            <h1 class="text-5xl font-bold text-primary-500 hover:no-underline underline decoration-solid">
+            <h1 class="text-4xl md:text-5xl font-bold text-primary-500">
                 خرید و فروش بی واسطه
             </h1>
-            <h4 class="py-6 hover:underline hover:decoration-solid">
+            <h4 class="py-6">
                 خرید و فروش هر آنچه به فکرت میرسد!
             </h4>
             <!-- Top Categories -->
