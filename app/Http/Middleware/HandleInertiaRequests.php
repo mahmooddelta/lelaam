@@ -3,9 +3,11 @@
 namespace App\Http\Middleware;
 
 use App\Models\Message;
+use Config;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
+use function auth;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -20,6 +22,7 @@ class HandleInertiaRequests extends Middleware
      * Determine the current asset version.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return string|null
      */
     public function version(Request $request)
@@ -31,12 +34,13 @@ class HandleInertiaRequests extends Middleware
      * Define the props that are shared by default.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            'ziggy' => function () {
+            'ziggy' => function() {
                 return (new Ziggy)->toArray();
             },
 
@@ -44,14 +48,24 @@ class HandleInertiaRequests extends Middleware
 
             ],
 
-            'flash' => function () use ($request) {
+            'flash' => function() use ($request) {
                 return [
                     'type' => $request->session()->get('type'),
                     'body' => $request->session()->get('body'),
                 ];
             },
 
-            'unread_messages_count' => Message::whereHasSeen(false)->count(),
+            'unread_messages_count' => Message::query()
+                ->whereReceiverId(auth()->id())
+                ->orWhere('sender_id', auth()->id())
+                ->whereHasSeen(false)
+                ->count(),
+            'social_media_links' => [
+                'youtube' => Config::get('settings.website_youtube_link'),
+                'instagram' => Config::get('settings.website_instagram_link'),
+                'facebook' => Config::get('settings.website_facebook_link'),
+                'tiktok' => Config::get('settings.website_tiktok_link'),
+            ],
         ]);
     }
 }
