@@ -31,5 +31,6 @@ class DatabaseSeeder extends Seeder
 //        $this->call(AdSeeder::class);
         $this->call(AdsTableSeeder::class);
         $this->call(MediaTableSeeder::class);
+        $this->call(SettingsTableSeeder::class);
     }
 }
