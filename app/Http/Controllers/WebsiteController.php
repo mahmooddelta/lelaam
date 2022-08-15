@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AdResource;
 use App\Models\Ad;
 use App\Models\Category;
+use Config;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -78,5 +79,34 @@ class WebsiteController extends Controller
         }
 
         return redirect()->intended('account');
+    }
+
+    public function about(): Response
+    {
+        return Inertia::render('Others/About', [
+            'text' => Config::get('settings.website_about'),
+        ]);
+    }
+
+    public function contact(): Response
+    {
+        return Inertia::render('Others/Contact', [
+            'phone' => Config::get('settings.default_phone_number'),
+            'email' => Config::get('settings.default_email'),
+        ]);
+    }
+
+    public function privacy(): Response
+    {
+        return Inertia::render('Others/Privacy', [
+            'text' => Config::get('settings.website_privacy_text'),
+        ]);
+    }
+
+    public function terms(): Response
+    {
+        return Inertia::render('Others/TermsAndConditions', [
+            'text' => Config::get('settings.website_terms_text'),
+        ]);
     }
 }
