@@ -223,6 +223,7 @@ return [
             "phone" => "شماره تماس",
             "state_id" => "ولایت",
             "phone_verified_at" => "شماره تماس تایید شده است",
+            "banned_at" => "وضعیت بلاک",
         ],
         'filters' => [
             'email' => [
@@ -236,6 +237,12 @@ return [
                 'status_placeholder' => 'همه وضعیت ها',
                 "verified" => "تایید شده",
                 "unverified" => "تایید نشده",
+            ],
+            'ban' => [
+                'status' => 'وضعیت بلاکی',
+                'status_placeholder' => 'همه وضعیت ها',
+                "banned" => "بلاک شده",
+                "unbanned" => "بلاک نشده",
             ],
         ],
         'actions' => [

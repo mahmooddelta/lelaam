@@ -122,6 +122,12 @@ class UserResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
+                BooleanColumn::make('banned_at')
+                    ->label(__('general.users.fields.banned_at'))
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
                     ->searchable()
@@ -157,6 +163,17 @@ class UserResource extends Resource
                     ->queries(
                         true: fn(Builder $query) => $query->whereNotNull('phone_verified_at'),
                         false: fn(Builder $query) => $query->whereNull('phone_verified_at'),
+                        blank: fn(Builder $query) => $query,
+                    ),
+                TernaryFilter::make('banned_at')
+                    ->nullable()
+                    ->label(__('general.users.filters.ban.status'))
+                    ->placeholder(__('general.users.filters.ban.status_placeholder'))
+                    ->trueLabel(__('general.users.filters.ban.banned'))
+                    ->falseLabel(__('general.users.filters.ban.unbanned'))
+                    ->queries(
+                        true: fn(Builder $query) => $query->onlyBanned(),
+                        false: fn(Builder $query) => $query->withoutBanned(),
                         blank: fn(Builder $query) => $query,
                     ),
             ])
