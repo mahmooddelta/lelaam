@@ -13,8 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use function __;
 use function str;
 
@@ -35,10 +33,12 @@ class SettingResource extends Resource
                 TextInput::make('key')
                     ->label(__('general.settings.fields.key'))
                     ->required()
-                    ->maxLength(255),
-                TextInput::make('value')
+                    ->maxLength(255)
+                    ->columnSpan(2),
+                Forms\Components\RichEditor::make('value')
                     ->label(__('general.settings.fields.value'))
-                    ->maxLength(255),
+                    ->nullable()
+                    ->columnSpan(3),
             ]);
     }
 
@@ -48,11 +48,11 @@ class SettingResource extends Resource
             ->columns([
                 TextColumn::make('key')
                     ->label(__('general.settings.fields.key')),
-                TextColumn::make('value')
-                    ->label(__('general.settings.fields.value')),
                 TextColumn::make('created_at')
+                    ->label(__('general.created_at'))
                     ->formatStateUsing(fn(Setting $record) => $record->created_at->diffForHumans()),
                 TextColumn::make('updated_at')
+                    ->label(__('general.updated_at'))
                     ->formatStateUsing(fn(Setting $record) => $record->updated_at->diffForHumans()),
             ])
             ->filters([
