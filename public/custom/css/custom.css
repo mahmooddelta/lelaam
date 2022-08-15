@@ -1,6 +1,7 @@
 .vs__dropdown-toggle {
     height: 3rem;
     border-radius: 0.5rem;
+    direction: rtl;
 }
 
 .v-select {
@@ -11,6 +12,14 @@
 .vs__dropdown-menu {
     background: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
     color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
+}
+
+.vs__clear {
+    padding-left: 0.5rem;
+}
+
+.vs__actions{
+    padding-left: 0.5rem;
 }
 
 /* Global Transparent Background Color*/
