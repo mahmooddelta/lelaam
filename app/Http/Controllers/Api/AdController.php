@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Ad\Api\EditRequest;
 use App\Http\Requests\Ad\Api\StoreRequest;
-use App\Http\Requests\Ad\Api\UpdateRequest;
 use App\Http\Resources\AdReportResource;
 use App\Http\Resources\AdResource;
 use App\Http\Resources\Api\AdEditResource;
@@ -116,7 +116,7 @@ class AdController extends Controller
         return AdEditResource::make($ad->load(['category', 'currency', 'district.state', 'attributes.values', 'values', 'media']));
     }
 
-    public function update(UpdateRequest $request, Ad $ad): JsonResponse
+    public function update(EditRequest $request, Ad $ad): JsonResponse
     {
         if ($ad->is_published) {
             if ($ad->user_id === auth('api')->id()) {

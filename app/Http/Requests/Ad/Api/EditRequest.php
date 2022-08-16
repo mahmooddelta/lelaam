@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Ad;
+namespace App\Http\Requests\Ad\Api;
 
 use App\Models\Attribute;
 use App\Models\AttributeValue;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use function request;
 use function response;
 
-class UpdateRequest extends FormRequest
+class EditRequest extends FormRequest
 {
 
     /**
