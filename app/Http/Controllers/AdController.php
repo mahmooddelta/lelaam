@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Ad\StoreRequest;
 use App\Http\Requests\Ad\UpdateRequest;
 use App\Http\Resources\AdResource;
-use App\Http\Resources\Api\AdEditResource;
+use App\Http\Resources\AdUpdateResource;
 use App\Http\Resources\AttributeResource;
 use App\Http\Resources\AttributeValueResource;
 use App\Models\Ad;
@@ -205,7 +205,7 @@ class AdController extends Controller
         $post->load(['category', 'currency', 'district.state', 'attributes.values', 'values', 'media']);
 
         return Inertia::render('Ad/AdEdit', [
-            'ad' => AdEditResource::make($post),
+            'ad' => AdUpdateResource::make($post),
             'currencies' => Currency::select(['id', 'name'])->get()->prepend(['id' => 0, 'name' => 'توافقی']),
             'states' => State::select(['id', 'name'])->get(),
             'districts' => District::select(['id', 'name', 'state_id'])

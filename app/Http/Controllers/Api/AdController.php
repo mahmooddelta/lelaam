@@ -111,8 +111,15 @@ class AdController extends Controller
             ]);
     }
 
-    public function edit(Ad $ad): AdEditResource
+    public function edit(Ad $ad): AdEditResource|JsonResponse
     {
+        if ($ad->user_id === auth('api')->id()) {
+            return response()->json(
+                [
+                    'message' => '!شما اجازه ویرایش آگهی که توسط شما ارسال نشده است را ندارید',
+                ], ResponseAlias::HTTP_UNAUTHORIZED);
+        }
+
         return AdEditResource::make($ad->load(['category', 'currency', 'district.state', 'attributes.values', 'values', 'media']));
     }
 

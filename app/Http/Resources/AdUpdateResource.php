@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Api;
+namespace App\Http\Resources;
 
 use App\Http\Resources\AdReportResource;
 use App\Http\Resources\AttributeResource;
@@ -8,13 +8,15 @@ use App\Http\Resources\AttributeValueResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CurrencyResource;
 use App\Http\Resources\DistrictResource;
+use App\Http\Resources\MediaEditResource;
+use App\Http\Resources\MediaResource;
 use App\Http\Resources\StateResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /** @mixin \App\Models\Ad */
-class AdEditResource extends JsonResource
+class AdUpdateResource extends JsonResource
 {
     public static $wrap = null;
 
@@ -41,7 +43,7 @@ class AdEditResource extends JsonResource
             'values' => AttributeValueResource::collection($this->whenLoaded('values')),
 
             'category' => new CategoryResource($this->whenLoaded('category')),
-            'media' => MediaApiResource::collection($this->whenLoaded('media')),
+            'media' => MediaEditResource::collection($this->whenLoaded('media')),
             'reports' => AdReportResource::collection($this->whenLoaded('reports')),
             'user' => new UserResource($this->whenLoaded('user')),
         ];
