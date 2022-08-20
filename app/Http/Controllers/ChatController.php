@@ -35,12 +35,12 @@ class ChatController extends Controller
         ]);
     }
 
-    public function create(Ad $ad, Conversation $conversation = null): Response|RedirectResponse
+    public function create(Ad $ad, Conversation $conversation): Response|RedirectResponse
     {
         try {
-            return DB::transaction(function() use ($ad, $conversation) {
+            return DB::transaction(function () use ($ad, $conversation) {
                 $ad->load('media');
-                if ($conversation === null) {
+                if (!$conversation->exists) {
                     $conversation = Conversation::query()
                         ->whereReceiverId(auth()->id())
                         ->orWhere('creator_id', auth()->id())
@@ -60,7 +60,7 @@ class ChatController extends Controller
                     ->whereHasSeen(false)
                     ->update(['has_seen' => true, 'has_seen_at' => now()]);
                 // Broadcast the event to channel
-                if ($conversation->wasRecentlyCreated) {
+                if ($conversation->wasRecentlyCreated || $conversation->wasChanged('updated_at')) {
                     broadcast(new ConversationCreatedEvent($conversation, $ad));
                 }
 
@@ -85,7 +85,7 @@ class ChatController extends Controller
         $ad->load('media');
 
         try {
-            DB::transaction(function() use ($request, $ad) {
+            DB::transaction(function () use ($request, $ad) {
                 $message = Message::create(
                     [
                         'conversation_id' => $request->validated('conversation_id'),
