@@ -18,7 +18,7 @@ Route::get('currencies', [AppController::class, 'currencies']);
 Route::get('districts/{state:name?}', [AppController::class, 'districts']);
 // Auth Endpoints
 Route::post('register', [AuthController::class, 'register']);
-Route::middleware(['api'])->prefix('auth')->group(function() {
+Route::middleware(['api'])->prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
@@ -27,7 +27,7 @@ Route::middleware(['api'])->prefix('auth')->group(function() {
     // Phone verification
     Route::get('profile/phone/verified/status', [AuthController::class, 'profilePhoneVerified']);
 });
-Route::middleware(['api', 'jwt'])->group(function() {
+Route::middleware(['api', 'jwt'])->group(function () {
     // Ad Reports
     Route::get('post/reports', [AdController::class, 'reports']);
     // Report Create
@@ -41,10 +41,10 @@ Route::middleware(['api', 'jwt'])->group(function() {
     // Update auth user verified phone field
     Route::post('auth/profile/phone/verify', [AuthController::class, 'profilePhoneVerifiedUpdate']);
     // Protected routes with phone verification
-    Route::middleware(['api.phone.verified'])->group(function() {
+    Route::middleware(['api.phone.verified'])->group(function () {
         // Conversations
         Route::get('conversations', [ChatController::class, 'index']);
-        Route::get('conversation/{ad:slug}/{conversation?}/messages', [ChatController::class, 'create']);
+        Route::get('conversation/messages/{ad:slug}/{conversation?}', [ChatController::class, 'create']);
         Route::delete('conversation/{conversation}/destroy', [ConversationsController::class, 'destroy']);
         // Chat
         Route::post('chat/{ad:slug}/store', [ChatController::class, 'store']);
