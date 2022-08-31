@@ -60,7 +60,7 @@ class UserResource extends Resource
                     ->password()
                     ->required()
                     ->maxLength(255)
-                    ->dehydrateStateUsing(fn($state) => ! empty($state) ? Hash::make($state) : ""),
+                    ->dehydrateStateUsing(fn($state) => !empty($state) ? Hash::make($state) : ""),
 
                 Select::make('state_id')
                     ->label(__('general.users.fields.state_id'))
@@ -184,14 +184,14 @@ class UserResource extends Resource
                     ->icon('heroicon-o-lock-closed')
                     ->requiresConfirmation()
                     ->modalWidth('sm')
-                    ->form(function() {
+                    ->form(function () {
                         return [
                             TextInput::make('comment')
                                 ->label(__('general.users.actions.ban.comment')),
 
                             DateTimePicker::make('expired_at')
                                 ->label(__('general.users.actions.ban.expires_at'))
-                                ->visible(fn(callable $get) => ! $get('permanent')),
+                                ->visible(fn(callable $get) => !$get('permanent')),
 
                             Checkbox::make('permanent')
                                 ->label(__('general.users.actions.ban.permanent'))
@@ -199,7 +199,7 @@ class UserResource extends Resource
                                 ->default(true),
                         ];
                     })
-                    ->action(function(User $record, array $data) {
+                    ->action(function (User $record, array $data) {
                         if ($record->isNotBanned()) {
                             $record->ban([
                                 'comment' => $data['comment'],
@@ -222,10 +222,38 @@ class UserResource extends Resource
                     ->label(__('general.users.actions.unban.label'))
                     ->icon('heroicon-o-lock-open')
                     ->requiresConfirmation()
-                    ->action(function(Model $record) {
+                    ->action(function (Model $record) {
                         $record->unban();
                         Notification::make()
                             ->title(__('general.users.actions.unban.messages.success'))
+                            ->icon('heroicon-o-check-circle')
+                            ->success()
+                            ->send();
+                    }),
+                Tables\Actions\Action::make('verify_phone')
+                    ->label(__('general.users.actions.verify_phone.label'))
+                    ->icon('heroicon-o-phone')
+                    ->requiresConfirmation()
+                    ->modalWidth('sm')
+                    ->form(function () {
+                        return [
+                            TextInput::make('phone')
+                                ->label(__('general.users.fields.phone'))
+                                ->tel()
+                                ->minLength(9)
+                                ->maxLength(14)
+                                ->unique('users', 'phone')
+                                ->visible(fn($record) => blank($record->phone)),
+                        ];
+                    })
+                    ->action(function (Model $record, array $data) {
+                        $record->update([
+                            'phone' => filled(\Arr::get($data, 'phone')) ? $data['phone'] : $record->phone,
+                            'phone_verified_at' => now(),
+                        ]);
+
+                        Notification::make()
+                            ->title(__('general.users.actions.verify_phone.messages.success'))
                             ->icon('heroicon-o-check-circle')
                             ->success()
                             ->send();
@@ -237,14 +265,14 @@ class UserResource extends Resource
                     ->icon('heroicon-o-lock-closed')
                     ->requiresConfirmation()
                     ->modalWidth('sm')
-                    ->form(function() {
+                    ->form(function () {
                         return [
                             TextInput::make('comment')
                                 ->label(__('general.users.actions.ban.comment')),
 
                             DateTimePicker::make('expired_at')
                                 ->label(__('general.users.actions.ban.expires_at'))
-                                ->visible(fn(callable $get) => ! $get('permanent')),
+                                ->visible(fn(callable $get) => !$get('permanent')),
 
                             Checkbox::make('permanent')
                                 ->label(__('general.users.actions.ban.permanent'))
@@ -252,8 +280,8 @@ class UserResource extends Resource
                                 ->default(true),
                         ];
                     })
-                    ->action(function(Collection $records, array $data) {
-                        $records->each(function(User $record) use ($data) {
+                    ->action(function (Collection $records, array $data) {
+                        $records->each(function (User $record) use ($data) {
                             if ($record->isNotBanned()) {
                                 $record->ban([
                                     'comment' => $data['comment'],
@@ -277,10 +305,23 @@ class UserResource extends Resource
                     ->label(__('general.users.actions.unban.plural_label'))
                     ->icon('heroicon-o-lock-open')
                     ->requiresConfirmation()
-                    ->action(function(Collection $records) {
+                    ->action(function (Collection $records) {
                         $records->each->unban();
                         Notification::make()
                             ->title(__('general.users.actions.unban.messages.success_plural'))
+                            ->icon('heroicon-o-check-circle')
+                            ->success()
+                            ->send();
+                    }),
+                BulkAction::make('verify_phone')
+                    ->label(__('general.users.actions.verify_phone.plural_label'))
+                    ->icon('heroicon-o-phone')
+                    ->requiresConfirmation()
+                    ->action(function (Collection $records) {
+                        $records->each(fn($record) => $record->update(['phone_verified_at' => now()]));
+
+                        Notification::make()
+                            ->title(__('general.users.actions.verify_phone.messages.success_plural'))
                             ->icon('heroicon-o-check-circle')
                             ->success()
                             ->send();
