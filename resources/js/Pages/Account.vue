@@ -71,6 +71,9 @@ const pageTitle = usePage().props.value.user ? `${usePage().props.value.user.nam
                             </svg>
                             ویرایش
                         </Link>
+                        <div v-else class="p-2 badge badge-primary" v-if="ad?.is_expired">
+                            منقضی شد.
+                        </div>
                         <Link as="button" class="btn btn-primary btn-outline btn-sm" method="post"
                               v-if="!ad.is_sold"
                               preserve-state
