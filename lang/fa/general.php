@@ -33,6 +33,8 @@ return [
     ],
     'actions' => [
         'status' => 'تغییر وضعیت',
+        'sold' => 'فروخته شد',
+        'not_sold' => 'فروخته نشد',
     ],
     'SEO' => [
         'title' => 'سئو',
@@ -141,6 +143,7 @@ return [
             'address' => 'آدرس',
             'district_id' => 'ناحیه',
             'is_published' => 'تایید/نشر شده',
+            'is_sold' => 'فروخته شده',
             'media' => 'انتخاب تصاویر',
         ],
         'placeholders' => [
@@ -163,6 +166,8 @@ return [
             'status_placeholder' => 'همه وضعیت ها',
             'published' => 'منتشر شده',
             'not_published' => 'منتشر نشده',
+            'sold' => 'فروخته شده',
+            'not_sold' => 'فروخته نشده',
             'category' => 'دسته بندی',
             'user' => 'کاربر',
             'state' => 'ولایت',

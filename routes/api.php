@@ -53,6 +53,7 @@ Route::middleware(['api', 'jwt'])->group(function () {
     // Post Update
     Route::get('post/{ad:slug}/edit', [AdController::class, 'edit']);
     Route::post('post/{ad:slug}/update', [AdController::class, 'update']);
+    Route::post('post/{post:slug}/sold', [AdController::class, 'sold']);
 });
 // Ads
 Route::get('posts/{category:slug?}', [AdController::class, 'index']);

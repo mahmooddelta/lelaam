@@ -63,7 +63,7 @@ class AdController extends Controller
     public function store(StoreRequest $request): JsonResponse
     {
         try {
-            DB::transaction(function() use ($request) {
+            DB::transaction(function () use ($request) {
                 $ad = Ad::create($request->validated());
                 // Sync Attributes
                 if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
@@ -76,7 +76,7 @@ class AdController extends Controller
                 // Sync Media
                 if ($request->has('images') && $request->hasFile('images')) {
                     $ad->addMultipleMediaFromRequest(['images'])
-                        ->each(function($fileAdder) {
+                        ->each(function ($fileAdder) {
                             $fileAdder->toMediaCollection('ads');
                         });
                 }
@@ -128,7 +128,7 @@ class AdController extends Controller
         if ($ad->is_published) {
             if ($ad->user_id === auth('api')->id()) {
                 try {
-                    DB::transaction(function() use ($request, $ad) {
+                    DB::transaction(function () use ($request, $ad) {
                         $ad->update($request->validated() + ['is_published' => false]);
                         // Sync Attributes
                         if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
@@ -145,7 +145,7 @@ class AdController extends Controller
                             }
 
                             $ad->addMultipleMediaFromRequest(['images'])
-                                ->each(function($fileAdder) {
+                                ->each(function ($fileAdder) {
                                     $fileAdder->toMediaCollection('ads');
                                 });
                         }
@@ -244,6 +244,20 @@ class AdController extends Controller
 
         return response()->json([
             'message' => 'گزارش تخلف یا مشکل شما ارسال شد. لطفاً منتظر بررسی مدیر سایت باشید!',
+        ], ResponseAlias::HTTP_CREATED);
+    }
+
+    public function sold(Ad $post): JsonResponse
+    {
+        if ($post->is_sold) {
+            return response()->json([
+                'message' => '.آگهی شما از قبل فروخته شده است',
+            ], ResponseAlias::HTTP_FORBIDDEN);
+        }
+
+        $post->update(['is_sold' => true]);
+        return response()->json([
+            'message' => '.شما آگهی تان را به حالت فروخته شده درآوردید',
         ], ResponseAlias::HTTP_CREATED);
     }
 }

@@ -92,7 +92,7 @@ class AdController extends Controller
                 ->whereSlug($ad->slug)
                 ->exists() : false,
             'report_types' => ReportType::select(['id', 'name'])->get(),
-            'can_report' => auth()->check() && ! auth()
+            'can_report' => auth()->check() && !auth()
                     ->user()
                     ->reports()
                     ->whereAdId($ad->id)
@@ -138,7 +138,7 @@ class AdController extends Controller
     public function store(StoreRequest $request): RedirectResponse
     {
         try {
-            DB::transaction(function() use ($request) {
+            DB::transaction(function () use ($request) {
                 $ad = Ad::create($request->validated());
                 // Sync Attributes
                 if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
@@ -230,7 +230,7 @@ class AdController extends Controller
         if ($post->user_id === auth()->id()) {
             if ($post->is_published) {
                 try {
-                    DB::transaction(function() use ($request, $post) {
+                    DB::transaction(function () use ($request, $post) {
                         $post->update($request->validated() + ['is_published' => false]);
                         // Sync Attributes
                         if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
@@ -238,7 +238,7 @@ class AdController extends Controller
                         }
                         // Sync Values
                         if ($request->input('values') && count(request()->input('values')) > 0) {
-                            $filtered = Arr::map($request->input('values'), function($value, $key) {
+                            $filtered = Arr::map($request->input('values'), function ($value, $key) {
                                 unset($value['name']);
 
                                 return $value;
@@ -252,7 +252,7 @@ class AdController extends Controller
                             }
 
                             $post->addMultipleMediaFromRequest(['images'])
-                                ->each(function($fileAdder) {
+                                ->each(function ($fileAdder) {
                                     $fileAdder->toMediaCollection('ads');
                                 });
                         }
@@ -289,6 +289,17 @@ class AdController extends Controller
             ->with([
                 'type' => 'success',
                 'body' => '.آگهی شما ویرایش شد',
+            ]);
+    }
+
+    public function sold(Ad $post): RedirectResponse
+    {
+        $post->update(['is_sold' => true]);
+
+        return back()
+            ->with([
+                'type' => 'success',
+                'body' => 'شما آگهی تان را به حالت فروخته شده درآوردید.',
             ]);
     }
 }

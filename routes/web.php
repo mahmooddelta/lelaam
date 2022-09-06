@@ -41,6 +41,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.veri
         // Post Edit
         Route::get('post/{post:slug}/edit', [AdController::class, 'edit'])->name('post.edit');
         Route::post('post/{post:slug}/edit', [AdController::class, 'update'])->name('post.update');
+        Route::post('post/{post:slug}/sold', [AdController::class, 'sold'])->name('post.sold');
         // Chat & Messaging
         Route::get('chat', [ChatController::class, 'index'])->name('chat');
         Route::get('chat/{ad:slug}/{conversation?}', [ChatController::class, 'create'])->name('chat.create');
