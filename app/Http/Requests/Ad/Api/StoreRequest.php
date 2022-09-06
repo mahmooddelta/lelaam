@@ -78,6 +78,9 @@ class StoreRequest extends FormRequest
             'is_chat_enabled' => [
                 'sometimes',
             ],
+            'is_sold' => [
+                'sometimes',
+            ],
             'images' => [
                 'nullable',
             ],

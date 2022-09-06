@@ -6,7 +6,7 @@ use App\Models\AdReport;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\AdReport */
+/** @mixin AdReport */
 class AdReportResource extends JsonResource
 {
     /**

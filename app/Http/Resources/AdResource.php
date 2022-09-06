@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Ad;
 use AshAllenDesign\ShortURL\Models\ShortURL;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -11,11 +12,11 @@ use function is_null;
 use function secure_asset;
 use function url;
 
-/** @mixin \App\Models\Ad */
+/** @mixin Ad */
 class AdResource extends JsonResource
 {
     /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array
      */
@@ -39,6 +40,7 @@ class AdResource extends JsonResource
             'published_at' => $this->whenNotNull($this->published_at?->diffForHumans()),
             'is_published' => $this->when($this->is_published, $this->is_published),
             'is_expired' => $this->when($this->expires_at, $this->expires_at?->isPast()),
+            'is_sold' => $this->is_sold,
 
             'attributes' => AttributeResource::collection($this->whenLoaded('attributes')),
             'values' => AttributeValueResource::collection($this->whenLoaded('values')),
@@ -46,7 +48,7 @@ class AdResource extends JsonResource
             'media' => MediaResource::collection($this->whenLoaded('media')),
 
             'user' => $this->when('user', $this?->user?->name ?? 'مهمان'),
-            'user_info' => $this->when(! is_null($this->user_id), $this?->user?->only(['phone', 'email'])),
+            'user_info' => $this->when(!is_null($this->user_id), $this?->user?->only(['phone', 'email'])),
             'category' => CategoryResource::make($this->whenLoaded('category')),
             'district' => $this->when('district', $this?->district?->name ?? 'District'),
             'state' => $this?->district?->state?->name ?? 'State',
@@ -54,7 +56,7 @@ class AdResource extends JsonResource
             'bookmarks' => BookmarkResource::collection($this->whenLoaded('bookmarkers')),
 
             'conversations' => ConversationResource::collection($this->whenLoaded('conversations')),
-            'short_link' => ShortURL::findByDestinationURL(url('post/'.$this->slug))?->first()?->default_short_url ?? '',
+            'short_link' => ShortURL::findByDestinationURL(url('post/' . $this->slug))?->first()?->default_short_url ?? '',
         ];
     }
 }

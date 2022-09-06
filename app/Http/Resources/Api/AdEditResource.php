@@ -10,10 +10,11 @@ use App\Http\Resources\CurrencyResource;
 use App\Http\Resources\DistrictResource;
 use App\Http\Resources\StateResource;
 use App\Http\Resources\UserResource;
+use App\Models\Ad;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Ad */
+/** @mixin Ad */
 class AdEditResource extends JsonResource
 {
     public static $wrap = null;

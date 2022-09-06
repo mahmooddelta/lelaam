@@ -50,6 +50,7 @@ class Ad extends Model implements HasMedia
         'is_published',
         'published_at',
         'is_chat_enabled',
+        'is_sold',
         'expires_at',
     ];
 
@@ -61,16 +62,16 @@ class Ad extends Model implements HasMedia
     protected static function boot()
     {
         parent::boot();
-        self::creating(function($model) {
+        self::creating(function ($model) {
             // 0 means user has not logged in and added the ad as a guest
             $model->user_id = auth('api')->check() ? auth('api')->id() ?? 0 : auth()->id() ?? 0;
             // Add one month to current month for expires_at field of newly created ads
             $model->expires_at = now()->addMonth()->toDateTimeString();
         });
 
-        static::created(function($item) {
+        static::created(function ($item) {
             $builder = new \AshAllenDesign\ShortURL\Classes\Builder();
-            $builder->destinationUrl(url('post/'.$item->slug))->make();
+            $builder->destinationUrl(url('post/' . $item->slug))->make();
         });
     }
 
@@ -81,6 +82,7 @@ class Ad extends Model implements HasMedia
 
     protected $casts = [
         'is_published' => 'boolean',
+        'is_sold' => 'boolean',
         'published_at' => 'datetime',
         'expires_at' => 'datetime',
     ];
@@ -198,9 +200,14 @@ class Ad extends Model implements HasMedia
         return $query->whereIsChatEnabled(true);
     }
 
+    public function scopeIsSold(Builder $query): Builder
+    {
+        return $query->whereIsSold(true);
+    }
+
     public function scopeFilter(Builder $builder, Request $request): Builder
     {
-        return $builder->when($request->has('search') && filled($request->search), fn(Builder $query) => $builder->where('title', 'LIKE', "%".$request->search."%"))
+        return $builder->when($request->has('search') && filled($request->search), fn(Builder $query) => $builder->where('title', 'LIKE', "%" . $request->search . "%"))
             ->when($request->has('category') && filled($request->category), fn(Builder $query) => $builder->where('category_id', Category::whereSlug($request->category)->value('id')))
             ->when($request->has('district') && filled($request->district), fn(Builder $query) => $builder->where('district_id', District::whereName($request->district)->value('id')))
             ->when($request->has('state') && filled($request->state), fn(Builder $query) => $builder->whereIn('district_id', District::whereStateId(State::whereName($request->state)->value('id'))->pluck('id')->toArray()))
