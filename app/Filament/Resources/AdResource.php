@@ -116,8 +116,8 @@ class AdResource extends Resource
                                         ->heading(__('general.ads.placeholders.attribute_values_section'))
                                         ->collapsible()
                                         ->columns(2)
-                                        ->schema(function(callable $get): array {
-                                            if (! is_null($get('category_id'))) {
+                                        ->schema(function (callable $get): array {
+                                            if (!is_null($get('category_id'))) {
                                                 return static::generateInputs(Category::with('attributes')
                                                     ->find($get('category_id'))->attributes);
                                             }
@@ -125,7 +125,7 @@ class AdResource extends Resource
                                             return [];
                                         })
                                         ->visible(fn(callable $get, Component $livewire) => $livewire instanceof Pages\CreateAd
-                                            && ! is_null($get('category_id'))
+                                            && !is_null($get('category_id'))
                                             && count(Category::with('attributes')
                                                 ->find($get('category_id'))->attributes) > 0),
                                 ]),
@@ -211,27 +211,27 @@ class AdResource extends Resource
 
     private static function generateInputs(Collection $collection): array
     {
-        return $collection->map(function(Attribute $attribute) {
+        return $collection->map(function (Attribute $attribute) {
             return match ($attribute->frontend_type) {
-                'text' => TextInput::make('attributes.'.$attribute->id)
+                'text' => TextInput::make('attributes.' . $attribute->id)
                     ->label($attribute->name)
                     ->required(),
-                'number' => TextInput::make('attributes.'.$attribute->id)
+                'number' => TextInput::make('attributes.' . $attribute->id)
                     ->label($attribute->name)
                     ->numeric()
                     ->required(),
-                'checkbox' => Checkbox::make('attributes.'.$attribute->id)
+                'checkbox' => Checkbox::make('attributes.' . $attribute->id)
                     ->label($attribute->name)
                     ->inline()
                     ->required(),
-                'radio' => Radio::make('attributes.'.$attribute->id)
+                'radio' => Radio::make('attributes.' . $attribute->id)
                     ->label($attribute->name)
                     ->options($attribute->values)
                     ->required(),
-                'select' => Select::make('values.'.$attribute->id)
+                'select' => Select::make('values.' . $attribute->id)
                     ->options($attribute->values()
-                            ->pluck('name', 'id', 'attribute_id')
-                            ->toArray() ?? [])
+                        ->pluck('name', 'id', 'attribute_id')
+                        ->toArray() ?? [])
                     ->label($attribute->name)
                     ->required()
             };
@@ -280,6 +280,11 @@ class AdResource extends Resource
                     ->searchable()
                     ->toggleable()
                     ->sortable(),
+                Tables\Columns\BooleanColumn::make('is_sold')
+                    ->label(__('general.ads.fields.is_sold'))
+                    ->searchable()
+                    ->toggleable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('general.created_at'))
                     ->toggleable()
@@ -287,7 +292,7 @@ class AdResource extends Resource
                 Tables\Columns\TextColumn::make('expires_at')
                     ->label(__('general.expires_at'))
                     ->toggleable()
-                    ->formatStateUsing(fn(Ad $record) => $record->expires_at->isPast() ? __('general.ads.filters.expired').' در '.$record->expires_at->diffForHumans() : $record->expires_at->longRelativeToNowDiffForHumans()),
+                    ->formatStateUsing(fn(Ad $record) => $record->expires_at->isPast() ? __('general.ads.filters.expired') . ' در ' . $record->expires_at->diffForHumans() : $record->expires_at->longRelativeToNowDiffForHumans()),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_published')
@@ -295,6 +300,11 @@ class AdResource extends Resource
                     ->placeholder(__('general.ads.filters.status_placeholder'))
                     ->trueLabel(__('general.ads.filters.published'))
                     ->falseLabel(__('general.ads.filters.not_published')),
+                Tables\Filters\TernaryFilter::make('is_sold')
+                    ->label(__('general.ads.filters.status'))
+                    ->placeholder(__('general.ads.filters.status_placeholder'))
+                    ->trueLabel(__('general.ads.filters.sold'))
+                    ->falseLabel(__('general.ads.filters.not_sold')),
                 Tables\Filters\SelectFilter::make('category_id')
                     ->label(__('general.ads.filters.category'))
                     ->options(Category::pluck('name', 'id')->toArray()),
@@ -311,7 +321,7 @@ class AdResource extends Resource
                         DatePicker::make('create_on')
                             ->label(__('general.ads.filters.created_on')),
                     ])
-                    ->query(function(Builder $query, array $data): Builder {
+                    ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['create_on'],
@@ -323,7 +333,7 @@ class AdResource extends Resource
                         DatePicker::make('updated_at')
                             ->label(__('general.ads.filters.updated_on')),
                     ])
-                    ->query(function(Builder $query, array $data): Builder {
+                    ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['updated_at'],
@@ -338,7 +348,7 @@ class AdResource extends Resource
                             ->default(now())
                             ->label(__('general.ads.filters.created_until')),
                     ])
-                    ->query(function(Builder $query, array $data): Builder {
+                    ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['created_from'],
@@ -357,7 +367,7 @@ class AdResource extends Resource
                             ->default(now())
                             ->label(__('general.ads.filters.updated_until')),
                     ])
-                    ->query(function(Builder $query, array $data): Builder {
+                    ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['updated_from'],
@@ -388,15 +398,22 @@ class AdResource extends Resource
                     ->icon('heroicon-o-refresh')
                     ->color('primary')
                     ->visible(fn(Ad $record): bool => auth()->user()?->can('update', $record))
-                    ->action(function(Ad $record) {
+                    ->action(function (Ad $record) {
                         broadcast(new AdPublishStatusChangedEvent($record))->toOthers();
 
                         return $record->update(
                             [
-                                'is_published' => ! $record->is_published,
-                                'published_at' => ! $record->is_published ? now()->toDateTimeString() : null,
+                                'is_published' => !$record->is_published,
+                                'published_at' => !$record->is_published ? now()->toDateTimeString() : null,
                             ]);
                     }),
+                Action::make('is_sold')
+                    ->label(fn(Ad $record) => $record->is_sold ? __('general.actions.not_sold') : __('general.actions.sold'))
+                    ->icon('heroicon-o-check')
+                    ->color('primary')
+                    ->visible(fn(Ad $record): bool => auth()->user()?->can('update', $record))
+                    ->requiresConfirmation()
+                    ->action(fn(Ad $record) => $record->update(['is_sold' => !$record->is_sold,])),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -405,17 +422,25 @@ class AdResource extends Resource
                     ->icon('heroicon-o-refresh')
                     ->color('primary')
                     ->visible(fn(Ad $record): bool => auth()->user()?->can('update', $record))
-                    ->action(fn(Collection $records) => $records->each(function($record) {
+                    ->action(fn(Collection $records) => $records->each(function ($record) {
                         broadcast(new AdPublishStatusChangedEvent($record));
 
                         return $record->update(
                             [
-                                'is_published' => ! $record->is_published,
-                                'published_at' => ! $record->is_published ? now()->toDateTimeString() : null,
+                                'is_published' => !$record->is_published,
+                                'published_at' => !$record->is_published ? now()->toDateTimeString() : null,
                             ]);
                     }))
                     ->deselectRecordsAfterCompletion()
                     ->requiresConfirmation(),
+                BulkAction::make('is_sold')
+                    ->label(fn(Ad $record) => $record->is_sold ? __('general.actions.not_sold') : __('general.actions.sold'))
+                    ->icon('heroicon-o-check')
+                    ->color('primary')
+                    ->visible(fn(Ad $record): bool => auth()->user()?->can('update', $record))
+                    ->requiresConfirmation()
+                    ->deselectRecordsAfterCompletion()
+                    ->action(fn(Collection $records) => $records->each(fn($record) => $record->update(['is_sold' => !$record->is_sold,]))),
                 FilamentExportBulkAction::make('export')
                     ->label(__('general.export.bulk_action_button_label'))
                     ->fileName(str(self::$model)->after("App\Models\\"))
