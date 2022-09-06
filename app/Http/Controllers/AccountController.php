@@ -21,7 +21,7 @@ class AccountController extends Controller
             'ads' => AdResource::collection(Ad::isOwner()
                 ->with('media')
                 ->withoutGlobalScope(AdNotExpiredScope::class)
-                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'expires_at', 'published_at', 'is_published'])
+                ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'expires_at', 'published_at', 'is_published', 'is_sold'])
                 ->latest()
                 ->get()),
             'states' => State::select(['id', 'name'])->get(),
