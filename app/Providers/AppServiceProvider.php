@@ -31,13 +31,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Filament::serving(function() {
+        Filament::serving(function () {
             Filament::registerTheme(
-                app(Vite::class)('resources/css/filament.css', 'build/admin'),
+                app(Vite::class)('resources/css/filament.css', 'build/admin/'),
             );
         });
 
-        Str::macro('persian_slug', function($string, $separator = '-') {
+        Str::macro('persian_slug', function ($string, $separator = '-') {
             $string = trim($string);
             $string = mb_strtolower($string, 'UTF-8');
             $string = preg_replace("/[^a-z0-9_\-\sءاآؤئبپتثجچحخدذرزژسشصضطظعغفقكکگلمنوهی]/u", '', $string);
@@ -46,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
             return preg_replace("/[\s_]/", $separator, $string);
         });
 
-        TemporaryUpload::previewManipulation(function(Conversion $conversion) {
+        TemporaryUpload::previewManipulation(function (Conversion $conversion) {
             $conversion->fit(Manipulations::FIT_CROP, 300, 300);
         });
     }
