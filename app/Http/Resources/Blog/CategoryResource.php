@@ -2,18 +2,19 @@
 
 namespace App\Http\Resources\Blog;
 
+use App\Models\Blog\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Blog\Category */
+/** @mixin Category */
 class CategoryResource extends JsonResource
 {
     /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'id' => $this->when($this->id, $this->id),
