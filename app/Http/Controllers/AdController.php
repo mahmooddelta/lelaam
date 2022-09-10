@@ -200,7 +200,7 @@ class AdController extends Controller
 
     public function edit(Ad $post): Response
     {
-        abort_if($post->user_id === auth()->id(), ResponseAlias::HTTP_UNAUTHORIZED, 'شما اجازه ویرایش آگهی که توسط شما ساخته نشده است را ندارید!');
+        abort_if($post->user_id !== auth()->id(), ResponseAlias::HTTP_UNAUTHORIZED, 'شما اجازه ویرایش آگهی که توسط شما ساخته نشده است را ندارید!');
 
         $post->load(['category', 'currency', 'district.state', 'attributes.values', 'values', 'media']);
 
