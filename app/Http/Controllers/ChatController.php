@@ -85,7 +85,7 @@ class ChatController extends Controller
         $ad->load('media');
 
         try {
-            DB::transaction(function () use ($request, $ad) {
+            return DB::transaction(function () use ($request, $ad) {
                 $message = Message::create(
                     [
                         'conversation_id' => $request->validated('conversation_id'),
@@ -94,6 +94,7 @@ class ChatController extends Controller
                         'body' => $request->validated('message'),
                     ]);
                 broadcast(new MessageSentEvent($message->conversation, $message))->toOthers();
+                return back()->with(['message' => 'پیام ارسال شد.']);
             });
         } catch (Exception $exception) {
             Log::error($exception);
@@ -104,12 +105,18 @@ class ChatController extends Controller
                     'body' => 'مشکلی در ارسال پیام شما پیش آمده است. لطفا دوباره کوشش کنید!',
                 ]);
         }
-
-        return back()->with(['message' => 'پیام ارسال شد.']);
     }
 
     public function destroy(Message $message): RedirectResponse
     {
+        if ($message->sender_id !== auth()->id()) {
+            return back()
+                ->with([
+                    'type' => 'error',
+                    'body' => 'حذف پیامی که توسط شما فرستاده نشده است مجاز نیست!',
+                ]);
+        }
+
         $message->delete();
 
         return back();

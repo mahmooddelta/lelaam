@@ -19,7 +19,6 @@ use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Maize\Markable\Models\Bookmark;
@@ -79,6 +78,7 @@ class AdController extends Controller
     public function show(Ad $ad): Response
     {
         abort_if($ad->is_published === false, ResponseAlias::HTTP_NOT_FOUND, 'آگهی منقضی شده است!');
+
         $ad->load(['category:name,slug,id', 'user', 'media', 'attributes', 'values.attribute', 'bookmarkers']);
 
         // Add the add to user's viewed ads
@@ -102,18 +102,6 @@ class AdController extends Controller
         ]);
     }
 
-    public function bookmark(Ad $ad): RedirectResponse
-    {
-        Bookmark::toggle($ad, auth()->user());
-
-        return back()->with([
-            'type' => 'success',
-            'body' => $ad->whereHasBookmark(auth()->user())
-                ->whereSlug($ad->slug)
-                ->exists() ? 'آگهی با موفقیت به لیست علاقه مندی ها اضافه شد.' : 'آگهی از لیست علاقه مندی های شما حذف شد.',
-        ]);;
-    }
-
     public function create(): Response
     {
         return Inertia::render('AdCreate', [
@@ -135,10 +123,13 @@ class AdController extends Controller
         ]);
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function store(StoreRequest $request): RedirectResponse
     {
         try {
-            DB::transaction(function () use ($request) {
+            return DB::transaction(function () use ($request) {
                 $ad = Ad::create($request->validated());
                 // Sync Attributes
                 if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
@@ -168,34 +159,6 @@ class AdController extends Controller
                     'body' => 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
                 ]);
         }
-
-        return redirect()
-            ->route('home')
-            ->with([
-                'type' => 'success',
-                'body' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
-            ]);
-    }
-
-    public function report(Ad $ad, Request $request): RedirectResponse
-    {
-        $request->validate(
-            [
-                'type' => 'required|exists:report_types,id',
-                'description' => 'required',
-            ]);
-
-        $ad->reports()->create(
-            [
-                'user_id' => auth()->id(),
-                'report_type_id' => $request->input('type'),
-                'description' => $request->input('description'),
-            ]);
-
-        return back()->with([
-            'type' => 'success',
-            'body' => 'گزارش تخلف یا مشکل شما ارسال شد. لطفاً منتظر بررسی مدیر سایت باشید!',
-        ]);
     }
 
     public function edit(Ad $post): Response
@@ -225,75 +188,86 @@ class AdController extends Controller
         ]);
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function update(UpdateRequest $request, Ad $post): RedirectResponse
     {
-        if ($post->user_id === auth()->id()) {
-            if ($post->is_published) {
-                try {
-                    DB::transaction(function () use ($request, $post) {
-                        $post->update($request->validated() + ['is_published' => false]);
-                        // Sync Attributes
-                        if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
-                            $post->attributes()->sync($request->input('attributes'));
-                        }
-                        // Sync Values
-                        if ($request->input('values') && count(request()->input('values')) > 0) {
-                            $filtered = Arr::map($request->input('values'), function ($value, $key) {
-                                unset($value['name']);
-
-                                return $value;
-                            });
-                            $post->values()->sync($filtered);
-                        }
-                        // Sync Media
-                        if ($request->has('images') && $request->hasFile('images')) {
-                            if (count($post->media) > 0) {
-                                $post->clearMediaCollection('ads');
-                            }
-
-                            $post->addMultipleMediaFromRequest(['images'])
-                                ->each(function ($fileAdder) {
-                                    $fileAdder->toMediaCollection('ads');
-                                });
-                        }
-
-                        return to_route('account')
-                            ->with([
-                                'type' => 'success',
-                                'body' => '.آگهی شما ویرایش شد',
-                            ]);
-                    });
-                } catch (Exception $exception) {
-                    return back()
-                        ->with([
-                            'type' => 'error',
-                            'body' => '!ویرایش آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید',
-                        ]);
-                }
-            } else {
-                return back()
-                    ->with([
-                        'type' => 'error',
-                        'body' => '!ویرایش آگهی شما در انتظار تایید مدیر سایت است. تا تایید آن شکیبا باشید یا آگهی شما تا هنوز منتشر نشده است',
-                    ]);
-            }
-        } else {
+        if ($post->user_id !== auth()->id()) {
             return back()
                 ->with([
                     'type' => 'error',
                     'body' => 'شما اجازه ویرایش آگهی که توسط شما ساخته نشده است را ندارید!',
                 ]);
         }
+        if (!$post->is_published) {
+            return back()
+                ->with([
+                    'type' => 'error',
+                    'body' => '!ویرایش آگهی شما در انتظار تایید مدیر سایت است. تا تایید آن شکیبا باشید یا آگهی شما تا هنوز منتشر نشده است',
+                ]);
+        }
 
-        return to_route('account')
-            ->with([
-                'type' => 'success',
-                'body' => '.آگهی شما ویرایش شد',
-            ]);
+        try {
+            return DB::transaction(function () use ($request, $post) {
+                $post->update($request->validated() + ['is_published' => false]);
+                // Sync Attributes
+                if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
+                    $post->attributes()->sync($request->input('attributes'));
+                }
+                // Sync Values
+                if ($request->input('values') && count(request()->input('values')) > 0) {
+                    $filtered = Arr::map($request->input('values'), function ($value, $key) {
+                        unset($value['name']);
+
+                        return $value;
+                    });
+                    $post->values()->sync($filtered);
+                }
+                // Sync Media
+                if ($request->has('images') && $request->hasFile('images')) {
+                    if (count($post->media) > 0) {
+                        $post->clearMediaCollection('ads');
+                    }
+
+                    $post->addMultipleMediaFromRequest(['images'])
+                        ->each(function ($fileAdder) {
+                            $fileAdder->toMediaCollection('ads');
+                        });
+                }
+
+                return to_route('account')
+                    ->with([
+                        'type' => 'success',
+                        'body' => '.آگهی شما ویرایش شد',
+                    ]);
+            });
+        } catch (Exception $exception) {
+            return back()
+                ->with([
+                    'type' => 'error',
+                    'body' => '!ویرایش آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید',
+                ]);
+        }
     }
 
     public function sold(Ad $post): RedirectResponse
     {
+        if ($post->user_id !== auth()->id()) {
+            return back()
+                ->with([
+                    'type' => 'error',
+                    'body' => 'شما اجازه تغییر حالت آگهی به فروخته شده را ندارید!',
+                ]);
+        }
+        if (!$post->is_published) {
+            return back()
+                ->with([
+                    'type' => 'error',
+                    'body' => '!ویرایش آگهی شما در انتظار تایید مدیر سایت است. تا تایید آن شکیبا باشید یا آگهی شما تا هنوز منتشر نشده است',
+                ]);
+        }
+
         $post->update(['is_sold' => true]);
 
         return back()
@@ -301,5 +275,17 @@ class AdController extends Controller
                 'type' => 'success',
                 'body' => 'شما آگهی تان را به حالت فروخته شده درآوردید.',
             ]);
+    }
+
+    public function bookmark(Ad $ad): RedirectResponse
+    {
+        Bookmark::toggle($ad, auth()->user());
+
+        return back()->with([
+            'type' => 'success',
+            'body' => $ad->whereHasBookmark(auth()->user())
+                ->whereSlug($ad->slug)
+                ->exists() ? 'آگهی با موفقیت به لیست علاقه مندی ها اضافه شد.' : 'آگهی از لیست علاقه مندی های شما حذف شد.',
+        ]);
     }
 }

@@ -47,7 +47,7 @@ class AdController extends Controller
         };
 
         return AdResource::collection(Ad::query()
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at', 'currency_id', 'is_chat_enabled'])
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'updated_at', 'updated_at', 'id', 'is_published', 'user_id', 'published_at', 'currency_id', 'is_chat_enabled', 'is_sold'])
             ->published()
             ->with('media')
             ->when($category->exists, fn(Builder $query) => $query->whereCategoryId($category->id))
@@ -60,10 +60,13 @@ class AdController extends Controller
             ->withQueryString());
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function store(StoreRequest $request): JsonResponse
     {
         try {
-            DB::transaction(function () use ($request) {
+            return DB::transaction(function () use ($request) {
                 $ad = Ad::create($request->validated());
                 // Sync Attributes
                 if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
@@ -80,6 +83,10 @@ class AdController extends Controller
                             $fileAdder->toMediaCollection('ads');
                         });
                 }
+                return response()->json(
+                    [
+                        'message' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
+                    ], ResponseAlias::HTTP_CREATED);
             });
         } catch (Exception $exception) {
             return response()->json(
@@ -87,11 +94,6 @@ class AdController extends Controller
                     'message' => 'ارسال آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید!',
                 ], ResponseAlias::HTTP_BAD_REQUEST);
         }
-
-        return response()->json(
-            [
-                'message' => 'آگهی شما ارسال شد. لطفاً منتظر تاییدی مدیر سایت و نشر آن بروی سایت باشید!',
-            ], ResponseAlias::HTTP_CREATED);
     }
 
     public function show(Ad $ad): JsonResponse
@@ -125,59 +127,52 @@ class AdController extends Controller
 
     public function update(EditRequest $request, Ad $ad): JsonResponse
     {
-        if ($ad->is_published) {
-            if ($ad->user_id === auth('api')->id()) {
-                try {
-                    DB::transaction(function () use ($request, $ad) {
-                        $ad->update($request->validated() + ['is_published' => false]);
-                        // Sync Attributes
-                        if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
-                            $ad->attributes()->sync($request->input('attributes'));
-                        }
-                        // Sync Values
-                        if ($request->input('values') && count(request()->input('values')) > 0) {
-                            $ad->values()->sync($request->input('values'));
-                        }
-                        // Sync Media
-                        if ($request->has('images') && $request->hasFile('images')) {
-                            if (count($ad->media) > 0) {
-                                $ad->clearMediaCollection('ads');
-                            }
-
-                            $ad->addMultipleMediaFromRequest(['images'])
-                                ->each(function ($fileAdder) {
-                                    $fileAdder->toMediaCollection('ads');
-                                });
-                        }
-
-                        return response()->json(
-                            [
-                                'message' => '.آگهی شما ویرایش شد',
-                            ], ResponseAlias::HTTP_CREATED);
-                    });
-                } catch (Exception $exception) {
-                    return response()->json(
-                        [
-                            'message' => '!ویرایش آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید',
-                        ], ResponseAlias::HTTP_BAD_REQUEST);
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => '!شما سازنده آگهی نیستید! پس امکان ویرایش وجود ندارد',
-                    ], ResponseAlias::HTTP_BAD_REQUEST);
-            }
-        } else {
+        if ($ad->user_id !== auth('api')->id()) {
+            return response()->json(
+                [
+                    'message' => '!شما سازنده آگهی نیستید! پس امکان ویرایش وجود ندارد',
+                ], ResponseAlias::HTTP_BAD_REQUEST);
+        }
+        if ($ad->is_published === false) {
             return response()->json(
                 [
                     'message' => '!ویرایش آگهی شما در انتظار تایید مدیر سایت است. تا تایید آن شکیبا باشید یا آگهی شما تا هنوز منتشر نشده است',
                 ], ResponseAlias::HTTP_BAD_REQUEST);
         }
+        try {
+            return DB::transaction(function () use ($request, $ad) {
+                $ad->update($request->validated() + ['is_published' => false]);
+                // Sync Attributes
+                if ($request->input('attributes') && count(request()->input('attributes')) > 0) {
+                    $ad->attributes()->sync($request->input('attributes'));
+                }
+                // Sync Values
+                if ($request->input('values') && count(request()->input('values')) > 0) {
+                    $ad->values()->sync($request->input('values'));
+                }
+                // Sync Media
+                if ($request->has('images') && $request->hasFile('images')) {
+                    if (count($ad->media) > 0) {
+                        $ad->clearMediaCollection('ads');
+                    }
 
-        return response()->json(
-            [
-                'message' => '.آگهی شما ویرایش شد',
-            ], ResponseAlias::HTTP_CREATED);
+                    $ad->addMultipleMediaFromRequest(['images'])
+                        ->each(function ($fileAdder) {
+                            $fileAdder->toMediaCollection('ads');
+                        });
+                }
+
+                return response()->json(
+                    [
+                        'message' => '.آگهی شما ویرایش شد',
+                    ], ResponseAlias::HTTP_CREATED);
+            });
+        } catch (Exception $exception) {
+            return response()->json(
+                [
+                    'message' => '!ویرایش آگهی با مشکل روبرو شد. لطفاً دوباره کوشش نمایید',
+                ], ResponseAlias::HTTP_BAD_REQUEST);
+        }
     }
 
     public function bookmark(Ad $ad): JsonResponse
@@ -196,7 +191,7 @@ class AdController extends Controller
     public function userAds(): JsonResponse
     {
         $ads = Ad::isOwner()
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at', 'is_chat_enabled'])
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at', 'is_chat_enabled', 'is_sold'])
             ->with('media')
             ->get();
 
@@ -209,7 +204,7 @@ class AdController extends Controller
     {
         return AdResource::collection(Ad::published()
             ->whereHasBookmark(auth('api')->user())
-            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at', 'is_chat_enabled'])
+            ->select(['title', 'slug', 'price', 'district_id', 'category_id', 'created_at', 'id', 'is_published', 'user_id', 'published_at', 'is_chat_enabled', 'is_sold'])
             ->with('media')
             ->get());
     }
