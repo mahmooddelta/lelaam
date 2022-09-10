@@ -57,37 +57,45 @@ const pageTitle = usePage().props.value.user ? `${usePage().props.value.user.nam
         </section>
         <div class="divider"></div>
         <Collapse title="اعلانات من">
-            <section class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xs:grid-cols-3 gap-4 px-4"
+            <section class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 px-4"
                      v-if="ads.data.length > 0">
                 <Ad v-for="ad in ads.data" :key="ad.id" :ad="ad">
                     <template #footer="{ ad: ad }">
-                        <Link as="button" class="btn btn-primary btn-outline btn-sm"
-                              v-if="$page.props.user && ad.user !== 'مهمان' && ad.is_published && !ad.is_expired && ad.user !== $page.props.user.name"
-                              :href="route('post.edit', ad.slug)">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                            </svg>
-                            ویرایش
-                        </Link>
-                        <div v-else class="p-2 badge badge-primary" v-if="ad?.is_expired">
-                            منقضی شد.
-                        </div>
-                        <Link as="button" class="btn btn-primary btn-outline btn-sm" method="post"
-                              v-if="!ad.is_sold"
-                              preserve-state
-                              preserve-scroll
-                              :href="route('post.sold', ad.slug)">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor" class="w-4 h-4 mr-2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            فروخته شد
-                        </Link>
-                        <div v-else class="p-2 badge badge-primary" v-if="ad?.is_sold">
-                            فروخته شد.
+                        <div class="w-full flex items-center justify-between">
+                            <section>
+                                <Link as="button" class="btn btn-primary btn-outline btn-sm"
+                                      v-if="ad.is_published && !ad.is_expired && ad.user !== $page.props.user.id"
+                                      :href="route('post.edit', ad.slug)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                    ویرایش
+                                </Link>
+                                <div v-else class="p-2 badge badge-primary">
+                                    منقضی شد.
+                                </div>
+                            </section>
+                            <section>
+                                <Link as="button" class="btn btn-primary btn-outline btn-sm" method="post"
+                                      v-if="!ad.is_sold"
+                                      preserve-state
+                                      preserve-scroll
+                                      :href="route('post.sold', ad.slug)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5"
+                                         stroke="currentColor" class="w-4 h-4 mr-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    فروخته شد
+                                </Link>
+                                <div v-else class="p-4 badge badge-primary">
+                                    فروخته شد.
+                                </div>
+                            </section>
                         </div>
                     </template>
                 </Ad>
