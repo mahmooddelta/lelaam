@@ -5,12 +5,13 @@ namespace App\Http\Resources\Blog;
 use App\Http\Resources\MediaResource;
 use App\Http\Resources\TagResource;
 use App\Http\Resources\UserResource;
+use App\Models\Blog\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use function is_null;
 use function str;
 
-/** @mixin \App\Models\Blog\Post */
+/** @mixin Post */
 class PostResource extends JsonResource
 {
     /**
@@ -18,10 +19,10 @@ class PostResource extends JsonResource
      *
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
-            'title' => $this->title,
+            'title' => str($this->title)->limit(22)->value(),
             'slug' => $this->slug,
 
             'content' => $this->when($this->content, str($this->content)->limit(350)),
