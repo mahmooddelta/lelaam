@@ -110,6 +110,11 @@
                                                 <option v-for="type in report_types" :key="type.id" :value="type.id"
                                                         v-text="type.name"></option>
                                             </select>
+                                            <section class="text-sm italic m-1">
+                                                <label for="typeDescription">توضیخات نوع تخلف یا مشکل:</label>
+                                                <p id="typeDescription"
+                                                   v-html="currentTypeDescription"></p>
+                                            </section>
                                             <div v-if="form.errors.type"
                                                  class="text-red-500 text-sm my-2">{{ form.errors.type }}</div>
                                         </div>
@@ -118,7 +123,10 @@
                                         <label for="description" class="label block font-medium">
                                             <span
                                                 class="label-text font-bold after:content-['*'] after:ml-0.5 after:text-red-500">
-                                                توضیحات
+                                                 توضیحات
+                                                (
+                                                لطفاً چگونه گی و چرایی وجود مشکل یا تخلف را بنویسید.
+                                                )
                                             </span>
                                         </label>
                                         <client-only>
@@ -194,7 +202,7 @@
     </div>
 </template>
 <script setup>
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import Label from "../Jetstream/Label.vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 import DialogModal from "../Jetstream/DialogModal.vue";
@@ -202,6 +210,7 @@ import Button from "../Jetstream/Button.vue";
 import SplideSlider from "../Shared/Components/SplideSlider.vue";
 import RichEditor from "../Shared/Components/CKEditor.vue";
 import ClientOnly from '@duannx/vue-client-only';
+import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     ad: Object,
@@ -217,6 +226,11 @@ const form = useForm({
     type: 'انتخاب نوع',
     description: '',
 })
+const currentTypeDescription = ref('');
+watch(() => form.type, () => {
+    currentTypeDescription.value = props.report_types.filter(type => type.id === form.type)[0].description
+})
+
 const submit = () => {
     form.post(route('post.report', props.ad.data.slug), {
         preserveState: true,

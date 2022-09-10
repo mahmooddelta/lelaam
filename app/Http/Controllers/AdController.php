@@ -91,7 +91,7 @@ class AdController extends Controller
             'is_bookmarked' => auth()->check() ? $ad->whereHasBookmark(auth()->user())
                 ->whereSlug($ad->slug)
                 ->exists() : false,
-            'report_types' => ReportType::select(['id', 'name'])->get(),
+            'report_types' => ReportType::select(['id', 'name', 'description'])->active()->get(),
             'can_report' => auth()->check() && !auth()
                     ->user()
                     ->reports()
