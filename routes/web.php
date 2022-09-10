@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.veri
     });
 // Blog routes
 Route::get('blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('blog/posts', [BlogController::class, 'posts'])->name('blog.posts');
 Route::get('blog/{post:slug}', [BlogController::class, 'show'])->name('blog.post');
 // Other routes
 Route::get('about-us', [WebsiteController::class, 'about'])->name('about');
