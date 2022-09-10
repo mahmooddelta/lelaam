@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdController;
+use App\Http\Controllers\AdReportsController;
 use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChatController;
@@ -31,12 +32,12 @@ Route::get('phone/verify', [WebsiteController::class, 'phoneUnverified'])->name(
 Route::post('phone/verify', [WebsiteController::class, 'phoneVerify'])->name('phone.verify.store')->middleware('auth');
 // Protected routes
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'phone.verified', 'logs-out-banned-user'])
-    ->group(function() {
+    ->group(function () {
         Route::get('account', [AccountController::class, 'index'])
             ->name('account');
         Route::get('post/{ad:slug}/bookmark', [AdController::class, 'bookmark'])
             ->name('ad.bookmark');
-        Route::post('post/{ad:slug}/report', [AdController::class, 'report'])
+        Route::post('post/{ad:slug}/report', [AdReportsController::class, 'store'])
             ->name('post.report');
         // Post Edit
         Route::get('post/{post:slug}/edit', [AdController::class, 'edit'])->name('post.edit');
