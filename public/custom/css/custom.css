@@ -9,6 +9,10 @@
     color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
 }
 
+.vs__selected {
+    color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
+}
+
 .vs__dropdown-menu {
     background: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
     color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
@@ -18,7 +22,7 @@
     padding-left: 0.5rem;
 }
 
-.vs__actions{
+.vs__actions {
     padding-left: 0.5rem;
 }
 
