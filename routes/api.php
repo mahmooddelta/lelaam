@@ -61,4 +61,5 @@ Route::post('post/create', [AdController::class, 'store']);
 Route::get('post/{ad:slug}', [AdController::class, 'show']);
 // Blog
 Route::get('blog/categories', BlogCategoryController::class);
-Route::get('blog/posts', PostController::class);
+Route::get('blog/posts', [PostController::class, 'index']);
+Route::get('blog/{post:slug}', [PostController::class, 'show']);

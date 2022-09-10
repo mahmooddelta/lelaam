@@ -4,15 +4,17 @@ namespace App\Http\Controllers\Blog;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Blog\PostResource;
+use App\Http\Resources\Blog\PostResourceFull;
 use App\Models\Blog\Post;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use function request;
 
 class PostController extends Controller
 {
-    public function __invoke()
+    public function index(): AnonymousResourceCollection
     {
         if (request()->has('sortBy') || request()->has('category_id') || request()->has('perPage')) {
             Validator::make(request()?->all(),
@@ -43,5 +45,10 @@ class PostController extends Controller
             ->paginate(request('perPage', 6))
             ->withQueryString()
         );
+    }
+
+    public function show(Post $post)
+    {
+        return PostResourceFull::make($post->load(['category', 'media', 'user', 'tags']));
     }
 }
