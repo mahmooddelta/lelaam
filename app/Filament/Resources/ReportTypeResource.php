@@ -60,6 +60,7 @@ class ReportTypeResource extends Resource
 
                 TextColumn::make('description')
                     ->label(__('general.report_types.fields.description'))
+                    ->html()
                     ->toggleable()
                     ->limit(60),
 
