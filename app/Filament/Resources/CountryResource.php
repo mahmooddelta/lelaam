@@ -134,4 +134,13 @@ class CountryResource extends Resource
             'edit' => Pages\EditCountry::route('/{record}/edit'),
         ];
     }
+    public static function getEloquentQuery(): Builder
+    {
+        return static::$model::latest();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'phone_code', 'iso3'];
+    }
 }

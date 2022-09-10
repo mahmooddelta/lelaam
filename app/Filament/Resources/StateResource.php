@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Builder;
 
 class StateResource extends Resource
 {
@@ -107,5 +108,15 @@ class StateResource extends Resource
     protected static function getNavigationGroup(): ?string
     {
         return __('nav.location');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::$model::latest();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'country.name'];
     }
 }

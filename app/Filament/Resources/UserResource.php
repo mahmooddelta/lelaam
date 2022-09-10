@@ -371,4 +371,14 @@ class UserResource extends Resource
     {
         return __('nav.users');
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::$model::latest();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email', 'phone', 'state.name'];
+    }
 }

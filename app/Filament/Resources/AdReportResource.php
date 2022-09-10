@@ -185,4 +185,9 @@ class AdReportResource extends Resource
     {
         return static::$model::latest();
     }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['user.id', 'ad.title', 'report_type_id', 'reportType.name'];
+    }
 }

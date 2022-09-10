@@ -61,8 +61,7 @@ class ReportTypeResource extends Resource
                 TextColumn::make('description')
                     ->label(__('general.report_types.fields.description'))
                     ->html()
-                    ->toggleable()
-                    ->limit(60),
+                    ->toggleable(),
 
                 BooleanColumn::make('is_active')
                     ->label(__('general.report_types.fields.is_active'))
@@ -121,5 +120,10 @@ class ReportTypeResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return static::$model::latest();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name'];
     }
 }

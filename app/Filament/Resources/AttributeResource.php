@@ -17,6 +17,7 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 
 class AttributeResource extends Resource
@@ -124,5 +125,15 @@ class AttributeResource extends Resource
     protected static function getNavigationGroup(): ?string
     {
         return __('nav.leelam');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::$model::latest();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'frontend_type'];
     }
 }

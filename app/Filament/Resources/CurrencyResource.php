@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class CurrencyResource extends Resource
 {
@@ -102,5 +103,15 @@ class CurrencyResource extends Resource
     protected static function getNavigationGroup(): ?string
     {
         return __('nav.setting');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::$model::latest();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'symbol'];
     }
 }

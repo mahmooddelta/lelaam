@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Builder;
 use function __;
 use function str;
 
@@ -47,12 +48,16 @@ class SettingResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('key')
+                    ->searchable()
+                    ->sortable()
                     ->label(__('general.settings.fields.key')),
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
+                    ->toggleable()
                     ->formatStateUsing(fn(Setting $record) => $record->created_at->diffForHumans()),
                 TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
+                    ->toggleable()
                     ->formatStateUsing(fn(Setting $record) => $record->updated_at->diffForHumans()),
             ])
             ->filters([
@@ -98,5 +103,15 @@ class SettingResource extends Resource
     protected static function getNavigationGroup(): ?string
     {
         return __('nav.setting');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::$model::latest();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['value', 'key'];
     }
 }

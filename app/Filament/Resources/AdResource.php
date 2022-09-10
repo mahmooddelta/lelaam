@@ -497,4 +497,9 @@ class AdResource extends Resource
     {
         return static::$model::query()->latest('created_at')->withoutGlobalScope(AdNotExpiredScope::class);
     }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'slug', 'user.name', 'category.name', 'phone_number', 'district.name'];
+    }
 }
