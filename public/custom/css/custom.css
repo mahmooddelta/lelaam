@@ -18,6 +18,11 @@
     color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
 }
 
+.vs__dropdown-option {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
 .vs__clear {
     padding-left: 0.5rem;
 }
