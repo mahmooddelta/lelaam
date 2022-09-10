@@ -13,6 +13,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -51,22 +52,16 @@ class PostResource extends Resource
             ->schema([
                 TextInput::make('title')
                     ->label(__('general.blog_posts.fields.title'))
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::persian_slug($state))),
+                    ->required(),
 
-                TextInput::make('slug')
-                    ->label(__('general.blog_posts.fields.slug'))
-                    ->disabled()
-                    ->required()
-                    ->unique(Post::class, 'slug', fn($record) => $record),
+                Toggle::make('is_featured')
+                    ->label(__('general.blog_posts.fields.is_featured'))
+                    ->helperText(__('general.blog_posts.placeholders.is_featured')),
 
                 RichEditor::make('content')
                     ->label(__('general.blog_posts.fields.content'))
                     ->required()
-                    ->columnSpan([
-                        'sm' => 2,
-                    ]),
+                    ->columnSpan(2),
 
                 Select::make('blog_category_id')
                     ->label(__('general.blog_posts.fields.category_id'))
@@ -79,6 +74,7 @@ class PostResource extends Resource
                 SpatieTagsInput::make('tags')
                     ->label(__('general.blog_posts.fields.tags'))
                     ->hint(__('general.blog_posts.placeholders.tags'))
+                    ->type('post')
                     ->required(),
 
                 Card::make()
@@ -126,7 +122,7 @@ class PostResource extends Resource
                     ->falseLabel(__('general.ads.filters.not_published'))
                     ->queries(
                         true: fn(Builder $query) => $query->published(),
-                        false: fn(Builder $query) => ! $query->published(),
+                        false: fn(Builder $query) => !$query->published(),
                         blank: fn(Builder $query) => $query,
                     ),
 
