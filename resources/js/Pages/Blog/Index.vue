@@ -43,7 +43,7 @@ defineProps({
                                     {{ item.published_at ?? '' }}
                                 </span>
                             </div>
-                            <h1 class="text-4xl font-bold card-title" v-text="item.title"></h1>
+                            <h1 class="text-4xl font-bold card-title mt-4" v-text="item.title"></h1>
                             <div class="py-2 w-fit whitespace-normal text-justify" v-html="item.content"></div>
                         </div>
                         <div class="card-actions justify-between">

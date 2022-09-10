@@ -24,7 +24,7 @@
                     {{ item.published_at ?? '' }}
                 </div>
             </div>
-            <h1 class="text-2xl font-bold text-center" v-text="item.title"></h1>
+            <h1 class="text-2xl font-bold text-center break-words" v-text="item.title"></h1>
             <div class="card-actions justify-between mt-4">
                 <section class="flex justify-between">
                     <div class="w-8 h-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">

@@ -47,8 +47,18 @@ defineProps({
                     </div>
                 </section>
             </div>
-            <h1 class="text-2xl font-bold" v-text="post.data.title"></h1>
+            <h1 class="text-2xl font-bold break-words" v-text="post.data.title"></h1>
             <p class="text-justify my-4" v-html="post.data.content"></p>
+        </section>
+        <div class="divider"></div>
+        <section class="pb-4">
+            <p class="text-xl mb-4">
+                تگ ها:
+            </p>
+            <template v-for="tag in post.data.tags" :key="tag.id">
+                <Link :href="route('blog.posts', {tag: tag.slug})" class="p-4 mx-1 badge badge-primary"
+                      v-text="tag.name"></Link>
+            </template>
         </section>
     </Container>
 </template>
