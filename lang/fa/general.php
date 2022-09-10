@@ -378,6 +378,7 @@ return [
             'published_at' => 'نشر شده',
             'media' => 'انتخاب تصاویر',
             'tags' => 'تگ ها',
+            'is_featured' => 'صفحه اول بلاگ',
         ],
         'placeholders' => [
             'category' => 'انتخاب دسته بندی',
@@ -385,6 +386,7 @@ return [
             'photo_section' => 'تصاویر',
             'no_user' => 'مهمان',
             'tags' => 'با کامه (،) تگ وارد شده را اضافه کنید.',
+            'is_featured' => 'در صفحه اول بلاگ نشان داده شود؟',
         ],
         'filters' => [
             'status' => 'وضعیت',
