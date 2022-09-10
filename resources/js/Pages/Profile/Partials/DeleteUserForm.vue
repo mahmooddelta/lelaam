@@ -40,11 +40,11 @@ const closeModal = () => {
 <template>
     <JetActionSection>
         <template #title>
-            حذف حساب کاریری
+            حذف حساب کاربری
         </template>
 
         <template #description>
-            حذف دائمی حساب کاریری
+            حذف دائمی حساب کاربری
         </template>
 
         <template #content>
@@ -55,14 +55,14 @@ const closeModal = () => {
 
             <div class="mt-5">
                 <JetDangerButton @click="confirmUserDeletion">
-                    حذف حساب کاریری
+                    حذف حساب کاربری
                 </JetDangerButton>
             </div>
 
             <!-- Delete Account Confirmation Modal -->
             <JetDialogModal :show="confirmingUserDeletion" @close="closeModal">
                 <template #title>
-                    حذف حساب کاریری
+                    حذف حساب کاربری
                 </template>
 
                 <template #content>
@@ -95,7 +95,7 @@ const closeModal = () => {
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
-                        حذف حساب کاریری
+                        حذف حساب کاربری
                     </JetDangerButton>
                 </template>
             </JetDialogModal>
