@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Message;
 use Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 use function auth;
@@ -21,7 +22,7 @@ class HandleInertiaRequests extends Middleware
     /**
      * Determine the current asset version.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return string|null
      */
@@ -33,14 +34,14 @@ class HandleInertiaRequests extends Middleware
     /**
      * Define the props that are shared by default.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            'ziggy' => function() {
+            'ziggy' => function () {
                 return (new Ziggy)->toArray();
             },
 
@@ -48,7 +49,7 @@ class HandleInertiaRequests extends Middleware
 
             ],
 
-            'flash' => function() use ($request) {
+            'flash' => function () use ($request) {
                 return [
                     'type' => $request->session()->get('type'),
                     'body' => $request->session()->get('body'),
@@ -66,6 +67,7 @@ class HandleInertiaRequests extends Middleware
                 'facebook' => Config::get('settings.website_facebook_link'),
                 'tiktok' => Config::get('settings.website_tiktok_link'),
             ],
+            'is_blog' => Route::is('blog.*'),
         ]);
     }
 }
