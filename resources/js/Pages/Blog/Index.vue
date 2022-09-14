@@ -26,14 +26,15 @@ defineProps({
                     <div class="card-body">
                         <div class="h-full">
                             <div class="pb-4 flex justify-between">
-                                <strong class="text-sm flex">
+                                <Link as="strong" :href="route('blog.posts', {category: item?.category?.slug})"
+                                      class="text-sm flex cursor-pointer hover:underline hover:decoration-2 hover:decoration-primary-500 hover:underline-offset-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
                                          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                               d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                                     </svg>
                                     {{ item?.category?.name ?? '' }}
-                                </strong>
+                                </Link>
                                 <span class="text-sm flex">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
                                          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -84,14 +85,15 @@ defineProps({
         <div class="divider"></div>
         <!-- Categories -->
         <div class="w-full" v-for="category in categories.data" :key="category.id">
-            <h2 class="text-3xl font-bold pb-4 flex">
+            <Link as="h2" :href="route('blog.posts', {category: category.slug})"
+                  class="text-3xl font-bold pb-4 flex cursor-pointer hover:underline hover:decoration-4 hover:decoration-primary-500 hover:underline-offset-8">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mr-1" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
                           d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
                 {{ category.name }}
-            </h2>
+            </Link>
             <div class="flex flex-row w-full">
                 <div v-for="item in category.posts" :key="item.id">
                     <BlogPost :item="item"/>

@@ -40,6 +40,7 @@ class BlogController extends Controller
     {
         $posts = Post::query()
             ->when($request->has('tag') && $request->filled('tag'), fn(Builder $builder) => $builder->whereHas('tags', fn($query) => $query->containing($request->input('tag'))))
+            ->when($request->has('category') && $request->filled('category'), fn(Builder $builder) => $builder->where('blog_category_id', Category::whereSlug($request->input('category'))->value('id')))
             ->with(['media', 'user', 'category'])
             ->published()
             ->latest()
