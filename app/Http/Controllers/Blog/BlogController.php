@@ -19,7 +19,7 @@ class BlogController extends Controller
     {
         return Inertia::render('Blog/Index', [
             'categories' => CategoryResource::collection(Category::with([
-                'posts' => fn($query) => $query->with(['media', 'user', 'category'])->published(),
+                'posts' => fn($query) => $query->with(['media', 'user', 'category'])->withCount('media')->published(),
             ])
                 ->visible()
                 ->latest()
@@ -38,17 +38,31 @@ class BlogController extends Controller
 
     public function posts(Request $request): Response
     {
+        $filters = [
+            'category' => $request->has('category') ? request('category') : null,
+            'tag' => $request->has('tag') ? request('tag') : null,
+            'search' => $request->has('search') ? request('search') : null,
+            'sortBy' => $request->has('sortBy') ? request('sortBy') : 'مرتب سازی بر اساس',
+        ];
+
         $posts = Post::query()
             ->when($request->has('tag') && $request->filled('tag'), fn(Builder $builder) => $builder->whereHas('tags', fn($query) => $query->containing($request->input('tag'))))
             ->when($request->has('category') && $request->filled('category'), fn(Builder $builder) => $builder->where('blog_category_id', Category::whereSlug($request->input('category'))->value('id')))
+            ->when($request->has('search') && $request->filled('search'), fn(Builder $builder) => $builder->where('title', 'LIKE', "%{$request->input('search')}%"))
             ->with(['media', 'user', 'category'])
+            ->withCount('media')
             ->published()
-            ->latest()
+            ->orderBy('published_at', $request->input('sortBy') === 'newest' ? 'asc' : 'desc')
             ->paginate(9)
             ->withQueryString();
 
+        $categories = Category::select(['name', 'slug'])->visible()->get();
+
         return Inertia::render('Blog/Posts', [
-            'posts' => PostResource::collection($posts)
+            'posts' => PostResource::collection($posts),
+            'categories' => CategoryResource::collection($categories),
+            'filters' => $filters,
+            'routeResourceName' => $request->route()->getName(),
         ]);
     }
 
