@@ -1,9 +1,14 @@
 <template>
     <div class="card w-96 bg-base-100 shadow-xl">
         <figure>
-            <img :src="item.media[0].url"
-                 :alt="item.title + '_image_' + item.media[0].uuid"
+            <img v-if="item.media"
+                 :src="item.media?.url"
+                 :alt="item.title + '_image_' + item.media?.uuid"
                  class="rounded-lg w-full object-cover h-[12rem]" loading="lazy"/>
+            <img v-else
+                 src="../../../../public/images/No_image_preview.png"
+                 alt="Default blog post image"
+                 class="rounded-lg w-full object-contain h-[12rem]" loading="lazy"/>
         </figure>
         <div class="card-body">
             <div class="pb-4 flex justify-between">
@@ -16,7 +21,8 @@
                     {{ item?.category?.name ?? '' }}
                 </strong>
                 <Link v-else as="strong"
-                      :href="route('blog.posts', {category: item?.category?.slug})" class="text-sm flex cursor-pointer hover:underline hover:decoration-2 hover:decoration-primary-500 hover:underline-offset-4">
+                      :href="route('blog.posts', {category: item?.category?.slug})"
+                      class="text-sm flex cursor-pointer hover:underline hover:decoration-2 hover:decoration-primary-500 hover:underline-offset-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
                          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
