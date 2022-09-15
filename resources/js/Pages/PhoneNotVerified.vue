@@ -14,13 +14,14 @@ import ClientOnly from '@duannx/vue-client-only';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyBSMj80wutV8V9xN7Kzl_sIgaB11FFYfH8",
-    authDomain: "lelaam-42896.firebaseapp.com",
-    projectId: "lelaam-42896",
-    storageBucket: "lelaam-42896.appspot.com",
-    messagingSenderId: "606275294671",
-    appId: "1:606275294671:web:a2679e3c18de34c23deeba",
-    measurementId: "G-N970EG7BPE"
+    apiKey: "AIzaSyDsrj5NKw--vWj-wY9ubIz55lBg9TdQp9I",
+    authDomain: "lelaam-e0f93.firebaseapp.com",
+    databaseURL: "https://lelaam-e0f93.firebaseio.com",
+    projectId: "lelaam-e0f93",
+    storageBucket: "lelaam-e0f93.appspot.com",
+    messagingSenderId: "895976409113",
+    appId: "1:895976409113:web:4c0f8f0e08ce710e818288",
+    measurementId: "G-F2LPW4D061"
 };
 
 // Initialize Firebase
