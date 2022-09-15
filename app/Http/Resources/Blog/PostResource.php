@@ -15,7 +15,7 @@ use function str;
 class PostResource extends JsonResource
 {
     /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array
      */
@@ -25,17 +25,17 @@ class PostResource extends JsonResource
             'title' => str($this->title)->limit(22)->value(),
             'slug' => $this->slug,
 
-            'content' => $this->when($this->content, str($this->content)->limit(350)),
+            'content' => $this->when($this->content, str($this->content)->limit(82)),
 
-            'published_at' => $this->when(! is_null($this->published_at), $this?->published_at?->diffForHumans() ?? ''),
-            'is_published' => ! is_null($this->published_at),
+            'published_at' => $this->when(!is_null($this->published_at), $this?->published_at?->diffForHumans() ?? ''),
+            'is_published' => !is_null($this->published_at),
 
             'is_featured' => $this->is_featured,
 
-            'media_count' => $this->whenCounted('media', $this->media_count),
+            'media_count' => $this->whenCounted('media', 0),
 
             'category' => new CategoryResource($this->whenLoaded('category')),
-            'media' => MediaResource::collection($this->whenLoaded('media')),
+            'media' => MediaResource::make($this->media()->first()),
             'user' => new UserResource($this->whenLoaded('user')),
             'tags' => TagResource::collection($this->whenLoaded('tags')),
         ];
