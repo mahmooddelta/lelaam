@@ -4,26 +4,46 @@ import Container from "../../Shared/Components/Container.vue";
 import {Splide, SplideSlide} from '@splidejs/vue-splide';
 import BlogPost from "../../Shared/Components/BlogPost.vue";
 
-defineProps({
+const props = defineProps({
     categories: Object,
     featured: Object,
     newest: Object,
 })
+
+const options = {
+    gap: '1rem',
+    paginationDirection: 'rtl',
+    direction: 'rtl',
+    rewind: props.featured.data.length > 1,
+    autoplay: props.featured.data.length > 1,
+    type: props.featured.data.length > 1 ? 'loop' : 'slide',
+    drag: props.featured.data.length > 1,
+    keyboard: props.featured.data.length > 1,
+    pagination: props.featured.data.length > 1,
+    paginationKeyboard: props.featured.data.length > 1,
+    arrows: props.featured.data.length > 1,
+    lazyLoad: 'nearby',
+}
 </script>
 
 <template>
     <Head title="بلاگ لیلام"/>
     <Container>
         <!-- Featured -->
-        <Splide v-for="item in featured.data" :key="item.id">
-            <SplideSlide>
-                <div class="card lg:card-side bg-base-100 shadow-xl py-0">
-                    <figure class="w-screen">
-                        <img :src="item.media[0].url" :data-splide-lazy="item.media[0].url"
-                             :alt="item.title + '_image_' + item.media[0].uuid"
-                             class="rounded-lg w-full object-cover h-[22rem]" loading="lazy"/>
+        <Splide :options="options" :has-track="true">
+            <SplideSlide v-for="item in featured.data" :key="item.id">
+                <div class="card lg:card-side bg-base-100 shadow-xl py-0 pr-8 break-all">
+                    <figure class="w-full">
+                        <img v-if="item.media"
+                             :src="item.media?.url" :data-splide-lazy="item.media?.url"
+                             :alt="item.title + '_image_' + item.media?.uuid"
+                             class="rounded-lg w-full object-cover max-h-[24rem]" loading="lazy"/>
+                        <img v-else
+                             src="../../../../public/images/No_image_preview.png"
+                             alt="Default blog post image"
+                             class="rounded-lg w-full object-contain h-[12rem]" loading="lazy"/>
                     </figure>
-                    <div class="card-body">
+                    <div class="card-body min-w-[26rem]">
                         <div class="h-full">
                             <div class="pb-4 flex justify-between">
                                 <Link as="strong" :href="route('blog.posts', {category: item?.category?.slug})"
@@ -45,9 +65,9 @@ defineProps({
                                 </span>
                             </div>
                             <h1 class="text-4xl font-bold card-title mt-4" v-text="item.title"></h1>
-                            <div class="py-2 w-fit whitespace-normal text-justify" v-html="item.content"></div>
+                            <div class="py-2 w-fit whitespace-normal text-justify break-all" v-html="item.content"></div>
                         </div>
-                        <div class="card-actions justify-between">
+                        <div class="card-actions justify-between sticky bottom-0 pt-4">
                             <div class="avatar">
                                 <div
                                     class="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -77,28 +97,31 @@ defineProps({
             </svg>
             جدید ترین پست ها
         </h2>
-        <div class="flex flex-row w-full">
+        <div class="flex flex-row justify-center items-center w-full">
             <div class="grid grid-cols-4" v-for="item in newest.data" :key="item.id">
                 <BlogPost :item="item"/>
             </div>
         </div>
         <div class="divider"></div>
         <!-- Categories -->
-        <div class="w-full" v-for="category in categories.data" :key="category.id">
-            <Link as="h2" :href="route('blog.posts', {category: category.slug})"
-                  class="text-3xl font-bold pb-4 flex cursor-pointer hover:underline hover:decoration-4 hover:decoration-primary-500 hover:underline-offset-8">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mr-1" fill="none" viewBox="0 0 24 24"
-                     stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                </svg>
-                {{ category.name }}
-            </Link>
-            <div class="flex flex-row w-full">
-                <div v-for="item in category.posts" :key="item.id">
-                    <BlogPost :item="item"/>
+        <div class="w-full" v-for="(category, index) in categories.data" :key="category.id">
+            <template v-if="category.posts && category.posts.length > 0">
+                <Link as="h2" :href="route('blog.posts', {category: category.slug})"
+                      class="text-3xl font-bold pb-4 flex cursor-pointer hover:underline hover:decoration-4 hover:decoration-primary-500 hover:underline-offset-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mr-1" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                    {{ category.name }}
+                </Link>
+                <div class="flex flex-row w-full">
+                    <template v-for="item in category.posts" :key="item.id">
+                        <BlogPost :item="item"/>
+                    </template>
                 </div>
-            </div>
+            </template>
+            <div class="divider" v-if="index !== categories.data.length - 1"></div>
         </div>
     </Container>
 </template>
