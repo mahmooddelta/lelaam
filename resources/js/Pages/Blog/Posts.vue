@@ -2,11 +2,24 @@
 
 import Container from "../../Shared/Components/Container.vue";
 import BlogPost from "../../Shared/Components/BlogPost.vue";
+import BlogFilters from "../../Shared/BlogFilters.vue";
 import Pagination from "../../Shared/Components/Pagination.vue";
+import useFilters from "../../Composables/useFilters";
 
-defineProps({
+const props = defineProps({
     posts: Object,
+    categories: Object,
+    routeResourceName: {
+        type: String,
+        required: true,
+    },
+    filters: Object,
 })
+const {filters, isLoading} = useFilters({
+    filters: props.filters,
+    routeResourceName: props.routeResourceName,
+});
+
 </script>
 
 <template>
@@ -16,8 +29,18 @@ defineProps({
             <h1 class="text-5xl font-bold pb-4 text-center">
                 پست ها
             </h1>
-            <div v-for="post in posts.data" :key="post.id" class="flex flex-row w-full">
+            <section class="w-full">
+                <BlogFilters :categories="categories" :filters="filters" v-model="filters"/>
+            </section>
+            <div v-for="post in posts.data" :key="post.id"
+                 v-if="posts.data && posts.data.length > 0"
+                 class="flex flex-row w-full">
                 <BlogPost :item="post"/>
+            </div>
+            <div v-else class="my-12">
+                <h1 class="text-4xl text-center font-bold">
+                    متاسفیم. پست بلاگی با فیلتر شما پیدا نشد!
+                </h1>
             </div>
             <Pagination :links="posts.meta.links"/>
         </div>
