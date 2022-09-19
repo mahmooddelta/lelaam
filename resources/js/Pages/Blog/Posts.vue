@@ -34,7 +34,7 @@ const {filters, isLoading} = useFilters({
             </section>
             <div v-for="post in posts.data" :key="post.id"
                  v-if="posts.data && posts.data.length > 0"
-                 class="flex flex-row w-full">
+                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-12 lg:gap-20 w-full justify-items-center">
                 <BlogPost :item="post"/>
             </div>
             <div v-else class="my-12">

@@ -19,7 +19,7 @@ class BlogController extends Controller
     {
         return Inertia::render('Blog/Index', [
             'categories' => CategoryResource::collection(Category::with([
-                'posts' => fn($query) => $query->with(['media', 'user', 'category'])->withCount('media')->published(),
+                'posts' => fn($query) => $query->with(['media', 'user', 'category'])->withCount('media')->published()->take(8),
             ])
                 ->visible()
                 ->latest()
@@ -28,10 +28,12 @@ class BlogController extends Controller
                 ->published()
                 ->featured()
                 ->latest()
+                ->take(8)
                 ->get()),
             'newest' => PostResource::collection(Post::with(['category', 'media', 'user'])
                 ->published()
                 ->latest()
+                ->take(8)
                 ->get()),
         ]);
     }
