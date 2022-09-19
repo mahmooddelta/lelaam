@@ -66,7 +66,7 @@ class AuthController extends Controller
         $credentials = request(['email', 'phone', 'password']);
 
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'ایمیل یا رمزعبور اشتباه میباشد.'], 400);
             }
         } catch (JWTException $e) {
@@ -79,7 +79,7 @@ class AuthController extends Controller
     /**
      * Register a User via given credentials.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -110,7 +110,7 @@ class AuthController extends Controller
      */
     public function me(): JsonResponse
     {
-        if (! $user = JWTAuth::parseToken()->authenticate()) {
+        if (!$user = JWTAuth::parseToken()->authenticate()) {
             return response()->json(['!مشخصات وارد شده، درست نیست'], Response::HTTP_NOT_FOUND);
         }
 
@@ -146,7 +146,7 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param  string  $token
+     * @param string $token
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -222,6 +222,21 @@ class AuthController extends Controller
         ]);
     }
 
+    private function formatAuthPhoneNumber()
+    {
+        $phoneFormatted = auth('api')->user()->phone;
+        if (!str($phoneFormatted)->startsWith('+93')) {
+            if (!str($phoneFormatted)->startsWith('+') && str($phoneFormatted)->startsWith('93')) {
+                $phoneFormatted = '+' . $phoneFormatted;
+            } else if (str($phoneFormatted)->startsWith('07')) {
+                $phoneFormatted = '+93' . str($phoneFormatted)->substr(1, strlen($phoneFormatted))->value();
+            } else {
+                $phoneFormatted = '+93' . $phoneFormatted;
+            }
+        }
+        return $phoneFormatted;
+    }
+
     public function profilePhoneVerifiedUpdate(Request $request): JsonResponse
     {
         $validated = $request->validate(
@@ -242,8 +257,9 @@ class AuthController extends Controller
                     'max:28',
                 ],
             ]);
+
         try {
-            if (Firebase::auth()->getUser($request->uid)->phoneNumber !== auth('api')->user()->phone) {
+            if (Firebase::auth()->getUser($request->uid)->phoneNumber !== $this->formatAuthPhoneNumber()) {
                 return response()->json(['message' => '!شماره تماس وارد شده، اشتباه است'], Response::HTTP_UNAUTHORIZED);
             }
         } catch (UserNotFound $exception) {
@@ -251,10 +267,6 @@ class AuthController extends Controller
         }
         if (auth('api')->user()?->hasVerifiedPhone()) {
             return response()->json(['message' => '!شماره تماس کاربر از قبل تایید شده است'], Response::HTTP_FORBIDDEN);
-        }
-
-        if (auth('api')->user()->phone !== $validated['phone']) {
-            return response()->json(['message' => '!شماره تماس وارد شده، اشتباه است'], Response::HTTP_UNAUTHORIZED);
         }
 
         return auth('api')->user()?->update(
