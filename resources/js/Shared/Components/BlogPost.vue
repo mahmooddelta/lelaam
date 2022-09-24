@@ -1,5 +1,5 @@
 <template>
-    <div class="card w-96 bg-base-100 shadow-xl">
+    <div class="card w-full lg:w-80 h-[26rem] mx-auto bg-base-100 shadow-xl">
         <figure>
             <img v-if="item.media"
                  :src="item.media?.url"
