@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Pishran\LaravelPersianSlug\HasPersianSlug;
+use RalphJSmit\Helpers\Laravel\Concerns\HasFactory;
 use RalphJSmit\Laravel\SEO\Support\HasSEO;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
@@ -22,6 +23,7 @@ class Post extends Model implements HasMedia
     use HasSEO;
     use HasPersianSlug;
     use HasTags;
+    use HasFactory;
 
     protected $table = 'blog_posts';
 
@@ -44,7 +46,7 @@ class Post extends Model implements HasMedia
     {
         parent::boot();
 
-        self::creating(function($model) {
+        self::creating(function ($model) {
             // 0 means user has not logged in and added the ad as a guest
             $model->user_id = auth()->id() ?? 0;
         });
