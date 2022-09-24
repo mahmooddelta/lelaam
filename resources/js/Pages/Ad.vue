@@ -195,8 +195,29 @@
             </div>
             <!-- Carousel -->
             <client-only>
-                <SplideSlider :images="ad.data.media" :model-data="ad.data"
-                              v-if="ad.data.media && ad.data.media.length > 0"/>
+                <SplideSlider :images="ad.data.media" :custom-options="{ gap: '1rem', perPage: 3}"
+                              class="w-full max-h-[34rem] order-first lg:order-last pt-4 lg:py-0 mb-12 md:mb-0"
+                              v-if="ad.data.media && ad.data.media.length > 0">
+                    <SplideSlide v-if="ad.data.media.length === 1"
+                                 :id="ad.data.media[0].uuid">
+                        <img :src="ad.data.media[0].url" :data-splide-lazy="ad.data.media[0].url"
+                             :alt="ad.data.title + '_image_' + ad.data.media[0].uuid"
+                             class="rounded-lg w-full object-cover" loading="lazy"/>
+                    </SplideSlide>
+                    <SplideSlide v-if="ad.data.media.length > 1"
+                                 v-for="image in ad.data.media"
+                                 :key="image.uuid"
+                                 :id="image.uuid">
+                        <img :src="image.url" :data-splide-lazy="image.url"
+                             :alt="ad.data.title + '_image_' + image.uuid"
+                             class="rounded-lg w-full block object-cover" loading="lazy"/>
+                    </SplideSlide>
+                    <SplideSlide v-else>
+                        <img :src="ad.data.thumb" :data-splide-lazy="ad.data.thumb" alt="No Image Placeholder"
+                             loading="lazy"
+                             class="rounded-lg object-cover w-full"/>
+                    </SplideSlide>
+                </SplideSlider>
             </client-only>
         </section>
     </div>
@@ -210,7 +231,6 @@ import Button from "../Jetstream/Button.vue";
 import SplideSlider from "../Shared/Components/SplideSlider.vue";
 import RichEditor from "../Shared/Components/CKEditor.vue";
 import ClientOnly from '@duannx/vue-client-only';
-import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     ad: Object,
