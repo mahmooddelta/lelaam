@@ -54,7 +54,7 @@ class BlogController extends Controller
             ->with(['media', 'user', 'category'])
             ->withCount('media')
             ->published()
-            ->orderBy('published_at', $request->input('sortBy') === 'newest' ? 'asc' : 'desc')
+            ->orderBy('published_at', $request->input('sortBy') === 'newest' ? 'desc' : 'asc')
             ->paginate(9)
             ->withQueryString();
 
