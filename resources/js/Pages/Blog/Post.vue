@@ -13,7 +13,7 @@ defineProps({
             <ol role="list" class="flex items-center space-x-4">
                 <li>
                     <div class="flex items-center">
-                        <Link :href="route('blog.posts')" class="mx-4 text-sm font-medium text-base-700 hover:font-bold">
+                        <Link :href="route('blog.index')" class="mr-4 text-sm font-medium text-base-700 hover:font-bold">
                             پست های بلاگ
                         </Link>
                     </div>
