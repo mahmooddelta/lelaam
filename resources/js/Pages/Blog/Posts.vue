@@ -27,7 +27,7 @@ const {filters, isLoading} = useFilters({
     <Container>
         <div class="w-full">
             <h1 class="text-5xl font-bold pb-4 text-center">
-                پست ها
+                پست های بلاگ لیلام
             </h1>
             <section class="w-full">
                 <BlogFilters :categories="categories" :filters="filters" v-model="filters"/>
