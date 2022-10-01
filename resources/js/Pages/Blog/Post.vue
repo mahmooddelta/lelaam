@@ -9,6 +9,43 @@ defineProps({
 <template>
     <Head :title="post.data.title"/>
     <Container>
+        <nav class="w-full my-4" aria-label="Breadcrumb">
+            <ol role="list" class="flex items-center space-x-4">
+                <li>
+                    <div class="flex items-center">
+                        <Link :href="route('blog.posts')" class="mx-4 text-sm font-medium text-base-700 hover:font-bold">
+                            پست های بلاگ
+                        </Link>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="flex-shrink-0 h-5 w-5 text-base-300 transition ease-in-out duration-300 hover:rotate-180"
+                             fill="none" viewBox="0 0 24 24"
+                             stroke="#fb5858" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        <Link
+                            :href="route('blog.posts', {category: post.data?.category?.slug})"
+                            v-text="post.data.category.name"
+                            class="ml-4 text-sm font-medium text-base-700 hover:font-bold"></Link>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="flex-shrink-0 h-5 w-5 text-base-300 transition ease-in-out duration-300 hover:rotate-180"
+                             fill="none" viewBox="0 0 24 24"
+                             stroke="#fb5858" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        <a v-text="post.data.title" disabled class="ml-4 text-sm font-medium text-primary-500"></a>
+                    </div>
+                </li>
+            </ol>
+        </nav>
         <section>
             <img :src="post.data.media[0].url"
                  :alt="post.data.title + '_image_' + post.data?.media[0]?.uuid"
