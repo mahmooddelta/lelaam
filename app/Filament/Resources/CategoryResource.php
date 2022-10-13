@@ -24,6 +24,8 @@ use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
+use Guava\FilamentIconPicker\Forms\IconPicker;
+use Guava\FilamentIconPicker\Tables\IconColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -83,6 +85,11 @@ class CategoryResource extends Resource
                                 ->label(__('general.categories.fields.is_visible'))
                                 ->default(true),
 
+                            IconPicker::make('icon')
+                                ->columnSpan('full')
+                                ->label(__('general.categories.fields.icon'))
+                                ->placeholder(__('general.categories.placeholders.no_icon_selected')),
+
                             RichEditor::make('description')
                                 ->label(__('general.categories.fields.description'))
                                 ->columnSpan(2),
@@ -105,7 +112,7 @@ class CategoryResource extends Resource
                                 ->label(__('general.updated_at'))
                                 ->content(fn(?Category $record): string => $record ? $record->updated_at->diffForHumans() : '-'),
                         ])
-//                        ->visible(fn(Component $livewire): bool => ! $livewire instanceof ChildrenRelationManager)
+                        ->visible(fn(Component $livewire): bool => !$livewire instanceof ChildrenRelationManager)
                         ->columns(1),
                     $layout::make()
                         ->schema([
@@ -146,23 +153,30 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
+                IconColumn::make('icon')
+                    ->label(__('general.categories.fields.icon'))
+                    ->default('fas-window-close')
+                    ->toggleable(),
+
                 TextColumn::make('name')
                     ->label(__('general.categories.fields.name'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+
                 TextColumn::make('parent.name')
                     ->label(__('general.categories.fields.parent_id'))
                     ->searchable()
                     ->sortable()
                     ->default(__('general.categories.placeholders.no_parent'))
                     ->toggleable(),
+
                 TextColumn::make('children_count')
                     ->counts('children')
                     ->label(__('general.categories.placeholders.num_children'))
                     ->sortable()
                     ->toggleable()
-                    ->visible(fn(Component $livewire): bool => ! $livewire instanceof ChildrenRelationManager),
+                    ->visible(fn(Component $livewire): bool => !$livewire instanceof ChildrenRelationManager),
                 Tables\Columns\BadgeColumn::make('position')
                     ->colors(['primary'])
                     ->label(__('general.categories.fields.position'))
@@ -203,7 +217,7 @@ class CategoryResource extends Resource
                     ->icon('heroicon-o-refresh')
                     ->color('primary')
                     ->visible(fn(Category $record): bool => auth()->user()?->can('update', $record))
-                    ->action(fn(Category $record) => $record->update(['is_visible' => ! $record->is_visible])),
+                    ->action(fn(Category $record) => $record->update(['is_visible' => !$record->is_visible])),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -212,7 +226,7 @@ class CategoryResource extends Resource
                     ->icon('heroicon-o-refresh')
                     ->color('primary')
                     ->visible(fn(Category $record): bool => auth()->user()?->can('update', $record))
-                    ->action(fn(Collection $records) => $records->each(fn($record) => $record->update(['is_visible' => ! $record->is_visible])))
+                    ->action(fn(Collection $records) => $records->each(fn($record) => $record->update(['is_visible' => !$record->is_visible])))
                     ->deselectRecordsAfterCompletion()
                     ->requiresConfirmation(),
 

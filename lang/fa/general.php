@@ -54,10 +54,12 @@ return [
             'is_visible' => 'فعال',
             'description' => 'توضیحات',
             'position' => 'موقعیت نمایش',
+            'icon' => 'آیکن',
         ],
         'placeholders' => [
             'no_parent' => 'بدون والد',
             'num_children' => 'تعداد زیردسته ها',
+            'no_icon_selected' => 'آیکن مورد نظر را جستجو و انتخاب نمایید.'
         ],
         'filters' => [
             'status' => 'وضعیت',
