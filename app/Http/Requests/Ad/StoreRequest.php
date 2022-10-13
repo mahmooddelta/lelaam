@@ -6,11 +6,11 @@ use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Category;
 use App\Models\District;
+use App\Rules\Concerns\ValidatesMedia;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
-use Spatie\MediaLibraryPro\Rules\Concerns\ValidatesMedia;
 use Symfony\Component\HttpFoundation\Response;
 use function request;
 use function response;
@@ -18,7 +18,6 @@ use function response;
 class StoreRequest extends FormRequest
 {
     use ValidatesMedia;
-
     /**
      * Determine if the user is authorized to make this request.
      *

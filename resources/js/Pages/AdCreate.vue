@@ -8,6 +8,7 @@ import ClientOnly from '@duannx/vue-client-only';
 import MLPAttachment from "../Shared/Components/MLPAttachment.vue";
 import Label from "../Jetstream/Label.vue";
 import Input from "../Jetstream/Input.vue";
+import Uppy from "../Shared/Components/Uppy.vue";
 // Functions
 const isNumber = (str) => {
     const pattern = /^\d+\.?\d*$/;
@@ -94,8 +95,12 @@ const mediaChanged = media => form.images = media;
             <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- First grid -->
                 <section>
-                    <MLPAttachment @media-changed="mediaChanged" :errors="form.errors.images" :model-value="form.images"
-                                   :collection-name="'ads'">
+                    <Uppy form-id="ad_form"
+                          :max-file-size-in-bytes="5 * 1024 * 1024"
+                          :min-number-of-files="0"
+                          :max-number-of-files="5"
+                          :upload-route="route('attachment.upload')"
+                    >
                         <template #label>
                             <span class="label-text font-bold">عکس آگهی</span>
                             <small class="text-sm text-left">
@@ -111,7 +116,7 @@ const mediaChanged = media => form.images = media;
                                 </span>
                             </small>
                         </template>
-                    </MLPAttachment>
+                    </Uppy>
                     <div class="divider"></div>
                     <section class="my-4" :class="{'grid grid-cols-1 lg:grid-cols-2 gap-4' : !isNegotiable}">
                         <div class="form-control">

@@ -7,6 +7,7 @@ use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ConversationsController;
+use App\Http\Controllers\UploadController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,5 +60,5 @@ Route::get('about-us', [WebsiteController::class, 'about'])->name('about');
 Route::get('contact-us', [WebsiteController::class, 'contact'])->name('contact');
 Route::get('privacy', [WebsiteController::class, 'privacy'])->name('privacy');
 Route::get('terms-and-conditions', [WebsiteController::class, 'terms'])->name('terms');
-// Media Library routes
-Route::mediaLibrary();
+// Upload attachment routes
+Route::post('attachment/upload', UploadController::class)->name('attachment.upload');

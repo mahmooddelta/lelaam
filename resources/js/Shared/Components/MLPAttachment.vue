@@ -34,16 +34,16 @@ const onImageChange = (media) => {
             <slot name="label"/>
         </label>
         <client-only>
-            <media-library-attachment
-                :name="collectionName"
-                @change="onImageChange"
-                :initial-value="modelValue"
-                :max-items="5"
-                :translations="mlp_translations"
-                :validation-rules="{accept: ['image/jpeg', 'image/png', 'image/jpg'], maxSizeInKB: 5 * 1024, minSizeInKB: 5}"
-                :validation-errors="errors"
-                multiple
-            />
+<!--            <media-library-attachment-->
+<!--                :name="collectionName"-->
+<!--                @change="onImageChange"-->
+<!--                :initial-value="modelValue"-->
+<!--                :max-items="5"-->
+<!--                :translations="mlp_translations"-->
+<!--                :validation-rules="{accept: ['image/jpeg', 'image/png', 'image/jpg'], maxSizeInKB: 5 * 1024, minSizeInKB: 5}"-->
+<!--                :validation-errors="errors"-->
+<!--                multiple-->
+<!--            />-->
         </client-only>
         <div v-if="errors" class="text-red-500 text-sm my-2">{{ errors }}</div>
     </div>
@@ -54,12 +54,12 @@ import {defineAsyncComponent} from "vue";
 export default {
     name: "MlPAttachment",
     components: {
-        MediaLibraryAttachment: defineAsyncComponent(() => {
-            if (typeof window !== 'undefined') {
-                return import('@spatie/media-library-pro-vue3-attachment')
-                    .then(module => module.MediaLibraryAttachment)
-            }
-        })
+        // MediaLibraryAttachment: defineAsyncComponent(() => {
+        //     if (typeof window !== 'undefined') {
+        //         return import('@spatie/media-library-pro-vue3-attachment')
+        //             .then(module => module.MediaLibraryAttachment)
+        //     }
+        // })
     },
 }
 </script>

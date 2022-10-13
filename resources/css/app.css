@@ -7,8 +7,6 @@
 @import "vue-select/dist/vue-select.css";
 @import '../../public/custom/css/custom.css';
 
-@import '@spatie/media-library-pro-styles';
-
 @import 'vue-toastification/dist/index.css';
 @import '@splidejs/vue-splide/css';
 
