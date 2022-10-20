@@ -140,8 +140,8 @@ class AdController extends Controller
                     $ad->values()->sync($request->input('values'));
                 }
                 // Sync Media
-                if ($request->has('images') && count($request->input('images')) > 0) {
-                    $ad->addFromMediaLibraryRequest($request->input('images'))
+                if ($request->has('images') && !is_null($request->safe(['images'])) && count($request->safe(['images'])) > 0) {
+                    $ad->addMediaFromRequest('images')
                         ->toMediaCollection('ads');
                 }
 

@@ -78,7 +78,7 @@ class UpdateRequest extends FormRequest
                 Rule::exists(District::class, 'id'),
             ],
             'is_chat_enabled' => [
-                'sometimes',
+                'nullable',
             ],
             'is_sold' => [
                 'sometimes',
@@ -104,7 +104,7 @@ class UpdateRequest extends FormRequest
             'images.*.size' => [
                 'required_with:images',
                 'numeric',
-                'max:'. 5 * 1024 * 1024,
+                'max:' . 5 * 1024 * 1024,
             ],
             'attributes' => [
                 'nullable',
