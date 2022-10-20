@@ -60,5 +60,3 @@ Route::get('about-us', [WebsiteController::class, 'about'])->name('about');
 Route::get('contact-us', [WebsiteController::class, 'contact'])->name('contact');
 Route::get('privacy', [WebsiteController::class, 'privacy'])->name('privacy');
 Route::get('terms-and-conditions', [WebsiteController::class, 'terms'])->name('terms');
-// Upload attachment routes
-Route::post('attachment/upload', UploadController::class)->name('attachment.upload');
