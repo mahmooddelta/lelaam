@@ -2,13 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\TemporaryUpload;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Vite;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Spatie\Image\Manipulations;
-use Spatie\MediaLibrary\Conversions\Conversion;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,10 +41,6 @@ class AppServiceProvider extends ServiceProvider
             $string = preg_replace("/[\s\-_]+/", ' ', $string);
 
             return preg_replace("/[\s_]/", $separator, $string);
-        });
-
-        TemporaryUpload::previewManipulation(function (Conversion $conversion) {
-            $conversion->fit(Manipulations::FIT_CROP, 300, 300);
         });
     }
 }
