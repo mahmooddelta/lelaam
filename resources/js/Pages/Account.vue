@@ -74,7 +74,10 @@ const pageTitle = usePage().props.value.user ? `${usePage().props.value.user.nam
                                     </svg>
                                     ویرایش
                                 </Link>
-                                <div v-else class="p-2 badge badge-primary">
+                                <div v-if="!ad.is_published" class="p-2 mx-2 badge badge-primary">
+                                    در انتظار تایید مدیر سایت!
+                                </div>
+                                <div v-if="ad.is_expired" class="p-2 mx-2 badge badge-primary">
                                     منقضی شد.
                                 </div>
                             </section>
