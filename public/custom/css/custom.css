@@ -2,9 +2,6 @@
     height: 3rem;
     border-radius: 0.5rem;
     direction: rtl;
-}
-
-.v-select {
     background: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
     color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
 }
@@ -29,6 +26,10 @@
 
 .vs__actions {
     padding-left: 0.5rem;
+}
+
+.vs__open-indicator {
+    fill: hsl(var(--bc) / 0.8) !important;
 }
 
 /* Global Transparent Background Color*/
@@ -77,4 +78,34 @@
 
 [type='checkbox']:focus, [type='radio']:focus {
     box-shadow: none;
+}
+
+/* Uppy */
+.uppy-Dashboard-inner {
+    background: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
+    color: hsl(var(--bc) / 0.8) !important;
+    width: 100% !important;
+}
+
+.uppy-Dashboard-AddFiles-title {
+    color: hsl(var(--bc) / 0.8) !important;
+    max-width: 100% !important;
+}
+
+.uppy-Dashboard-Item-name {
+    color: hsl(var(--bc) / 0.8) !important;
+}
+
+.uppy-DashboardContent-bar {
+    background: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
+    color: hsl(var(--bc) / 0.8) !important;
+}
+
+.uppy-StatusBar {
+    background: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
+    color: hsl(var(--bc) / 0.8) !important;
+}
+
+.uppy-StatusBar-content {
+    color: hsl(var(--bc) / 0.8) !important;
 }
