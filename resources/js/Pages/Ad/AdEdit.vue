@@ -1,15 +1,21 @@
 <template>
     <Head :title="title"/>
     <Container>
-        <form id="ad_form" @submit.prevent="save" method="post">
-            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- First grid -->
-                <section>
-                    <MLPAttachment @media-changed="mediaChanged" :errors="form.errors.images" :model-value="form.images"
-                                   :collection-name="'ads'">
-                        <template #label>
-                            <span class="label-text font-bold">عکس آگهی</span>
-                            <small class="text-sm text-left">
+        <form id="ad_form" @submit.prevent="save" method="post" enctype="multipart/form-data">
+            <!-- Uploader -->
+            <section class="w-full">
+                <Uppy form-id="ad_form"
+                      :max-file-size-in-bytes="5 * 1024 * 1024"
+                      :min-number-of-files="0"
+                      :max-number-of-files="5"
+                      @file-added="addFile"
+                      @file-removed="removeFile"
+                      :media="$props.ad.media"
+                >
+                    <template #label>
+                        <span
+                            class="font-bold after:content-['*'] after:ml-0.5 after:text-red-500">عکس (های) آگهی</span>
+                        <small class="text-sm text-left">
                                 <span class="flex">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
                                          viewBox="0 0 24 24"
@@ -20,10 +26,17 @@
                                     </svg>
                                     افزودن عکس، احتمال دیده شدن آگهی شما را افزایش میدهد.
                                 </span>
-                            </small>
-                        </template>
-                    </MLPAttachment>
-                    <div class="divider"></div>
+                        </small>
+                    </template>
+                </Uppy>
+                <div v-if="form.errors.images" class="text-red-500 text-sm my-2">
+                    {{ form.errors.images }}
+                </div>
+                <div class="divider"></div>
+            </section>
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- First grid -->
+                <section>
                     <section class="my-4" :class="{'grid grid-cols-1 lg:grid-cols-2 gap-4' : !isNegotiable}">
                         <div class="form-control">
                             <Label value="نوع پرداخت" :required="true" input-id="currency"/>
@@ -270,7 +283,7 @@ import {computed, onMounted, ref, watch} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import RichEditor from "../../Shared/Components/CKEditor.vue";
 import ClientOnly from '@duannx/vue-client-only';
-import MLPAttachment from "../../Shared/Components/MLPAttachment.vue";
+import Uppy from "../../Shared/Components/Uppy.vue";
 import Label from "../../Jetstream/Label.vue";
 import Input from "../../Jetstream/Input.vue";
 // Functions
@@ -303,7 +316,7 @@ const form = useForm({
     currency_id: setSelectValue(props.ad.currency.id, props.currencies),
     district_id: setSelectValue(props.ad.district.id, props.districts),
     is_chat_enabled: props.ad.is_chat_enabled,
-    images: props.ad.media,
+    images: [],
     attributes: [],
     values: [],
 })
@@ -376,6 +389,11 @@ const getAttributeError = (collection, attributeId) => {
     return collection.findIndex((item) => item.attribute_id === attributeId);
 }
 
-const mediaChanged = media => form.images = media;
+const addFile = (file) => {
+    form.images.push(file);
+}
+const removeFile = (file) => {
+    form.images = form.images.filter(image => image.name !== file.data.name)
+}
 const title = computed(() => ` ویرایش ${props.ad.title}`);
 </script>>
