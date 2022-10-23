@@ -19,7 +19,6 @@ return [
 //     example:
 //     'sets' => 'heroicons',
     'sets' => [
-        'heroicons',
         'fontawesome-solid',
     ],
 
