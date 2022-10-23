@@ -20,6 +20,7 @@ class CategoryResource extends JsonResource
             'slug' => $this->slug,
             'description' => $this->when($this->description, $this->description),
             'children' => self::collection($this->whenLoaded('children')),
+            'icon' => str($this->icon)->replace('fas-', 'fa-')->value(),
 
             'ads_count' => $this->when($this->ads_count, $this->ads_count),
             'attributes_count' => $this->when($this->attributes_count, $this->attributes_count),
