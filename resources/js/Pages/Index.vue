@@ -10,16 +10,16 @@ defineProps({
 
 <template>
     <Head title="خانه"/>
-    <div class="min-h-fit bg-base-200 py-10">
+    <div class="py-10 min-h-fit bg-base-200">
         <div class="w-full text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-primary-500">
+            <h1 class="text-4xl font-bold md:text-5xl text-primary-500">
                 خرید و فروش بی واسطه
             </h1>
             <h4 class="py-6">
                 خرید و فروش هر آنچه به فکرت میرسد!
             </h4>
             <!-- Top Categories -->
-            <TopCategories :categories="categories"/>
+            <TopCategories :categories="categories.data"/>
             <!-- Latest Ads -->
             <LatestAds :ads="ads.data"/>
         </div>

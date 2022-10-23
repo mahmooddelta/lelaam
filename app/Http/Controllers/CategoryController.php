@@ -11,8 +11,8 @@ class CategoryController extends Controller
     public function index()
     {
         return Inertia::render('Categories', [
-            'categories' => CategoryResource::collection(Category::query()->select(['id', 'name', 'slug'])
-                ->withCount(['ads' => fn($query) => $query->published()])
+            'categories' => CategoryResource::collection(Category::query()->select(['id', 'name', 'slug', 'icon'])
+                ->withCount(['ads' => fn ($query) => $query->published()])
                 ->orderByDesc('ads_count')
                 ->paginate(16)),
         ]);
