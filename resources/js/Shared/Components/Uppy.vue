@@ -126,7 +126,7 @@ uppy.on('file-removed', (file, reason) => {
     emit('fileRemoved', file);
 })
 // Add images to uppy
-if (props?.media) {
+if (props?.media && props?.media.length > 0) {
     for (const media of props?.media) {
         fetch(media.original_url)
             .then((response) => response.blob()) // returns a Blob
