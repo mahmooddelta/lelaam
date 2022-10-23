@@ -11,6 +11,15 @@ import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 import VueSelect from "vue-select";
 // Toast
 import Toast, {POSITION, useToast} from 'vue-toastification'
+// Font awesome
+import {library} from "@fortawesome/fontawesome-svg-core";
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import {fas} from '@fortawesome/free-solid-svg-icons'
+
+library.add(fas);
+import {dom} from "@fortawesome/fontawesome-svg-core";
+
+dom.watch();
 
 let appName = 'Laravel';
 
@@ -34,6 +43,7 @@ createInertiaApp({
             .component('Head', Head)
             .component('Link', Link)
             .component('v-select', VueSelect)
+            .component('FontAwesomeIcon', FontAwesomeIcon)
             .mixin({methods: {route}})
             .use(Toast, {
                 position: POSITION.TOP_RIGHT, rtl: true,
