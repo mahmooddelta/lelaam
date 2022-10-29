@@ -83,6 +83,7 @@ class Ad extends Model implements HasMedia
     protected $casts = [
         'is_published' => 'boolean',
         'is_sold' => 'boolean',
+        'is_chat_enabled' => 'boolean',
         'published_at' => 'datetime',
         'expires_at' => 'datetime',
     ];
