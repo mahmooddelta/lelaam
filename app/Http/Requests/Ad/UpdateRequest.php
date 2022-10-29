@@ -81,7 +81,7 @@ class UpdateRequest extends FormRequest
                 'nullable',
             ],
             'is_sold' => [
-                'sometimes',
+                'nullable',
             ],
             'images' => [
                 'nullable',
@@ -142,8 +142,7 @@ class UpdateRequest extends FormRequest
         $this->merge([
             'category_id' => Category::whereSlug($this->category_id)
                 ->value('id'),
-            'district_id' => District::whereName($this->district_id)
-                ->value('id'),
+            'district_id' => !$this->integer('district_id') ? District::whereName($this->district_id)->value('id') : $this->district_id,
             'currency_id' => $this->currency_id !== 0 ? Currency::whereName($this->currency_id)->value('id') : 0,
         ]);
     }
