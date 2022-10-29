@@ -315,7 +315,7 @@ const form = useForm({
     category_id: setSelectValue(props.category ?? props.ad.category.name, props.categories),
     currency_id: setSelectValue(props.ad.currency.id, props.currencies),
     district_id: setSelectValue(props.ad.district.id, props.districts),
-    is_chat_enabled: props.ad.is_chat_enabled,
+    is_chat_enabled: props.ad.is_chat_enabled ?? false,
     images: [],
     attributes: [],
     values: [],
@@ -342,7 +342,6 @@ const save = () => {
     form.post(route('post.update', props.ad.slug), {
         preserveState: true,
         preserveScroll: true,
-        replace: true,
     })
 }
 const state = ref(setSelectValue(props.state, props.states))
