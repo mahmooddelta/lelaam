@@ -1,6 +1,6 @@
 <template>
     <Head :title="ad.data.title"/>
-    <div class="max-w-lg mx-auto overflow-hidden md:max-w-6xl p-6">
+    <div class="max-w-lg mx-auto overflow-hidden md:max-w-6xl p-6 pb-12">
         <nav class="w-full" aria-label="Breadcrumb">
             <ol role="list" class="flex items-center space-x-4">
                 <li>
@@ -36,8 +36,7 @@
                 </li>
             </ol>
         </nav>
-        <section class="grid grid-cols-1 px-4 py-8"
-                 :class="{'md:grid-cols-2' : ad.data.media && ad.data.media.length > 0}">
+        <section class="grid grid-cols-1 lg:grid-cols-2 px-4 py-8">
             <div class="text-right px-4">
                 <h1 class="text-3xl lg:text-4xl font-bold" v-text="ad.data.title"></h1>
                 <h2 class="text-base-600 py-6 flex">
@@ -52,8 +51,8 @@
                     ولایت
                     {{ ad.data.state }}
                 </h2>
-                <section class="flex justify-between pb-4">
-                    <div class="flex justify-start">
+                <section class="lg:flex justify-between pb-4">
+                    <div class="lg:flex justify-start">
                         <a v-if="ad.data.phone_number" :href="`tel:${ad.data.phone_number}`"
                            class="btn btn-primary btn-sm mr-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
@@ -75,7 +74,7 @@
                             چت
                         </Link>
                     </div>
-                    <div class="flex justify-end">
+                    <div class="lg:flex justify-end">
                         <button class="btn btn-outline btn-primary btn-sm modal-button"
                                 @click="wantsToReportAd = true"
                                 v-if="$page.props.user && can_report">
@@ -195,27 +194,22 @@
             </div>
             <!-- Carousel -->
             <client-only>
-                <SplideSlider :images="ad.data.media" :custom-options="{ gap: '1rem', perPage: 3}"
-                              class="w-full max-h-[34rem] order-first lg:order-last pt-4 lg:py-0 mb-12 md:mb-0"
-                              v-if="ad.data.media && ad.data.media.length > 0">
-                    <SplideSlide v-if="ad.data.media.length === 1"
-                                 :id="ad.data.media[0].uuid">
-                        <img :src="ad.data.media[0].url" :data-splide-lazy="ad.data.media[0].url"
-                             :alt="ad.data.title + '_image_' + ad.data.media[0].uuid"
-                             class="rounded-lg w-full object-cover" loading="lazy"/>
-                    </SplideSlide>
-                    <SplideSlide v-if="ad.data.media.length > 1"
+                <SplideSlider :images="ad.data.media"
+                              class="order-first lg:order-last pt-4 lg:py-0 lg:mb-0 mb-12"
+                              :id="(Math.random() + 1).toString(36).substring(2)"
+                              :key="(Math.random() + 1).toString(36).substring(2)">
+                    <SplideSlide v-if="ad.data.media && ad.data.media.length > 0"
                                  v-for="image in ad.data.media"
                                  :key="image.uuid"
                                  :id="image.uuid">
-                        <img :src="image.url" :data-splide-lazy="image.url"
-                             :alt="ad.data.title + '_image_' + image.uuid"
-                             class="rounded-lg w-full block object-cover" loading="lazy"/>
+                        <img :alt="ad.data.title + '_image_' + image.uuid"
+                             :src="image.url" :data-splide-lazy="image.url"
+                             class="rounded-lg w-full object-cover" loading="lazy"/>
                     </SplideSlide>
-                    <SplideSlide v-else>
+                    <SplideSlide v-else class="w-full">
                         <img :src="ad.data.thumb" :data-splide-lazy="ad.data.thumb" alt="No Image Placeholder"
                              loading="lazy"
-                             class="rounded-lg object-cover w-full"/>
+                             class="rounded-lg w-full object-cover"/>
                     </SplideSlide>
                 </SplideSlider>
             </client-only>
@@ -229,6 +223,7 @@ import {useForm} from "@inertiajs/inertia-vue3";
 import DialogModal from "../Jetstream/DialogModal.vue";
 import Button from "../Jetstream/Button.vue";
 import SplideSlider from "../Shared/Components/SplideSlider.vue";
+import {SplideSlide} from '@splidejs/vue-splide';
 import RichEditor from "../Shared/Components/CKEditor.vue";
 import ClientOnly from '@duannx/vue-client-only';
 
@@ -238,6 +233,7 @@ const props = defineProps({
     report_types: Object,
     can_report: Boolean,
 })
+
 const isEmpty = value => (value == null || value === 0);
 const price = computed(() => isEmpty(props.ad.data.price) ? `<b class="text-bold">توافقی</b>` : `<b>${props.ad.data.price}</b> ${props.ad.data.currency}`)
 
