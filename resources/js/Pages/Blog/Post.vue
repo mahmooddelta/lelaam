@@ -13,7 +13,8 @@ defineProps({
             <ol role="list" class="flex items-center space-x-4">
                 <li>
                     <div class="flex items-center">
-                        <Link :href="route('blog.index')" class="mr-4 text-sm font-medium text-base-700 hover:font-bold">
+                        <Link :href="route('blog.index')"
+                              class="mr-4 text-sm font-medium text-base-700 hover:font-bold">
                             پست های بلاگ
                         </Link>
                     </div>
@@ -47,8 +48,13 @@ defineProps({
             </ol>
         </nav>
         <section>
-            <img :src="post.data.media[0].url"
+            <img v-if="post.data.media && post.data.media.length > 0"
+                 :src="post.data.media[0].url"
                  :alt="post.data.title + '_image_' + post.data?.media[0]?.uuid"
+                 class="rounded-lg w-full object-cover max-h-[26rem]" loading="lazy"/>
+            <img v-else
+                 src="../../../../public/images/cover.jpg"
+                 alt="Blog post no cover image"
                  class="rounded-lg w-full object-cover max-h-[26rem]" loading="lazy"/>
         </section>
         <section class="pt-6">
