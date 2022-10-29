@@ -1,6 +1,4 @@
 <script setup>
-import Heroicons from "../../Shared/Components/Heroicons.vue";
-
 defineProps({
     categories: Object,
 })
@@ -14,11 +12,11 @@ defineProps({
             <div class="text-center card-body">
                 <h2 class="flex items-center justify-center text-xl font-bold">
                     <i
-                      class="h-6 mr-1 text-center fas"
-                      :class="category.icon === '' ? 'fa-list' : category.icon"
+                        class="h-6 mr-1 text-center fas"
+                        :class="category.icon === '' ? 'fa-list' : category.icon"
                     ></i>
                     {{ category.name }}
-                  </h2>
+                </h2>
                 <p class="mb-2 text-sm" v-text="`${(category.ads_count || 0)} آگهی جدید `"></p>
                 <section class="w-full h-32">
                     <Link :href="route('ads', child.slug)" v-for="child in category.children" :key="child.id"
