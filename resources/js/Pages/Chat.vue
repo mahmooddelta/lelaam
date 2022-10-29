@@ -54,7 +54,8 @@ const deleteConversation = (conversationId) => {
         <ul>
             <h2 class="my-2 mb-2 ml-2 text-3xl text-gray-600">گفتگو ها</h2>
             <div class="divider"></div>
-            <li class="overflow-y-auto max-h-[19rem]">
+            <li class="max-h-[19rem]"
+                :class="conversations.data && conversations.data.length > 0 ?'overflow-y-auto' : ''">
                 <section v-for="conversation in conversations.data" :key="conversation.id"
                          v-if="conversations.data.length > 0"
                          class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-base-100 focus:outline-none rounded">
