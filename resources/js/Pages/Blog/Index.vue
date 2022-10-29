@@ -111,9 +111,9 @@ const sliderCustomProps = {
                 </SplideSlide>
             </SplideSlider>
         </client-only>
-        <div class="divider"></div>
         <!-- Newest -->
-        <h2 class="text-3xl font-bold pb-4 flex">
+        <h2 class="text-3xl font-bold pb-4 flex" v-if="newest.data && newest.data.length > 0">
+            <div class="divider"></div>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mr-1" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -130,7 +130,7 @@ const sliderCustomProps = {
                 </SplideSlide>
             </SplideSlider>
         </client-only>
-        <div class="divider"></div>
+        <div class="divider" v-if="categories.data && categories.data.length > 0"></div>
         <!-- Categories -->
         <div class="w-full" v-for="(category, index) in categories.data" :key="category.id">
             <template v-if="category.posts && category.posts.length > 0">
@@ -167,6 +167,11 @@ const sliderCustomProps = {
                 </client-only>
             </template>
             <div class="divider" v-if="index !== categories.data.length - 1"></div>
+        </div>
+        <div v-if="newest.data && newest.data.length < 1" class="py-12">
+            <h1 class="text-4xl text-center font-bold">
+                متاسفیم. بلاگ تا هنوز محتوایی ندارد.
+            </h1>
         </div>
     </Container>
 </template>
