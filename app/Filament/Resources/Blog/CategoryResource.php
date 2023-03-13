@@ -69,6 +69,7 @@ class CategoryResource extends Resource
 
                         TextInput::make('position')
                             ->label(__('general.blog_categories.fields.position'))
+                            ->required()
                             ->numeric(),
 
                         Toggle::make('is_visible')
@@ -88,10 +89,10 @@ class CategoryResource extends Resource
                             ->schema([
                                 Placeholder::make('created_at')
                                     ->label(__('general.created_at'))
-                                    ->content(fn(?Category $record): string => $record ? $record->created_at->diffForHumans() : '-'),
+                                    ->content(fn(?Category $record): string => $record ? $record->created_at?->diffForHumans() : '-'),
                                 Placeholder::make('updated_at')
                                     ->label(__('general.updated_at'))
-                                    ->content(fn(?Category $record): string => $record ? $record->updated_at->diffForHumans() : '-'),
+                                    ->content(fn(?Category $record): string => $record ? $record->updated_at?->diffForHumans() : '-'),
                             ])
                             ->hidden(fn(?Category $record) => $record === null),
                         Card::make()
@@ -144,7 +145,7 @@ class CategoryResource extends Resource
                     ->label(__('general.updated_at'))
                     ->date()
                     ->sortable()
-                    ->formatStateUsing(fn(Category $record): ?string => $record?->updated_at->diffForHumans())
+                    ->formatStateUsing(fn(Category $record): ?string => $record?->updated_at?->diffForHumans())
                     ->toggleable(),
             ])->filters([
                 TernaryFilter::make('is_visible')
