@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use RalphJSmit\Filament\SEO\SEO;
+use Illuminate\Support\Str;
 
 class CategoryResource extends Resource
 {
@@ -73,7 +74,7 @@ class CategoryResource extends Resource
                                         ->disabled()
                                         ->required()
                                         ->unique(Category::class, 'slug', fn($record) => $record),
-                                ]),
+                                ]), 
 
                             Select::make('parent_id')
                                 ->label(__('general.categories.fields.parent_id'))
