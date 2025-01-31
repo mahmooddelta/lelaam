@@ -1,0 +1,180 @@
+
+> build
+> npm-run-all build:*
+
+
+> build:frontend
+> vite build --config vite.production.config.js && vite build --config vite.production.config.js --ssr
+
+vite v3.2.5 building for production...
+transforming...
+
+[35m🌼 daisyUI components 2.46.1[0m [0m https://daisyui.com
+  [36m Direction:[0m [0m RTL
+  [32m✔︎ Including:[0m [0m base, components, 2 themes, utilities
+  [32m❤︎ Support daisyUI: [0m https://opencollective.com/daisyui [0m
+  
+
+[35m🌼 daisyUI components 2.46.1[0m [0m https://daisyui.com
+  [36m Direction:[0m [0m RTL
+  [32m✔︎ Including:[0m [0m base, components, 2 themes, utilities
+  [32m❤︎ Support daisyUI: [0m https://opencollective.com/daisyui [0m
+  
+✓ 402 modules transformed.
+rendering chunks...
+public/build/assets/No_image_preview.b0e61da6.png                20.40 KiB
+public/build/assets/cover.0e1f1bf9.jpg                           226.11 KiB
+public/build/manifest.json                                       21.10 KiB
+public/build/assets/Index.961dc6ed.js                            5.31 KiB / gzip: 1.93 KiB
+public/build/assets/AppLayout.f9056441.js                        0.51 KiB / gzip: 0.35 KiB
+public/build/assets/SectionTitle.213fcb61.js                     0.42 KiB / gzip: 0.28 KiB
+public/build/assets/SectionBorder.8865441c.js                    6.64 KiB / gzip: 2.41 KiB
+public/build/assets/Modal.19f35666.js                            1.92 KiB / gzip: 0.81 KiB
+public/build/assets/ApiTokenManager.91082628.js                  4.73 KiB / gzip: 1.75 KiB
+public/build/assets/Container.a58985bc.js                        0.22 KiB / gzip: 0.19 KiB
+public/build/assets/Account.92d7f131.js                          9.95 KiB / gzip: 2.86 KiB
+public/build/assets/Ad.4976e02b.js                               1.52 KiB / gzip: 0.85 KiB
+public/build/assets/DialogModal.7652acd0.js                      0.70 KiB / gzip: 0.42 KiB
+public/build/assets/Ad.2811ab90.js                               10.02 KiB / gzip: 3.32 KiB
+public/build/assets/CKEditor.16a9d7c9.js                         1.21 KiB / gzip: 0.65 KiB
+public/build/assets/index.es.77130993.js                         0.51 KiB / gzip: 0.30 KiB
+public/build/assets/AdEdit.8731ff52.js                           14.61 KiB / gzip: 3.84 KiB
+public/build/assets/Label.ec262523.js                            0.52 KiB / gzip: 0.35 KiB
+public/build/assets/Input.236cb742.js                            0.85 KiB / gzip: 0.50 KiB
+public/build/assets/LatestAds.72803a13.js                        0.79 KiB / gzip: 0.47 KiB
+public/build/assets/SplideSlider.95f200b5.js                     33.28 KiB / gzip: 14.55 KiB
+public/build/assets/AdCreate.e2024d6d.js                         14.02 KiB / gzip: 3.65 KiB
+public/build/assets/Ads.89ea8e93.js                              4.64 KiB / gzip: 1.73 KiB
+public/build/assets/Pagination.43ae1fa0.js                       0.69 KiB / gzip: 0.44 KiB
+public/build/assets/useFilters.e4f11bde.js                       0.40 KiB / gzip: 0.29 KiB
+public/build/assets/ConfirmPassword.61150563.js                  1.67 KiB / gzip: 0.84 KiB
+public/build/assets/AuthenticationCardLogo.b1505708.js           0.57 KiB / gzip: 0.40 KiB
+public/build/assets/Button.e80501a4.js                           0.28 KiB / gzip: 0.23 KiB
+public/build/assets/ValidationErrors.7ea0824b.js                 0.62 KiB / gzip: 0.40 KiB
+public/build/assets/ForgotPassword.5c7d575d.js                   2.24 KiB / gzip: 0.91 KiB
+public/build/assets/Login.135fa5b9.js                            2.59 KiB / gzip: 1.16 KiB
+public/build/assets/Checkbox.d600cbbb.js                         0.50 KiB / gzip: 0.34 KiB
+public/build/assets/TwoFactorChallenge.ed0bb9f0.js               3.04 KiB / gzip: 1.17 KiB
+public/build/assets/VerifyEmail.8845c04c.js                      2.71 KiB / gzip: 0.98 KiB
+public/build/assets/Index.8311474b.js                            6.98 KiB / gzip: 2.27 KiB
+public/build/assets/BlogPost.fb6bf5e2.js                         3.42 KiB / gzip: 1.38 KiB
+public/build/assets/Post.4f724951.js                             4.57 KiB / gzip: 1.71 KiB
+public/build/assets/Posts.fb39cd2b.js                            3.41 KiB / gzip: 1.39 KiB
+public/build/assets/Categories.76a7dd2f.js                       1.77 KiB / gzip: 0.86 KiB
+public/build/assets/TopCategories.ffc36fee.js                    1.48 KiB / gzip: 0.79 KiB
+public/build/assets/Chat.715d233d.js                             3.42 KiB / gzip: 1.56 KiB
+public/build/assets/Create.18bbe04c.js                           8.69 KiB / gzip: 3.10 KiB
+public/build/assets/ResetPassword.f13c5987.js                    2.10 KiB / gzip: 0.83 KiB
+public/build/assets/Register.a14e5e97.js                         4.73 KiB / gzip: 1.86 KiB
+public/build/assets/Index.d2fa7e25.js                            0.92 KiB / gzip: 0.49 KiB
+public/build/assets/Dashboard.fad92b4c.js                        8.90 KiB / gzip: 3.32 KiB
+public/build/assets/About.d52c896d.js                            0.83 KiB / gzip: 0.45 KiB
+public/build/assets/Privacy.4df45705.js                          0.74 KiB / gzip: 0.42 KiB
+public/build/assets/Contact.63e8216d.js                          3.05 KiB / gzip: 1.09 KiB
+public/build/assets/TermsAndConditions.f0d1c11b.js               0.74 KiB / gzip: 0.41 KiB
+public/build/assets/PrivacyPolicy.2a8a1977.js                    0.63 KiB / gzip: 0.42 KiB
+public/build/assets/AuthenticationCardLogo.ac86a3b3.js           0.18 KiB / gzip: 0.17 KiB
+public/build/assets/ActionSection.e6faef47.js                    0.49 KiB / gzip: 0.32 KiB
+public/build/assets/DeleteUserForm.57f3a8dd.js                   3.78 KiB / gzip: 1.16 KiB
+public/build/assets/InputError.b473c8bb.js                       0.26 KiB / gzip: 0.22 KiB
+public/build/assets/DangerButton.d004825b.js                     0.53 KiB / gzip: 0.36 KiB
+public/build/assets/LogoutOtherBrowserSessionsForm.b760fbf1.js   5.64 KiB / gzip: 1.94 KiB
+public/build/assets/ActionMessage.016365c0.js                    0.43 KiB / gzip: 0.30 KiB
+public/build/assets/SecondaryButton.34dc1ce9.js                  0.54 KiB / gzip: 0.37 KiB
+public/build/assets/TwoFactorAuthenticationForm.108b5e8c.js      10.61 KiB / gzip: 2.82 KiB
+public/build/assets/UpdatePasswordForm.68cb5ac1.js               3.12 KiB / gzip: 1.02 KiB
+public/build/assets/FormSection.cc8908a2.js                      0.92 KiB / gzip: 0.52 KiB
+public/build/assets/TermsOfService.b31b5b42.js                   0.62 KiB / gzip: 0.42 KiB
+public/build/assets/UpdateProfileInformationForm.b9173443.js     4.95 KiB / gzip: 1.91 KiB
+public/build/assets/Show.87cfd4cd.js                             2.43 KiB / gzip: 1.09 KiB
+public/build/assets/ckeditor.b98e88b3.js                         5.93 KiB / gzip: 2.62 KiB
+public/build/assets/Welcome.df660f74.css                         1.23 KiB / gzip: 0.36 KiB
+public/build/assets/Uppy.c59b6cd1.css                            75.17 KiB / gzip: 12.08 KiB
+public/build/assets/Welcome.ea6878d2.js                          12.42 KiB / gzip: 3.98 KiB
+public/build/assets/vue3-otp-input.esm.4cbba8e8.js               5.38 KiB / gzip: 2.08 KiB
+public/build/assets/app.27eeb19e.css                             134.80 KiB / gzip: 21.60 KiB
+public/build/assets/PhoneNotVerified.7c17cd11.js                 183.16 KiB / gzip: 37.61 KiB
+public/build/assets/Uppy.73b912c6.js                             251.73 KiB / gzip: 75.55 KiB
+public/build/assets/ckeditor.27fbcbfe.js                         956.62 KiB / gzip: 237.70 KiB
+public/build/assets/app.ee338fbd.js                              1424.05 KiB / gzip: 460.99 KiB
+vite v3.2.5 building SSR bundle for production...
+transforming...
+
+[35m🌼 daisyUI components 2.46.1[0m [0m https://daisyui.com
+  [36m Direction:[0m [0m RTL
+  [32m✔︎ Including:[0m [0m base, components, 2 themes, utilities
+  [32m❤︎ Support daisyUI: [0m https://opencollective.com/daisyui [0m
+  
+
+[35m🌼 daisyUI components 2.46.1[0m [0m https://daisyui.com
+  [36m Direction:[0m [0m RTL
+  [32m✔︎ Including:[0m [0m base, components, 2 themes, utilities
+  [32m❤︎ Support daisyUI: [0m https://opencollective.com/daisyui [0m
+  
+✓ 108 modules transformed.
+rendering chunks...
+bootstrap/ssr/ssr.mjs                                              54.72 KiB
+bootstrap/ssr/assets/Index.eb46ffb7.mjs                            24.67 KiB
+bootstrap/ssr/assets/AppLayout.00872499.mjs                        1.30 KiB
+bootstrap/ssr/assets/SectionBorder.66f2e2f5.mjs                    18.77 KiB
+bootstrap/ssr/assets/SectionTitle.9adbbbf5.mjs                     1.12 KiB
+bootstrap/ssr/assets/Modal.9e7a1e95.mjs                            2.53 KiB
+bootstrap/ssr/assets/ApiTokenManager.fb8e4dfc.mjs                  22.54 KiB
+bootstrap/ssr/assets/Account.066cf14c.mjs                          58.41 KiB
+bootstrap/ssr/assets/Container.ebd37312.mjs                        0.84 KiB
+bootstrap/ssr/assets/Ad.bc45e16e.mjs                               4.57 KiB
+bootstrap/ssr/assets/Ad.fdf61dcb.mjs                               26.59 KiB
+bootstrap/ssr/assets/Label.874376e7.mjs                            1.27 KiB
+bootstrap/ssr/assets/DialogModal.4453e9ab.mjs                      2.39 KiB
+bootstrap/ssr/assets/Button.a2158809.mjs                           0.90 KiB
+bootstrap/ssr/assets/SplideSlider.41dda577.mjs                     1.81 KiB
+bootstrap/ssr/assets/CKEditor.74e0f967.mjs                         2.18 KiB
+bootstrap/ssr/assets/AdEdit.6d015a63.mjs                           54.21 KiB
+bootstrap/ssr/assets/Uppy.988e3f98.mjs                             3.08 KiB
+bootstrap/ssr/assets/Input.b74c424d.mjs                            1.51 KiB
+bootstrap/ssr/assets/LatestAds.a6504f88.mjs                        1.79 KiB
+bootstrap/ssr/assets/AdCreate.2cde0d32.mjs                         52.78 KiB
+bootstrap/ssr/assets/Ads.72db502a.mjs                              6.90 KiB
+bootstrap/ssr/assets/Pagination.ca60e763.mjs                       1.46 KiB
+bootstrap/ssr/assets/useFilters.1177b18b.mjs                       0.86 KiB
+bootstrap/ssr/assets/ConfirmPassword.e316ed30.mjs                  6.04 KiB
+bootstrap/ssr/assets/AuthenticationCardLogo.66131bf8.mjs           1.93 KiB
+bootstrap/ssr/assets/ValidationErrors.3885506b.mjs                 1.32 KiB
+bootstrap/ssr/assets/ForgotPassword.4cc39cc2.mjs                   7.33 KiB
+bootstrap/ssr/assets/Login.9f32239c.mjs                            10.00 KiB
+bootstrap/ssr/assets/Checkbox.1ad1cb8c.mjs                         1.37 KiB
+bootstrap/ssr/assets/Register.2e3928ed.mjs                         20.67 KiB
+bootstrap/ssr/assets/ResetPassword.05e3d13a.mjs                    8.16 KiB
+bootstrap/ssr/assets/TwoFactorChallenge.e0af0350.mjs               10.59 KiB
+bootstrap/ssr/assets/VerifyEmail.eba4f10a.mjs                      8.34 KiB
+bootstrap/ssr/assets/Index.66c5e49b.mjs                            64.70 KiB
+bootstrap/ssr/assets/BlogPost.83d14bfe.mjs                         5.94 KiB
+bootstrap/ssr/assets/Post.a8a9b6da.mjs                             15.90 KiB
+bootstrap/ssr/assets/Posts.d870ac3a.mjs                            7.83 KiB
+bootstrap/ssr/assets/Categories.2a6b8dd8.mjs                       3.46 KiB
+bootstrap/ssr/assets/TopCategories.c3b9f541.mjs                    3.13 KiB
+bootstrap/ssr/assets/Chat.59971599.mjs                             12.93 KiB
+bootstrap/ssr/assets/Create.1cb984c7.mjs                           28.06 KiB
+bootstrap/ssr/assets/Dashboard.093880ef.mjs                        11.53 KiB
+bootstrap/ssr/assets/Index.d21afea8.mjs                            1.61 KiB
+bootstrap/ssr/assets/About.b4e4a945.mjs                            2.49 KiB
+bootstrap/ssr/assets/Contact.c1daa831.mjs                          8.63 KiB
+bootstrap/ssr/assets/Privacy.5915da30.mjs                          2.54 KiB
+bootstrap/ssr/assets/TermsAndConditions.ff8e2aeb.mjs               2.54 KiB
+bootstrap/ssr/assets/PhoneNotVerified.a81d4684.mjs                 17.55 KiB
+bootstrap/ssr/assets/PrivacyPolicy.f6613e51.mjs                    1.45 KiB
+bootstrap/ssr/assets/AuthenticationCardLogo.6f5b3a40.mjs           0.75 KiB
+bootstrap/ssr/assets/DeleteUserForm.39705a53.mjs                   15.55 KiB
+bootstrap/ssr/assets/ActionSection.68257d3e.mjs                    1.69 KiB
+bootstrap/ssr/assets/DangerButton.2ae62821.mjs                     1.15 KiB
+bootstrap/ssr/assets/InputError.582443f4.mjs                       0.81 KiB
+bootstrap/ssr/assets/SecondaryButton.884b84a6.mjs                  1.17 KiB
+bootstrap/ssr/assets/LogoutOtherBrowserSessionsForm.4ad02b28.mjs   22.00 KiB
+bootstrap/ssr/assets/ActionMessage.2ee7261a.mjs                    0.86 KiB
+bootstrap/ssr/assets/TwoFactorAuthenticationForm.83677556.mjs      41.15 KiB
+bootstrap/ssr/assets/UpdatePasswordForm.acfcb9e8.mjs               11.38 KiB
+bootstrap/ssr/assets/FormSection.220d9b20.mjs                      2.28 KiB
+bootstrap/ssr/assets/UpdateProfileInformationForm.f77e747b.mjs     18.89 KiB
+bootstrap/ssr/assets/Show.6851fa8d.mjs                             8.20 KiB
+bootstrap/ssr/assets/TermsOfService.f3f92f8e.mjs                   1.45 KiB
+bootstrap/ssr/assets/Welcome.7cd79d98.mjs                          14.70 KiB
