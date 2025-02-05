@@ -192,5 +192,6 @@ return [
         'desc' => 'توضیحات',
         'district_id' => 'ناحیه',
         'is_chat_enabled' => 'چت فعال باشد؟',
+        'state' => 'ولایت',
     ],
 ];

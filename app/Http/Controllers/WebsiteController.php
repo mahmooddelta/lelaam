@@ -55,7 +55,7 @@ class WebsiteController extends Controller
     {
         $validated = $request->validate(
             [
-                'phone' => 'required|string|min:10|max:14|unique:users,phone',
+                'phone' => 'required|string|min:10|max:14',
                 'phoneVerified' => ['nullable', 'boolean'],
             ]
         );

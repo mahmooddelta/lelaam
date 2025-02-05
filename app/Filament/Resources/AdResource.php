@@ -97,7 +97,8 @@ class AdResource extends Resource
                                 ])
                                 ->label(__('general.ads.fields.desc'))
                                 ->required()
-                                ->columnSpan(2),
+                                ->columnSpan(2)
+                                ->extraAttributes([ 'x-init' => "\$nextTick(() => { document.querySelector('trix-editor').style.color = 'black'; })"]),
                         ]),
                     $layout::make()
                         ->schema([

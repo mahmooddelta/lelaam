@@ -16,4 +16,9 @@ class EditAd extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return route('filament.resources.ads.index');
+    }
 }

@@ -17,7 +17,7 @@ const form = useForm({
     password: '',
     password_confirmation: '',
     terms: false,
-    state: 'انتخاب ولایت',
+    state: '',
 });
 
 const props = defineProps({
