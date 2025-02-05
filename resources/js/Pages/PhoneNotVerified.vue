@@ -13,6 +13,17 @@ import ClientOnly from '@duannx/vue-client-only';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// const firebaseConfig = {
+//     apiKey: "AIzaSyDsrj5NKw--vWj-wY9ubIz55lBg9TdQp9I",
+//     authDomain: "lelaam-e0f93.firebaseapp.com",
+//     databaseURL: "https://lelaam-e0f93.firebaseio.com",
+//     projectId: "lelaam-e0f93",
+//     storageBucket: "lelaam-e0f93.appspot.com",
+//     messagingSenderId: "895976409113",
+//     appId: "1:895976409113:web:4c0f8f0e08ce710e818288",
+//     measurementId: "G-F2LPW4D061"
+// };
+
 const firebaseConfig = {
     apiKey: "AIzaSyDsrj5NKw--vWj-wY9ubIz55lBg9TdQp9I",
     authDomain: "lelaam-e0f93.firebaseapp.com",
@@ -23,6 +34,17 @@ const firebaseConfig = {
     appId: "1:895976409113:web:4c0f8f0e08ce710e818288",
     measurementId: "G-F2LPW4D061"
 };
+
+// const firebaseConfig = {
+//     apiKey: "AIzaSyBrJ9xcyTafzHTtiYK6OJQlCTNjWxAzFe4",
+//     authDomain: "lelaam-90b58.firebaseapp.com",
+//     projectId: "lelaam-90b58",
+//     storageBucket: "lelaam-90b58.firebasestorage.app",
+//     messagingSenderId: "2000798059",
+//     appId: "1:2000798059:web:c82e25f49d2ab2c2338c2e",
+//     measurementId: "G-EWJE3SDBH2"
+// };
+
 
 // Initialize Firebase
 let app;
@@ -92,40 +114,19 @@ if (typeof window !== 'undefined') {
         auth.languageCode = 'fa';
         setTimeout(() => {
             window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-                // 'size': 'invisible',
-                'callback': (response) => isRecaptchaSolved.value = true,
-                'expired-callback': () => isRecaptchaSolved.value = false,
+                'size': 'normal',
+                'callback': (response) => {
+                    isRecaptchaSolved.value = true;
+                },
+                'expired-callback': () => {
+                    isRecaptchaSolved.value = false;
+                },
             }, auth);
             recaptchaVerifier.render().then((widgetId) => {
                 window.recaptchaWidgetId = widgetId;
             });
         }, 1000)
     });
-    const sendOtp = () => {
-        if (isRecaptchaSolved.value) {
-
-            const countryCode = '+93' // Afghanistan
-            const phoneNumberFormatted = form.phone.charAt(0) === '0' ? form.phone.substring(1) : form.phone;
-            const phoneNumber = countryCode + phoneNumberFormatted;
-            // !TODO Problem is here and thus it should be traced and sent
-            signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
-                .then(function (confirmationResult) {
-                    // SMS sent. Prompt user to type the code from the message, then sign the
-                    // user in with confirmationResult.confirm(code).
-                    window.confirmationResult = confirmationResult;
-
-                    toast.success('کد تاییدی ارسال شد.', {timeout: 3000});
-                    otpSent.value = true;
-                })
-                .catch(function (error) {
-                    grecaptcha.reset(window.recaptchaWidgetId);
-                    otpSent.value = false;
-                    handleOTPExceptions(error);
-                });
-        } else {
-            toast.error('لطفا پازل را حل کنید!', {timeout: 2000});
-        }
-    };
     const verifyOtp = () => {
         window.confirmationResult.confirm(otp.value).then(function (result) {
             otpVerified.value = true;
@@ -134,6 +135,68 @@ if (typeof window !== 'undefined') {
             handleOTPExceptions(error);
         });
     };
+}
+
+const handleOTPExceptions = error => {
+    console.log(error.message);
+    if (error.message === 'TOO_MANY_ATTEMPTS_TRY_LATER')
+        errors.value = 'تعداد ارسال کد از مقدار مجاز عبور نموده است. لطفاً بعداً کوشش کنید!';
+    else if (error.message === 'ERROR_SESSION_EXPIRED')
+        errors.value = 'کد وارد شده منقضی شده است. لطفاً روی ارسال دوباره کلیک کنید!';
+    else if (error.message === 'ERROR_QUOTA_EXCEEDED')
+        errors.value = 'مشکلی رخ داده است. لطفاً بعداً دوباره کوشش نمایید!';
+    else if (error.message === 'ERROR_INVALID_VERIFICATION_CODE')
+        errors.value = 'کد وارد شده درست نیست!';
+    else if (error.message === 'SESSION_EXPIRED') {
+        errors.value = 'کد وارد شده منقضی شده است. لطفاً روی ارسال دوباره کلیک کنید!';
+        window.location.reload();
+    }
+    else if (error.code === 'auth/invalid-verification-code')
+        errors.value = 'کد وارد شده درست نیست!';
+    else
+        errors.value = 'مشکلی در ارسال کد تایید رخ داده است. لطفاً بعداً دوباره کوشش نمایید.';
+        console.log(error.code);
+
+    if (errors.value !== '')
+        toast.error(errors.value, {timeout: 2000});
+};
+function verifyOtp() {
+    window.confirmationResult.confirm(otp.value).then(function (result) {
+        otpVerified.value = true;
+        console.log("oK")
+    }).catch(function (error) {
+        console.log("NoK",error)
+        otpVerified.value = false;
+        handleOTPExceptions(error);
+    });
+};
+function sendOtp() {
+    if (isRecaptchaSolved.value) {
+        const countryCode = '+93' // Afghanistan
+        const phoneNumberFormatted = form.phone.charAt(0) === '0' ? form.phone.substring(1) : form.phone;
+        const phoneNumber = countryCode + phoneNumberFormatted;
+        console.log(321);
+        // !TODO Problem is here and thus it should be traced and sent
+        signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+            .then(function (confirmationResult) {
+                console.log('confirmationResult: ',confirmationResult);
+                console.log('auth: ',auth);
+                // SMS sent. Prompt user to type the code from the message, then sign the
+                // user in with confirmationResult.confirm(code).
+                window.confirmationResult = confirmationResult;
+
+                toast.success('کد تاییدی ارسال شد.', {timeout: 3000});
+                otpSent.value = true;
+            })
+            .catch(function (error) {
+                grecaptcha.reset(window.recaptchaWidgetId);
+                otpSent.value = false;
+                handleOTPExceptions(error);
+            });
+    } else {
+        console.log(567);
+        toast.error('لطفا پازل را حل کنید!', {timeout: 2000});
+    }
 }
 </script>
 
@@ -164,9 +227,9 @@ if (typeof window !== 'undefined') {
                         />
                     </client-only>
                 </div>
-
-                <div class="flex items-center justify-end mt-4" v-if="isPhoneInputted && isRecaptchaSolved && !otpSent">
-                    <button id="sign-in-button" class="btn btn-outline btn-primary mx-1" @click="sendOtp"
+                <div class="flex items-center justify-end mt-4"
+                     >
+                    <button id="sign-in-button" class="btn btn-outline btn-primary mx-1" @click=sendOtp()
                             v-if="!otpSent" type="button">
                         ارسال کد
                     </button>
@@ -199,12 +262,12 @@ if (typeof window !== 'undefined') {
                                     :is-input-num="true"
                                     :placeholder="['*', '*', '*', '*', '*', '*']"
                                     @on-change="updateOtp()"
-                                    @on-complete="verifyOtp"
+                                    @on-complete=verifyOtp()
                                 />
                             </client-only>
                         </div>
                     </section>
-                    <button @click="sendOtp" class="btn btn-outline btn-primary mx-1" type="button">
+                    <button @click=sendOtp() class="btn btn-outline btn-primary mx-1" type="button">
                         کدی دریافت نکرده اید! ارسال دوباره
                     </button>
                 </section>

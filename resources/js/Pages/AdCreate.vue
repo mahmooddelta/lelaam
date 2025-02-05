@@ -38,8 +38,8 @@ const form = useForm({
     is_chat_enabled: true,
     images: [],
     attributes: [],
-    values: [],
-})
+    values: {},
+});
 const isFormSubmitting = ref(false);
 // Form submit action
 const save = () => {
